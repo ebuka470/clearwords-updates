@@ -349,6 +349,199 @@ const State = {
     }
   },
 
+   /* ============================================================
+   LANGUAGE SETUP PROMPT
+   Shown the first time a user tries to match without having
+   set up their learning/teaching languages.
+   ============================================================ */
+const LanguageSetup = {
+  _pendingResolve: null,
+
+  /**
+   * Returns a Promise that resolves to { learning, teaching } once the
+   * user saves, or null if they cancel.
+   */
+  prompt() {
+    return new Promise(resolve => {
+      this._pendingResolve = resolve;
+
+      const u = State.user || {};
+      const learning = u.learningLanguages || [];
+      const teaching = u.teachingLanguages || [];
+      const primaryLang = u.language || 'yoruba';
+
+      // Every available language
+      const allLangs = Object.entries(CW_CONFIG.LANGUAGES)
+        .map(([key, cfg]) => ({ key, ...cfg }));
+
+      const renderChips = (containerId, selected, excludeKey) =>
+        allLangs
+          .filter(l => l.key !== excludeKey)   // exclude the other section's primary
+          .map(l => `
+            <button type="button"
+                    class="lang-chip ${selected.includes(l.key) ? 'active' : ''}"
+                    data-lang="${l.key}"
+                    onclick="LanguageSetup.toggle('${containerId}', '${l.key}')">
+              ${l.emoji} ${l.name}
+            </button>
+          `).join('');
+
+      const body = `
+        <div style="font-size: 14px; color: var(--text-2); line-height: 1.5; margin-bottom: 18px;">
+          To match you with the right pod and language exchange partner,
+          we need to know two things. It takes 10 seconds and you can
+          change it later.
+        </div>
+
+        <div class="lang-section">
+          <div class="lang-section-title">
+            What do you want to learn?
+            <span style="color: var(--danger);">*</span>
+          </div>
+          <div class="lang-section-sub">
+            Pick every Nigerian language you want to get better at.
+          </div>
+          <div class="lang-chips" id="ls-learning">
+            ${renderChips('ls-learning', learning, null)}
+          </div>
+          <div class="lang-error" id="ls-learning-err"></div>
+        </div>
+
+        <div class="lang-section" style="margin-top: 18px;">
+          <div class="lang-section-title">
+            What can you help others with?
+            <span style="color: var(--danger);">*</span>
+          </div>
+          <div class="lang-section-sub">
+            Even a little counts — English is common. Language exchange
+            is two-way: you teach, they teach.
+          </div>
+          <div class="lang-chips" id="ls-teaching">
+            ${renderChips('ls-teaching', teaching, null)}
+          </div>
+          <div class="lang-error" id="ls-teaching-err"></div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 22px;">
+          <button class="btn btn-ghost" style="flex: 1;" onclick="LanguageSetup.cancel()">
+            Not now
+          </button>
+          <button class="btn" id="ls-save" style="flex: 2;" onclick="LanguageSetup.save()">
+            Save &amp; match me
+          </button>
+        </div>
+      `;
+
+      Header._modal('Set up your languages', body);
+
+      // Auto-check the primary language in both sections (as a suggestion)
+      // since most users who are learning Yoruba can also give basic Yoruba help.
+      setTimeout(() => {
+        ['ls-learning', 'ls-teaching'].forEach(id => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const hasAny = el.querySelector('.lang-chip.active');
+          if (!hasAny && primaryLang) {
+            const btn = el.querySelector(`[data-lang="${primaryLang}"]`);
+            if (btn) btn.classList.add('active');
+          }
+        });
+      }, 50);
+    });
+  },
+
+  toggle(containerId, langKey) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const btn = container.querySelector(`[data-lang="${langKey}"]`);
+    if (!btn) return;
+    btn.classList.toggle('active');
+    // Clear any error when they interact
+    const err = document.getElementById(containerId + '-err');
+    if (err) err.textContent = '';
+  },
+
+  cancel() {
+    if (this._pendingResolve) this._pendingResolve(null);
+    this._pendingResolve = null;
+    closeModal('cw-generic-modal');
+  },
+
+  async save() {
+    const learning = Array.from(
+      document.querySelectorAll('#ls-learning .lang-chip.active')
+    ).map(b => b.dataset.lang);
+
+    const teaching = Array.from(
+      document.querySelectorAll('#ls-teaching .lang-chip.active')
+    ).map(b => b.dataset.lang);
+
+    // Validation
+    if (learning.length === 0) {
+      document.getElementById('ls-learning-err').textContent =
+        'Pick at least one language you want to learn.';
+      return;
+    }
+    if (teaching.length === 0) {
+      document.getElementById('ls-teaching-err').textContent =
+        'Pick at least one language you can help with.';
+      return;
+    }
+
+    const btn = document.getElementById('ls-save');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-inline"></span> Saving…';
+
+    try {
+      await Backend.updateProfile({
+        learningLanguages: learning,
+        teachingLanguages: teaching
+      });
+
+      // Refresh user state so subsequent calls see the new values
+      const me = await Backend.me();
+      State.user = me.user || me;
+      Auth.setUser(State.user);
+
+      if (this._pendingResolve) {
+        this._pendingResolve({ learning, teaching });
+      }
+      this._pendingResolve = null;
+      closeModal('cw-generic-modal');
+      showToast('Languages saved ✨', 'success');
+    } catch (e) {
+      console.error('Language setup save failed:', e);
+      btn.disabled = false;
+      btn.textContent = 'Save & match me';
+      document.getElementById('ls-learning-err').textContent =
+        e.message || 'Could not save. Check your connection.';
+    }
+  },
+
+  /**
+   * Convenience: returns true if the user has enough languages set up.
+   */
+  hasLanguages() {
+    const u = State.user || {};
+    const learning = u.learningLanguages || [];
+    const teaching = u.teachingLanguages || [];
+    return learning.length > 0 && teaching.length > 0;
+  },
+
+  /**
+   * Ensure the user has languages set up. If not, prompt them.
+   * Returns true if ready to match, false if user cancelled.
+   */
+  async ensure() {
+    if (this.hasLanguages()) return true;
+    const result = await this.prompt();
+    return result !== null;
+  }
+};
+
+// Expose globally
+window.LanguageSetup = LanguageSetup;
+
   async loadProgress(language) {
     if (!Auth.isLoggedIn()) return null;
     try {
