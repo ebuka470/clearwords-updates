@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2E8B57">
+<title>ClearWords — Welcome</title>
+<style>
+/* ============ DESIGN TOKENS (matched to learn/practice) ============ */
+:root {
+  --brand: #2E8B57;
+  --brand-rgb: 46,139,87;
+  --gold: #E8B33C;
+  --gold-rgb: 232,179,60;
+  --indigo: #3B5BA5;
+  --indigo-rgb: 59,91,165;
+  --terracotta: #D97757;
+  --terracotta-rgb: 217,119,87;
+  --danger: #E5484D;
+  --bg: #FAF7F2;
+  --bg-elev: #FFFFFF;
+  --card: #FFFFFF;
+  --text: #1C1E21;
+  --text-2: #6B6F76;
+  --text-3: #9AA0A6;
+  --border: #E5E1D8;
+  --border-strong: #D4CFC2;
+  --shadow: 0 2px 12px rgba(28,30,33,0.06);
+  --shadow-lg: 0 8px 28px rgba(28,30,33,0.10);
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+[data-theme="dark"] {
+  --bg: #0F1114;
+  --bg-elev: #16191D;
+  --card: #1A1D21;
+  --text: #F2EFE9;
+  --text-2: #9AA0A6;
+  --text-3: #6B6F76;
+  --border: #2A2E33;
+  --border-strong: #3A3E44;
+  --shadow: 0 2px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.6);
+  --brand: #4CAF7A;
+  --brand-rgb: 76,175,122;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: contain;
+  overflow-x: hidden;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea { font-family: inherit; }
+::-webkit-scrollbar { width: 0; height: 0; }
+
+/* ============ LAYOUT ============ */
+.screen {
+  display: none;
+  min-height: 100dvh;
+  flex-direction: column;
+  padding: calc(20px + var(--safe-top)) 22px calc(28px + var(--safe-bot));
+  max-width: 520px;
+  margin: 0 auto;
+  width: 100%;
+}
+.screen.active { display: flex; }
+
+/* ============ TOP BAR ============ */
+.topbar {
+  display: flex; align-items: center; gap: 12px;
+  min-height: 36px;
+  margin-bottom: 8px;
+}
+.back-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); font-size: 20px;
+}
+.back-btn:active { background: var(--border); }
+.progress-dots { display: flex; gap: 6px; margin-left: auto; }
+.progress-dots span {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--border-strong);
+  transition: background .2s;
+}
+.progress-dots span.active { background: var(--brand); width: 20px; border-radius: 4px; }
+
+/* ============ WELCOME ============ */
+.welcome {
+  flex: 1;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center;
+  padding: 20px 0;
+}
+.welcome-logo {
+  font-size: 84px; line-height: 1;
+  margin-bottom: 20px;
+  animation: logoPop .6s cubic-bezier(.2,.9,.3,1.4);
+}
+@keyframes logoPop {
+  0% { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.welcome h1 {
+  font-size: 28px; font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.15;
+  max-width: 320px;
+}
+.welcome p {
+  font-size: 15px; color: var(--text-2);
+  margin-top: 12px; max-width: 320px; line-height: 1.5;
+}
+.welcome-actions {
+  margin-top: 34px; width: 100%; max-width: 320px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+/* ============ QUESTION HEADER ============ */
+.q-header { margin: 20px 0 24px; }
+.q-eyebrow {
+  font-size: 12px; font-weight: 800;
+  letter-spacing: .08em; color: var(--brand);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.q-title {
+  font-size: 24px; font-weight: 800;
+  letter-spacing: -0.02em; line-height: 1.2;
+}
+.q-sub {
+  font-size: 14.5px; color: var(--text-2);
+  margin-top: 6px; line-height: 1.5;
+}
+
+/* ============ CHOICE CARDS ============ */
+.choices {
+  display: flex; flex-direction: column; gap: 10px;
+  flex: 1;
+}
+.choice {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  text-align: left;
+  transition: border-color .15s, background .15s, transform .08s;
+  min-height: 62px;
+}
+.choice:active { transform: scale(.985); }
+.choice.selected {
+  border-color: var(--brand);
+  background: rgba(var(--brand-rgb), 0.06);
+}
+.choice-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  background: rgba(var(--brand-rgb), 0.12);
+}
+.choice-icon.tint-gold { background: rgba(var(--gold-rgb), 0.16); }
+.choice-icon.tint-indigo { background: rgba(var(--indigo-rgb), 0.14); }
+.choice-icon.tint-terracotta { background: rgba(var(--terracotta-rgb), 0.16); }
+.choice-icon.tint-danger { background: rgba(229,72,77,0.12); }
+.choice-body { flex: 1; min-width: 0; }
+.choice-title { font-weight: 700; font-size: 15px; }
+.choice-sub { font-size: 12.5px; color: var(--text-2); margin-top: 2px; line-height: 1.35; }
+.choice-check {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: transparent; font-size: 13px; font-weight: 800;
+  transition: all .15s;
+}
+.choice.selected .choice-check {
+  border-color: var(--brand); background: var(--brand); color: #fff;
+}
+.choice.disabled { opacity: .55; pointer-events: none; }
+.choice.language-locked .choice-sub::after {
+  content: ' · Coming soon';
+  font-size: 11px; font-weight: 700;
+  color: var(--text-3);
+}
+
+/* ============ FORM ============ */
+.form { display: flex; flex-direction: column; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label {
+  font-size: 13px; font-weight: 700; color: var(--text-2);
+  display: flex; align-items: center; gap: 4px;
+}
+.field label .req { color: var(--danger); font-weight: 800; }
+.field input, .field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  border-radius: 12px;
+  background: var(--bg-elev);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  transition: border-color .15s, box-shadow .15s;
+  -webkit-appearance: none;
+}
+.field input:focus, .field textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(var(--brand-rgb), 0.12);
+}
+.field input:disabled { opacity: .6; }
+.field-hint { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.field-error { font-size: 12.5px; color: var(--danger); margin-top: 2px; min-height: 16px; }
+
+/* ============ FOOTER ACTIONS ============ */
+.actions {
+  margin-top: 24px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.actions-row {
+  display: flex; gap: 10px;
+}
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 15px 22px;
+  border-radius: var(--radius-full);
+  font-weight: 700; font-size: 15.5px;
+  background: var(--brand); color: #fff;
+  min-height: 52px;
+  transition: transform .08s, opacity .15s;
+}
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: var(--text); border: 1.5px solid var(--border-strong); }
+.btn-block { width: 100%; }
+.btn .spinner-inline {
+  width: 16px; height: 16px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============ LINK STYLE ============ */
+.link-row {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-2);
+  margin-top: 16px;
+}
+.link-row a {
+  color: var(--brand); font-weight: 700; text-decoration: none;
+  cursor: pointer;
+}
+
+/* ============ ERROR / INFO PANELS ============ */
+.notice {
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin-top: 14px;
+}
+.notice-error {
+  background: rgba(229,72,77,0.08);
+  border: 1px solid rgba(229,72,77,0.3);
+  color: var(--danger);
+}
+.notice-warn {
+  background: rgba(var(--gold-rgb), 0.10);
+  border: 1px solid rgba(var(--gold-rgb), 0.4);
+  color: var(--text);
+}
+.notice-info {
+  background: rgba(var(--brand-rgb), 0.06);
+  border: 1px solid rgba(var(--brand-rgb), 0.28);
+  color: var(--text);
+}
+.notice strong { font-weight: 800; }
+.notice .retry {
+  margin-top: 10px;
+  display: inline-block;
+  font-weight: 700; color: var(--brand); text-decoration: underline;
+  cursor: pointer;
+  font-size: 13.5px;
+}
+
+/* ============ FAMILY EXPLAINER ============ */
+.family-note {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(var(--gold-rgb), 0.08);
+  border: 1px solid rgba(var(--gold-rgb), 0.35);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+.family-note strong { color: var(--text); }
+
+/* ============ PASSWORD TOGGLE ============ */
+.pw-wrap { position: relative; }
+.pw-wrap input { padding-right: 52px; }
+.pw-toggle {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-3); font-size: 15px;
+  border-radius: 50%;
+}
+
+/* ============ WELCOME BACK GREETING (login) ============ */
+.login-hero { text-align: center; padding: 30px 0 26px; }
+.login-hero .logo { font-size: 60px; margin-bottom: 12px; }
+.login-hero h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.login-hero p { font-size: 14.5px; color: var(--text-2); margin-top: 6px; }
+
+@media (max-width: 380px) {
+  .welcome h1 { font-size: 24px; }
+  .q-title { font-size: 21px; }
+  .welcome-logo { font-size: 68px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== 1. WELCOME ==================== -->
+<section class="screen active" id="s-welcome">
+  <div class="welcome">
+    <div class="welcome-logo">🗣️</div>
+    <h1>Keep the language close.</h1>
+    <p>Learn Nigerian languages through words, conversations, and everyday life — for you, and for the people you love.</p>
+    <div class="welcome-actions">
+      <button class="btn btn-block" onclick="Onb.go('s-purpose')">
+        Get started →
+      </button>
+      <button class="btn btn-ghost btn-block" onclick="Onb.go('s-login')">
+        I already have an account
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2. PURPOSE ==================== -->
+<section class="screen" id="s-purpose">
+  <div class="topbar">
+    <button class="back-btn" onclick="Onb.back('s-welcome')">←</button>
+    <div class="progress-dots" id="dots-purpose"></div>
+  </div>
+  <div class="q-header">
+    <div class="q-eyebrow">Step 1</div>
+    <div class="q-title">What brings you to ClearWords?</div>
+    <div class="q-sub">This helps us shape your journey.</div>
+  </div>
+  <div class="choices" id="choices-purpose"></div>
+  <div class="actions">
+    <button class="btn btn-block" id="next-purpose" onclick="Onb.go('s-learning-for')" disabled>Continue →</button>
+  </div>
+</section>
+
+<!-- ==================== 3. LEARNING FOR ==================== -->
+<section class="screen" id="s-learning-for">
+  <div class="topbar">
+    <button class="back-btn" onclick="Onb.back('s-purpose')">←</button>
+    <div class="progress-dots" id="dots-learning-for"></div>
+  </div>
+  <div class="q-header">
+    <div class="q-eyebrow">Step 2</div>
+    <div class="q-title">Who are you learning for?</div>
+  </div>
+  <div class="choices" id="choices-learning-for"></div>
+  <div class="actions">
+    <button class="btn btn-block" id="next-learning-for" onclick="Onb.go('s-account-type')" disabled>Continue →</button>
+  </div>
+</section>
+
+<!-- ==================== 4. ACCOUNT TYPE (shared/family) ==================== -->
+<section class="screen" id="s-account-type">
+  <div class="topbar">
+    <button class="back-btn" onclick="Onb.back('s-learning-for')">←</button>
+    <div class="progress-dots" id="dots-account-type"></div>
+  </div>
+  <div class="q-header">
+    <div class="q-eyebrow">Step 3</div>
+    <div class="q-title">How will you use ClearWords?</div>
+    <div class="q-sub">You can change this later in Settings.</div>
+  </div>
+  <div class="choices" id="choices-account-type"></div>
+  <div class="family-note" id="family-note" style="display:none;">
+    <strong>Shared accounts start with Premium family access.</strong><br>
+    Everyone in your family gets their own learner profile — progress, streak, and lessons stay separate.
+  </div>
+  <div class="actions">
+    <button class="btn btn-block" id="next-account-type" onclick="Onb.go('s-language')" disabled>Continue →</button>
+  </div>
+</section>
+
+<!-- ==================== 5. LANGUAGE ==================== -->
+<section class="screen" id="s-language">
+  <div class="topbar">
+    <button class="back-btn" onclick="Onb.back('s-account-type')">←</button>
+    <div class="progress-dots" id="dots-language"></div>
+  </div>
+  <div class="q-header">
+    <div class="q-eyebrow">Step 4</div>
+    <div class="q-title">What language connects you to home?</div>
+    <div class="q-sub">You can add more languages later.</div>
+  </div>
+  <div class="choices" id="choices-language"></div>
+  <div class="actions">
+    <button class="btn btn-block" id="next-language" onclick="Onb.go('s-goals')" disabled>Continue →</button>
+  </div>
+</section>
+
+<!-- ==================== 6. GOALS (multi-select) ==================== -->
+<section class="screen" id="s-goals">
+  <div class="topbar">
+    <button class="back-btn" onclick="Onb.back('s-language')">←</button>
+    <div class="progress-dots" id="dots-goals"></div>
+  </div>
+  <div class="q-header">
+    <div class="q-eyebrow">Step 5</div>
+    <div class="q-title">What do you want to do?</div>
+    <div class="q-sub">Pick everything that feels true.</div>
+  </div>
+  <div class="choices" id="choices-goals"></div>
+  <div class="actions">
+    <button class="btn btn-block" id="next-goals" onclick="Onb.go('s-level')" disabled>Continue →</button>
+  </div>
+</section>
+
+<!-- ==================== 7. LEVEL ==================== -->
+<section class="screen" id="s-level">
+  <div class="topbar">
+    <button class="back-btn" onclick="Onb.back('s-goals')">←</button>
+    <div class="progress-dots" id="dots-level"></div>
+  </div>
+  <div class="q-header">
+    <div class="q-eyebrow">Step 6</div>
+    <div class="q-title">How much do you already know?</div>
+    <div class="q-sub">Be honest — we'll adjust as you go.</div>
+  </div>
+  <div class="choices" id="choices-level"></div>
+  <div class="actions">
+    <button class="btn btn-block" id="next-level" onclick="Onb.go('s-signup')" disabled>Continue →</button>
+  </div>
+</section>
+
+<!-- ==================== 8. SIGNUP ==================== -->
+<section class="screen" id="s-signup">
+  <div class="topbar">
+    <button class="back-btn" onclick="Onb.back('s-level')">←</button>
+  </div>
+  <div class="q-header">
+    <div class="q-eyebrow">Last step</div>
+    <div class="q-title">Create your account</div>
+    <div class="q-sub">We'll personalize your learning and keep your progress safe.</div>
+  </div>
+  <form class="form" id="signup-form" onsubmit="Onb.submitSignup(event)">
+    <div class="field">
+      <label for="su-fullname">Full name <span class="req">*</span></label>
+      <input type="text" id="su-fullname" autocomplete="name" placeholder="Your full name" required>
+      <div class="field-error" id="su-fullname-err"></div>
+    </div>
+    <div class="field">
+      <label for="su-email">Email <span class="req">*</span></label>
+      <input type="email" id="su-email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
+      <div class="field-error" id="su-email-err"></div>
+    </div>
+    <div class="field">
+      <label for="su-password">Password <span class="req">*</span></label>
+      <div class="pw-wrap">
+        <input type="password" id="su-password" autocomplete="new-password" placeholder="At least 6 characters" minlength="6" required>
+        <button type="button" class="pw-toggle" onclick="Onb.togglePw('su-password', this)">👁</button>
+      </div>
+      <div class="field-error" id="su-password-err"></div>
+    </div>
+    <div class="field">
+      <label for="su-referral">Referral code <span style="color: var(--text-3); font-weight: 500;">(optional)</span></label>
+      <input type="text" id="su-referral" autocomplete="off" placeholder="e.g. CWABC123" maxlength="20" style="text-transform: uppercase;">
+      <div class="field-hint">If a friend invited you, enter their code.</div>
+    </div>
+    <div class="actions" style="margin-top: 8px;">
+      <button type="submit" class="btn btn-block" id="signup-btn">
+        <span id="signup-btn-label">Create my account</span>
+      </button>
+    </div>
+    <div id="signup-notice" style="display: none;"></div>
+    <div class="link-row">
+      Already have an account? <a onclick="Onb.go('s-login')">Log in</a>
+    </div>
+  </form>
+</section>
+
+<!-- ==================== 9. LOGIN ==================== -->
+<section class="screen" id="s-login">
+  <div class="topbar">
+    <button class="back-btn" onclick="Onb.back('s-welcome')">←</button>
+  </div>
+  <div class="login-hero">
+    <div class="logo">🗣️</div>
+    <h1>Welcome back.</h1>
+    <p>Log in to continue your journey.</p>
+  </div>
+  <form class="form" id="login-form" onsubmit="Onb.submitLogin(event)">
+    <div class="field">
+      <label for="li-email">Email</label>
+      <input type="email" id="li-email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
+      <div class="field-error" id="li-email-err"></div>
+    </div>
+    <div class="field">
+      <label for="li-password">Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="li-password" autocomplete="current-password" placeholder="Your password" required>
+        <button type="button" class="pw-toggle" onclick="Onb.togglePw('li-password', this)">👁</button>
+      </div>
+      <div class="field-error" id="li-password-err"></div>
+    </div>
+    <div class="actions" style="margin-top: 8px;">
+      <button type="submit" class="btn btn-block" id="login-btn">
+        <span id="login-btn-label">Log in</span>
+      </button>
+    </div>
+    <div id="login-notice" style="display: none;"></div>
+    <div class="link-row">
+      New to ClearWords? <a onclick="Onb.go('s-welcome')">Get started</a>
+    </div>
+  </form>
+</section>
+
+<script src="shared.js"></script>
+<script>
+/* ============================================================
+   ONBOARDING FLOW
+   ============================================================ */
+const Onb = {
+  // Local onboarding state — persisted so a user who reloads mid-flow
+  // doesn't lose their answers.
+  data: {
+    purpose: null,
+    learningFor: null,
+    accountType: null,
+    language: null,
+    goals: [],
+    level: null
+  },
+
+  // Which step index is "current" for the dot indicator (0-5)
+  stepOrder: ['s-purpose', 's-learning-for', 's-account-type', 's-language', 's-goals', 's-level'],
+
+  /* ---------- Boot ---------- */
+  init() {
+    // Theme
+    State.setTheme(State.theme);
+
+    // If already logged in, skip straight to learn.html
+    if (Auth.isLoggedIn()) {
+      location.replace('learn.html');
+      return;
+    }
+
+    // Restore any partial progress
+    try {
+      const saved = JSON.parse(localStorage.getItem('cw_onboarding_partial') || 'null');
+      if (saved) this.data = { ...this.data, ...saved };
+    } catch {}
+
+    // Render every screen's content
+    this.renderPurpose();
+    this.renderLearningFor();
+    this.renderAccountType();
+    this.renderLanguage();
+    this.renderGoals();
+    this.renderLevel();
+    this.renderDots();
+
+    // Restore selections visually
+    this.restoreSelections();
+  },
+
+  /* ---------- Navigation ---------- */
+  go(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(screenId);
+    if (el) {
+      el.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+    // Update URL hash so back button within onboarding works
+    if (location.hash !== '#' + screenId) {
+      history.pushState({ screen: screenId }, '', '#' + screenId);
+    }
+  },
+
+  back(screenId) {
+    this.go(screenId);
+  },
+
+  /* ---------- Dots ---------- */
+  renderDots() {
+    this.stepOrder.forEach((id, idx) => {
+      const el = document.getElementById('dots-' + id.replace('s-', ''));
+      if (!el) return;
+      el.innerHTML = this.stepOrder.map((_, i) =>
+        `<span class="${i <= idx ? 'active' : ''}"></span>`
+      ).join('');
+    });
+  },
+
+  /* ---------- Persistence ---------- */
+  savePartial() {
+    try { localStorage.setItem('cw_onboarding_partial', JSON.stringify(this.data)); } catch {}
+  },
+
+  restoreSelections() {
+    // Restore visually by re-selecting whichever values exist
+    if (this.data.purpose) this.markSelected('choices-purpose', this.data.purpose);
+    if (this.data.learningFor) this.markSelected('choices-learning-for', this.data.learningFor);
+    if (this.data.accountType) this.markSelected('choices-account-type', this.data.accountType);
+    if (this.data.language) this.markSelected('choices-language', this.data.language);
+    this.data.goals.forEach(g => this.markSelected('choices-goals', g));
+    if (this.data.level) this.markSelected('choices-level', this.data.level);
+
+    // Enable next buttons
+    ['purpose', 'learning-for', 'account-type', 'language', 'level'].forEach(k => {
+      const key = k === 'learning-for' ? 'learningFor'
+                : k === 'account-type' ? 'accountType'
+                : k;
+      const btn = document.getElementById('next-' + k);
+      if (btn && this.data[key]) btn.disabled = false;
+    });
+    const goalsBtn = document.getElementById('next-goals');
+    if (goalsBtn && this.data.goals.length) goalsBtn.disabled = false;
+  },
+
+  markSelected(containerId, value) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.querySelectorAll('.choice').forEach(c => {
+      if (c.dataset.value === String(value)) c.classList.add('selected');
+    });
+  },
+
+  /* ============================================================
+     STEP 1 — PURPOSE
+     ============================================================ */
+  renderPurpose() {
+    const options = [
+      { v: 'heritage',    icon: '🌳', title: 'My heritage',  sub: 'Reconnect with the language of my family' },
+      { v: 'family',      icon: '👨‍👩‍👧‍👦', title: 'My family',     sub: 'Communicate with relatives' },
+      { v: 'self',        icon: '🌟', title: 'For myself',   sub: 'Personal growth and curiosity' },
+      { v: 'child',       icon: '🧒', title: 'My child',     sub: 'Raise them knowing their language' },
+      { v: 'study',       icon: '📚', title: 'School / study', sub: 'Academic or research interest' }
+    ];
+    this.renderChoices('choices-purpose', options, val => {
+      this.data.purpose = val;
+      this.savePartial();
+      document.getElementById('next-purpose').disabled = false;
+    });
+  },
+
+  /* ============================================================
+     STEP 2 — LEARNING FOR
+     ============================================================ */
+  renderLearningFor() {
+    const options = [
+      { v: 'myself',   icon: '🙋', title: 'Myself' },
+      { v: 'child',    icon: '🧒', title: 'My child' },
+      { v: 'family',   icon: '👨‍👩‍👧', title: 'My family' },
+      { v: 'both',     icon: '👥', title: 'Me and my family' }
+    ];
+    this.renderChoices('choices-learning-for', options, val => {
+      this.data.learningFor = val;
+      this.savePartial();
+      document.getElementById('next-learning-for').disabled = false;
+    });
+  },
+
+  /* ============================================================
+     STEP 3 — ACCOUNT TYPE
+     ============================================================ */
+  renderAccountType() {
+    const options = [
+      { v: 'personal', icon: '👤', title: 'Just me',     sub: 'Personal learning journey' },
+      { v: 'family',   icon: '👨‍👩‍👧', title: 'My family', sub: 'Shared account with individual learner spaces' }
+    ];
+    this.renderChoices('choices-account-type', options, val => {
+      this.data.accountType = val;
+      this.savePartial();
+      document.getElementById('next-account-type').disabled = false;
+      const note = document.getElementById('family-note');
+      if (note) note.style.display = val === 'family' ? 'block' : 'none';
+    });
+  },
+
+  /* ============================================================
+     STEP 4 — LANGUAGE
+     ============================================================ */
+  renderLanguage() {
+    const options = [
+      { v: 'yoruba',  icon: '👑', title: 'Yorùbá',   sub: '44M+ speakers' },
+      { v: 'igbo',    icon: '🌍', title: 'Igbo',     sub: '34M+ speakers' },
+      { v: 'hausa',   icon: '🕌', title: 'Hausa',    sub: '50M+ speakers' },
+      { v: 'pidgin',  icon: '🗣️', title: 'Nigerian Pidgin', sub: '75M+ speakers' },
+      { v: 'urhobo',  icon: '⚓', title: 'Urhobo',   sub: '2M+ speakers', locked: true },
+      { v: 'itsekiri',icon: '⚖️', title: 'Itsekiri', sub: '1M+ speakers', locked: true }
+    ];
+    this.renderChoices('choices-language', options, val => {
+      this.data.language = val;
+      this.savePartial();
+      document.getElementById('next-language').disabled = false;
+    }, true);
+  },
+
+  /* ============================================================
+     STEP 5 — GOALS (multi-select)
+     ============================================================ */
+  renderGoals() {
+    const options = [
+      { v: 'talk_family',      icon: '💬', title: 'Talk with family' },
+      { v: 'understand',       icon: '👂', title: 'Understand conversations' },
+      { v: 'speak',            icon: '🎤', title: 'Speak confidently' },
+      { v: 'pronunciation',    icon: '🔊', title: 'Improve pronunciation' },
+      { v: 'culture',          icon: '🌍', title: 'Understand culture' },
+      { v: 'read_write',       icon: '📖', title: 'Read and write' },
+      { v: 'teach_child',      icon: '🧒', title: 'Teach my child' },
+      { v: 'visit_nigeria',    icon: '🇳🇬', title: 'Use it while visiting Nigeria' }
+    ];
+    const container = document.getElementById('choices-goals');
+    container.innerHTML = options.map(o => `
+      <button type="button" class="choice" data-value="${o.v}" onclick="Onb.toggleGoal('${o.v}', this)">
+        <div class="choice-icon">${o.icon}</div>
+        <div class="choice-body">
+          <div class="choice-title">${o.title}</div>
+        </div>
+        <div class="choice-check">✓</div>
+      </button>`).join('');
+  },
+
+  toggleGoal(value, btn) {
+    const arr = this.data.goals;
+    const idx = arr.indexOf(value);
+    if (idx >= 0) { arr.splice(idx, 1); btn.classList.remove('selected'); }
+    else { arr.push(value); btn.classList.add('selected'); }
+    this.savePartial();
+    document.getElementById('next-goals').disabled = arr.length === 0;
+  },
+
+  /* ============================================================
+     STEP 6 — LEVEL
+     ============================================================ */
+  renderLevel() {
+    const options = [
+      { v: 'zero',       icon: '🌱', title: 'Starting from zero' },
+      { v: 'few_words',  icon: '🌿', title: 'I know a few words' },
+      { v: 'some',       icon: '🌳', title: 'I understand some' },
+      { v: 'little',     icon: '💧', title: 'I can speak a little' },
+      { v: 'comfortable',icon: '🔥', title: "I'm already comfortable" }
+    ];
+    this.renderChoices('choices-level', options, val => {
+      this.data.level = val;
+      this.savePartial();
+      document.getElementById('next-level').disabled = false;
+    });
+  },
+
+  /* ============================================================
+     RENDER HELPERS
+     ============================================================ */
+  renderChoices(containerId, options, onSelect, singleSelect = true) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = options.map(o => `
+      <button type="button" class="choice ${o.locked ? 'disabled language-locked' : ''}"
+              data-value="${o.v}"
+              ${o.locked ? 'aria-disabled="true"' : ''}
+              onclick="Onb.selectChoice('${containerId}', '${o.v}', this, ${singleSelect})">
+        <div class="choice-icon ${o.tint ? 'tint-' + o.tint : ''}">${o.icon}</div>
+        <div class="choice-body">
+          <div class="choice-title">${o.title}</div>
+          ${o.sub ? `<div class="choice-sub">${o.sub}</div>` : ''}
+        </div>
+        <div class="choice-check">✓</div>
+      </button>`).join('');
+    this._handlers = this._handlers || {};
+    this._handlers[containerId] = onSelect;
+  },
+
+  selectChoice(containerId, value, btn, singleSelect) {
+    const container = document.getElementById(containerId);
+    if (singleSelect) {
+      container.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+    }
+    btn.classList.add('selected');
+    const handler = this._handlers && this._handlers[containerId];
+    if (handler) handler(value);
+  },
+
+  /* ============================================================
+     SIGNUP
+     ============================================================ */
+  togglePw(inputId, btn) {
+    const inp = document.getElementById(inputId);
+    if (!inp) return;
+    const isPw = inp.type === 'password';
+    inp.type = isPw ? 'text' : 'password';
+    btn.textContent = isPw ? '🙈' : '👁';
+  },
+
+  validateSignup() {
+    const fullname = document.getElementById('su-fullname').value.trim();
+    const email = document.getElementById('su-email').value.trim().toLowerCase();
+    const password = document.getElementById('su-password').value;
+    let ok = true;
+
+    const errF = document.getElementById('su-fullname-err');
+    const errE = document.getElementById('su-email-err');
+    const errP = document.getElementById('su-password-err');
+    errF.textContent = ''; errE.textContent = ''; errP.textContent = '';
+
+    if (!fullname) { errF.textContent = 'Full name is required.'; ok = false; }
+    if (!email) { errE.textContent = 'Email is required.'; ok = false; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errE.textContent = 'Please enter a valid email.'; ok = false; }
+    if (!password) { errP.textContent = 'Password is required.'; ok = false; }
+    else if (password.length < 6) { errP.textContent = 'Password must be at least 6 characters.'; ok = false; }
+
+    return ok ? { fullname, email, password } : null;
+  },
+
+  async submitSignup(e) {
+    e.preventDefault();
+    const notice = document.getElementById('signup-notice');
+    const btn = document.getElementById('signup-btn');
+    const label = document.getElementById('signup-btn-label');
+    notice.style.display = 'none';
+
+    const v = this.validateSignup();
+    if (!v) return;
+
+    // UI lock
+    btn.disabled = true;
+    label.innerHTML = '<span class="spinner-inline"></span> Creating your account…';
+
+    const referral = document.getElementById('su-referral').value.trim().toUpperCase();
+
+    const payload = {
+      fullName: v.fullname,
+      email: v.email,
+      password: v.password,
+      // Optional fields — backend ignores anything it doesn't recognize,
+      // and each of these has a fallback on the server side.
+      primaryLanguage: this.data.language || 'yoruba',
+      segment: this.data.purpose || null,
+      accountType: this.data.accountType || 'personal',
+      learningFor: this.data.learningFor || 'myself',
+      goals: this.data.goals || [],
+      level: this.data.level || 'zero'
+    };
+    if (referral) payload.referralCode = referral;
+
+    try {
+      const res = await cwSignup(payload);
+      // Contract: { token, user }
+      if (!res || !res.token) throw new Error('Unexpected signup response');
+
+      // Success — clear partial onboarding, ship them to the app
+      try { localStorage.removeItem('cw_onboarding_partial'); } catch {}
+      showToast('Welcome to ClearWords! 🎉', 'success');
+
+      // Give the toast a beat, then go
+      setTimeout(() => { location.replace('learn.html'); }, 400);
+    } catch (err) {
+      console.error('Signup failed:', err);
+      btn.disabled = false;
+      label.textContent = 'Create my account';
+
+      let msg = err.message || 'Something went wrong.';
+      let hint = '';
+      if (err.status === 409 || /already|exists/i.test(msg)) {
+        msg = 'An account with this email already exists.';
+        hint = ` <a class="retry" onclick="Onb.go('s-login');document.getElementById('li-email').value='${v.email}';">Log in instead →</a>`;
+      } else if (err.status === 429) {
+        msg = 'Too many signup attempts. Please wait a moment and try again.';
+      } else if (err.code === 'timeout' || err.code === 'network') {
+        msg = 'We couldn\u2019t reach the server. Check your connection and try again.';
+        hint = ` <a class="retry" onclick="Onb.submitSignup(event);">Retry →</a>`;
+      }
+
+      notice.className = 'notice notice-error';
+      notice.style.display = 'block';
+      notice.innerHTML = `<strong>${esc(msg)}</strong>${hint}`;
+    }
+  },
+
+  /* ============================================================
+     LOGIN
+     ============================================================ */
+  async submitLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('li-email').value.trim().toLowerCase();
+    const password = document.getElementById('li-password').value;
+    const notice = document.getElementById('login-notice');
+    const btn = document.getElementById('login-btn');
+    const label = document.getElementById('login-btn-label');
+
+    notice.style.display = 'none';
+    const errE = document.getElementById('li-email-err');
+    const errP = document.getElementById('li-password-err');
+    errE.textContent = ''; errP.textContent = '';
+
+    if (!email) { errE.textContent = 'Email is required.'; return; }
+    if (!password) { errP.textContent = 'Password is required.'; return; }
+
+    btn.disabled = true;
+    label.innerHTML = '<span class="spinner-inline"></span> Logging in…';
+
+    try {
+      const res = await cwLogin(email, password);
+      if (!res || !res.token) throw new Error('Unexpected login response');
+      showToast('Welcome back!', 'success');
+      setTimeout(() => { location.replace('learn.html'); }, 300);
+    } catch (err) {
+      console.error('Login failed:', err);
+      btn.disabled = false;
+      label.textContent = 'Log in';
+
+      let msg = err.message || 'Something went wrong.';
+      if (err.status === 401) msg = 'Incorrect email or password.';
+      else if (err.status === 429) msg = 'Too many attempts. Please wait a moment and try again.';
+      else if (err.code === 'timeout' || err.code === 'network') msg = 'We couldn\u2019t reach the server. Check your connection and try again.';
+
+      notice.className = 'notice notice-error';
+      notice.style.display = 'block';
+      notice.innerHTML = `<strong>${esc(msg)}</strong> <a class="retry" onclick="Onb.submitLogin(event);">Retry →</a>`;
+    }
+  }
+};
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => Onb.init());
+
+// Handle back button inside the onboarding wizard
+window.addEventListener('popstate', (e) => {
+  const screenId = (e.state && e.state.screen) || (location.hash || '#s-welcome').slice(1);
+  if (document.getElementById(screenId)) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+});
+
+window.Onb = Onb;
+</script>
+</body>
+</html>

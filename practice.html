@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2E8B57">
+<title>ClearWords — Practice</title>
+<style>
+/* ============ DESIGN TOKENS (must match learn.html) ============ */
+:root {
+  --brand: #2E8B57;
+  --brand-rgb: 46,139,87;
+  --gold: #E8B33C;
+  --gold-rgb: 232,179,60;
+  --indigo: #3B5BA5;
+  --indigo-rgb: 59,91,165;
+  --terracotta: #D97757;
+  --terracotta-rgb: 217,119,87;
+  --danger: #E5484D;
+  --bg: #FAF7F2;
+  --bg-elev: #FFFFFF;
+  --card: #FFFFFF;
+  --text: #1C1E21;
+  --text-2: #6B6F76;
+  --text-3: #9AA0A6;
+  --border: #E5E1D8;
+  --border-strong: #D4CFC2;
+  --shadow: 0 2px 12px rgba(28,30,33,0.06);
+  --shadow-lg: 0 8px 28px rgba(28,30,33,0.10);
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+[data-theme="dark"] {
+  --bg: #0F1114;
+  --bg-elev: #16191D;
+  --card: #1A1D21;
+  --text: #F2EFE9;
+  --text-2: #9AA0A6;
+  --text-3: #6B6F76;
+  --border: #2A2E33;
+  --border-strong: #3A3E44;
+  --shadow: 0 2px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.6);
+  --brand: #4CAF7A;
+  --brand-rgb: 76,175,122;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: contain;
+  padding-bottom: calc(84px + var(--safe-bot));
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+img, svg { display: block; max-width: 100%; }
+::-webkit-scrollbar { width: 0; height: 0; }
+
+/* ============ HEADER ============ */
+#cw-header {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: calc(12px + var(--safe-top)) 16px 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: saturate(180%) blur(12px);
+}
+.hdr-left, .hdr-right { display: flex; align-items: center; gap: 8px; }
+.lang-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border-radius: var(--radius-full);
+  background: var(--card); border: 1px solid var(--border);
+  font-size: 14px; font-weight: 700;
+}
+.lang-pill .chev { color: var(--text-3); font-size: 11px; }
+.icon-btn {
+  width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: var(--card); border: 1px solid var(--border);
+  position: relative; color: var(--text);
+}
+.streak-btn { width: auto; padding: 0 12px; gap: 4px; font-weight: 700; font-size: 13px; color: var(--gold); background: rgba(var(--gold-rgb), 0.12); border-color: rgba(var(--gold-rgb), 0.28); }
+.streak-icon { font-size: 14px; }
+.notif-dot {
+  position: absolute; top: 8px; right: 9px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--danger); border: 2px solid var(--card);
+}
+
+/* ============ PAGE ============ */
+.page { max-width: 520px; margin: 0 auto; padding: 0 16px; }
+.page-hero { padding: 22px 4px 18px; }
+.page-hero h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+.page-hero p { font-size: 14px; color: var(--text-2); margin-top: 4px; }
+
+.section-h { font-size: 13px; font-weight: 800; letter-spacing: .08em; color: var(--text-3); text-transform: uppercase; margin: 22px 4px 10px; }
+
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px;
+  margin-bottom: 12px; box-shadow: var(--shadow);
+}
+
+/* ============ PRACTICE METHOD CARDS ============ */
+.method-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px; border-radius: var(--radius);
+  background: var(--card); border: 1.5px solid var(--border);
+  width: 100%; text-align: left; transition: transform .08s, border-color .15s;
+  margin-bottom: 10px;
+}
+.method-card:active { transform: scale(.985); }
+.method-icon {
+  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+  background: rgba(var(--brand-rgb), 0.12);
+}
+.method-card.tint-indigo .method-icon { background: rgba(var(--indigo-rgb), 0.12); }
+.method-card.tint-gold .method-icon { background: rgba(var(--gold-rgb), 0.14); }
+.method-card.tint-terracotta .method-icon { background: rgba(var(--terracotta-rgb), 0.14); }
+.method-body { flex: 1; min-width: 0; }
+.method-title { font-weight: 800; font-size: 15px; }
+.method-desc { font-size: 12.5px; color: var(--text-2); margin-top: 3px; line-height: 1.4; }
+.method-chev { color: var(--text-3); font-size: 20px; }
+
+/* ============ USAGE BADGE ============ */
+.usage-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: 12px;
+  background: rgba(var(--brand-rgb), 0.06);
+  border: 1px solid rgba(var(--brand-rgb), 0.22);
+  font-size: 13px; font-weight: 600;
+  margin-bottom: 14px;
+}
+.usage-bar.warning { background: rgba(var(--gold-rgb), 0.08); border-color: rgba(var(--gold-rgb), 0.35); color: var(--gold); }
+.usage-bar.limit { background: rgba(229,72,77,0.08); border-color: rgba(229,72,77,0.35); color: var(--danger); }
+.usage-bar .label { flex: 1; }
+.usage-bar .count { font-weight: 800; }
+
+/* ============ BOTTOM NAV ============ */
+#cw-bottom-nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 8px 8px calc(8px + var(--safe-bot));
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  backdrop-filter: saturate(180%) blur(16px);
+  border-top: 1px solid var(--border);
+  max-width: 520px; margin: 0 auto;
+}
+.tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 6px 4px; border-radius: 10px;
+  color: var(--text-3); font-size: 11px; font-weight: 600;
+}
+.tab.active { color: var(--brand); }
+.tab svg { width: 22px; height: 22px; }
+.tab:active { transform: scale(.94); }
+
+/* ============ MODAL ============ */
+.cw-modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
+  display: none; align-items: flex-end; justify-content: center;
+}
+.cw-modal-overlay.active { display: flex; }
+.cw-modal {
+  width: 100%; max-width: 520px;
+  max-height: 88vh; display: flex; flex-direction: column;
+  background: var(--card); border-radius: 24px 24px 0 0;
+  animation: modalUp .25s ease;
+  border: 1px solid var(--border); border-bottom: none;
+}
+@keyframes modalUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.cw-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 12px; border-bottom: 1px solid var(--border); }
+.cw-modal-title { font-weight: 800; font-size: 16px; }
+.cw-modal-close { font-size: 26px; line-height: 1; color: var(--text-2); padding: 0 4px; }
+.cw-modal-body { padding: 16px 20px 24px; overflow-y: auto; }
+
+.lang-option {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 14px 16px; margin-bottom: 8px;
+  border-radius: 12px; border: 1.5px solid var(--border);
+  background: var(--bg-elev); text-align: left;
+}
+.lang-option.active { border-color: var(--brand); background: rgba(var(--brand-rgb), 0.08); }
+.lang-emoji { font-size: 22px; }
+.lang-name { flex: 1; font-weight: 700; font-size: 15px; }
+.lang-check { color: var(--brand); font-weight: 800; }
+
+.notif-item { display: flex; gap: 12px; padding: 12px; border-radius: 12px; background: var(--bg-elev); border: 1px solid var(--border); margin-bottom: 8px; }
+.notif-item.unread { border-color: rgba(var(--brand-rgb), 0.35); background: rgba(var(--brand-rgb), 0.05); }
+.notif-icon { font-size: 20px; flex-shrink: 0; }
+.notif-body { flex: 1; min-width: 0; }
+.notif-title { font-weight: 700; font-size: 13px; }
+.notif-text { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
+.notif-time { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+.modal-loading { padding: 40px; text-align: center; color: var(--text-2); font-size: 14px; }
+
+.cw-toast {
+  position: fixed; left: 50%; bottom: 100px;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--text); color: var(--bg);
+  padding: 12px 20px; border-radius: var(--radius-full);
+  font-size: 14px; font-weight: 600; z-index: 200;
+  opacity: 0; transition: opacity .2s, transform .2s;
+  max-width: 90%; text-align: center; box-shadow: var(--shadow-lg);
+}
+.cw-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.cw-toast-error { background: var(--danger); color: #fff; }
+.cw-toast-success { background: var(--brand); color: #fff; }
+
+/* ============ TIMMY CHAT ============ */
+#timmy-view {
+  position: fixed; inset: 0; z-index: 70;
+  background: var(--bg);
+  display: none; flex-direction: column;
+}
+#timmy-view.active { display: flex; }
+.chat-topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: calc(12px + var(--safe-top)) 16px 12px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+.chat-back { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--text-2); }
+.chat-avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(var(--brand-rgb), 0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.chat-name { flex: 1; font-weight: 800; font-size: 15px; }
+.chat-name small { display: block; font-weight: 500; font-size: 11.5px; color: var(--text-2); }
+.chat-menu-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-2); position: relative; }
+.chat-menu {
+  position: absolute; top: 44px; right: 0;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 6px; min-width: 170px;
+  box-shadow: var(--shadow-lg);
+  display: none; z-index: 10;
+}
+.chat-menu.show { display: block; }
+.chat-menu button {
+  display: block; width: 100%; padding: 10px 14px; text-align: left;
+  font-size: 13.5px; border-radius: 8px;
+}
+.chat-menu button:hover { background: rgba(var(--brand-rgb), 0.08); }
+.chat-menu button.danger { color: var(--danger); }
+
+.chat-scroll {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.msg { max-width: 84%; padding: 12px 15px; border-radius: 16px; font-size: 14.5px; line-height: 1.55; word-wrap: break-word; }
+.msg.user { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 4px; }
+.msg.bot { align-self: flex-start; background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+.msg.bot strong { color: var(--brand); font-weight: 700; }
+.msg.bot p { margin: 0 0 8px 0; }
+.msg.bot p:last-child { margin-bottom: 0; }
+.msg.typing { display: flex; gap: 4px; padding: 14px 18px; }
+.msg.typing span {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--text-3);
+  animation: typingBounce 1.2s infinite;
+}
+.msg.typing span:nth-child(2) { animation-delay: .15s; }
+.msg.typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes typingBounce { 0%,60%,100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-5px); opacity: 1; } }
+
+.chat-foot {
+  display: flex; gap: 8px; align-items: flex-end;
+  padding: 12px 16px calc(14px + var(--safe-bot));
+  background: var(--card);
+  border-top: 1px solid var(--border);
+}
+.chat-input {
+  flex: 1; padding: 12px 16px; font-size: 16px;
+  border-radius: 22px; background: var(--bg-elev);
+  border: 1.5px solid var(--border); color: var(--text);
+  font-family: inherit; resize: none; max-height: 120px;
+  line-height: 1.4;
+}
+.chat-input:focus { outline: none; border-color: var(--brand); }
+.chat-send {
+  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+  background: var(--brand); color: #fff; display: flex;
+  align-items: center; justify-content: center; font-size: 18px;
+}
+.chat-send:disabled { opacity: .4; }
+
+/* Scaffold chips (suggested replies) */
+.scaffold-row { display: flex; gap: 8px; padding: 10px 16px; overflow-x: auto; background: var(--bg); border-top: 1px solid var(--border); }
+.scaffold-chip {
+  padding: 9px 14px; border-radius: 18px;
+  background: var(--card); border: 1.5px solid var(--brand);
+  color: var(--brand); font-size: 13.5px; font-weight: 700;
+  white-space: nowrap;
+}
+.scaffold-chip:active { background: rgba(var(--brand-rgb), 0.08); }
+
+/* ============ PRACTICE MODES ============ */
+.mode-option {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px; border-radius: 12px;
+  background: var(--bg-elev); border: 1.5px solid var(--border);
+  margin-bottom: 10px; width: 100%; text-align: left;
+}
+.mode-option:active { background: rgba(var(--brand-rgb), 0.05); border-color: var(--brand); }
+.mode-emoji { font-size: 26px; flex-shrink: 0; }
+.mode-body { flex: 1; }
+.mode-title { font-weight: 800; font-size: 14.5px; }
+.mode-desc { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
+
+/* ============ REVIEW (Saved Words) ============ */
+.word-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 12px;
+  background: var(--card); border: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+.word-row-body { flex: 1; min-width: 0; }
+.word-row-term { font-weight: 800; font-size: 15px; color: var(--brand); }
+.word-row-pron { font-size: 11.5px; color: var(--text-3); margin-top: 1px; font-style: italic; }
+.word-row-trans { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+.word-row-play { width: 36px; height: 36px; border-radius: 50%; background: rgba(var(--brand-rgb), 0.12); color: var(--brand); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.word-row-play:active { background: var(--brand); color: #fff; }
+
+/* ============ SPEAK MODE ============ */
+.speak-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 32px 22px; text-align: center;
+  margin-bottom: 16px;
+}
+.speak-word { font-size: 34px; font-weight: 800; color: var(--brand); letter-spacing: -0.02em; line-height: 1.15; }
+.speak-pron { font-size: 14px; color: var(--text-3); margin-top: 8px; font-style: italic; }
+.speak-trans { font-size: 17px; margin-top: 14px; color: var(--text-2); }
+.mic-btn {
+  width: 84px; height: 84px; border-radius: 50%;
+  background: var(--brand); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  margin: 20px auto 8px; font-size: 32px;
+  box-shadow: 0 4px 20px rgba(var(--brand-rgb), 0.35);
+  transition: transform .15s, background .2s;
+}
+.mic-btn:active { transform: scale(.94); }
+.mic-btn.recording { background: var(--danger); animation: micPulse 1.2s infinite; }
+@keyframes micPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(229,72,77,.4); } 50% { box-shadow: 0 0 0 16px rgba(229,72,77,0); } }
+.mic-hint { font-size: 12.5px; color: var(--text-3); text-align: center; margin-top: 6px; }
+.speak-result {
+  margin-top: 16px; padding: 14px 16px; border-radius: 12px;
+  font-size: 13.5px; line-height: 1.5; text-align: left;
+}
+.speak-result.info { background: rgba(var(--brand-rgb), 0.06); border: 1px solid rgba(var(--brand-rgb), 0.25); color: var(--text); }
+.speak-result.warn { background: rgba(var(--gold-rgb), 0.08); border: 1px solid rgba(var(--gold-rgb), 0.35); }
+
+/* ============ SITUATIONS ============ */
+.situation-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px; border-radius: 12px;
+  background: var(--card); border: 1.5px solid var(--border);
+  margin-bottom: 10px; width: 100%; text-align: left;
+}
+.situation-card:active { border-color: var(--brand); background: rgba(var(--brand-rgb), 0.05); }
+.situation-icon { width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; background: rgba(var(--terracotta-rgb), 0.14); }
+.situation-body { flex: 1; min-width: 0; }
+.situation-title { font-weight: 800; font-size: 15px; }
+.situation-desc { font-size: 12.5px; color: var(--text-2); margin-top: 3px; }
+
+/* ============ BUTTONS ============ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px 20px; border-radius: var(--radius-full);
+  font-weight: 700; font-size: 15px;
+  background: var(--brand); color: #fff;
+  min-height: 46px;
+  transition: transform .08s, opacity .15s;
+}
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .55; }
+.btn-ghost { background: transparent; color: var(--brand); border: 1.5px solid var(--brand); }
+.btn-secondary { background: var(--text); color: var(--bg); }
+.btn-block { width: 100%; margin-top: 12px; }
+
+/* ============ MISC ============ */
+.empty-note { color: var(--text-2); font-size: 14px; text-align: center; padding: 40px 16px; }
+.empty-note strong { color: var(--text); display: block; font-size: 16px; margin-bottom: 6px; }
+.skel { background: linear-gradient(90deg, var(--border) 0%, var(--border-strong) 50%, var(--border) 100%); background-size: 200% 100%; animation: skel 1.2s infinite; border-radius: 8px; }
+.skel-row { height: 14px; margin: 8px 0; }
+.skel-block { height: 66px; margin-top: 12px; }
+@keyframes skel { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.spinner { width: 42px; height: 42px; border: 4px solid var(--border); border-top-color: var(--brand); border-radius: 50%; margin: 0 auto 14px; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loader { text-align: center; padding: 30px 0; }
+.loader-txt { font-size: 14px; color: var(--text-2); }
+
+@media (max-width: 380px) {
+  .page-hero h1 { font-size: 21px; }
+  .speak-word { font-size: 28px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<header id="cw-header"></header>
+
+<main class="page">
+  <div class="page-hero">
+    <h1>Practice</h1>
+    <p>Talk, listen, and get comfortable with the sounds of the language.</p>
+  </div>
+
+  <!-- AI usage bar -->
+  <div id="usage-bar" class="usage-bar" style="display:none;">
+    <span class="label">Timmy usage today</span>
+    <span class="count" id="usage-count">—</span>
+  </div>
+
+  <!-- Primary: Timmy AI chat -->
+  <div class="section-h">Talk with Timmy</div>
+  <button class="method-card" onclick="Practice.openTimmy('practice')">
+    <div class="method-icon">🤓</div>
+    <div class="method-body">
+      <div class="method-title">Practice with Timmy</div>
+      <div class="method-desc">Chat in ${LANGNAME} about your latest lesson</div>
+    </div>
+    <div class="method-chev">›</div>
+  </button>
+  <button class="method-card tint-indigo" onclick="Practice.openTimmy('cultural')">
+    <div class="method-icon">🎭</div>
+    <div class="method-body">
+      <div class="method-title">Cultural advice</div>
+      <div class="method-desc">How and when to use words in real Nigerian contexts</div>
+    </div>
+    <div class="method-chev">›</div>
+  </button>
+  <button class="method-card tint-gold" onclick="Practice.openTimmy('quick')">
+    <div class="method-icon">⚡</div>
+    <div class="method-body">
+      <div class="method-title">Quick translations</div>
+      <div class="method-desc">Fast translations with pronunciation help</div>
+    </div>
+    <div class="method-chev">›</div>
+  </button>
+
+  <!-- Speak -->
+  <div class="section-h">Speak</div>
+  <button class="method-card tint-terracotta" onclick="Practice.openSpeak()">
+    <div class="method-icon">🎤</div>
+    <div class="method-body">
+      <div class="method-title">Pronunciation practice</div>
+      <div class="method-desc">Listen, then repeat. Timmy explains where you can improve</div>
+    </div>
+    <div class="method-chev">›</div>
+  </button>
+
+  <!-- Review -->
+  <div class="section-h">Review</div>
+  <button class="method-card" onclick="Practice.openReview()">
+    <div class="method-icon">⭐</div>
+    <div class="method-body">
+      <div class="method-title">Saved words</div>
+      <div class="method-desc" id="saved-count-text">Review words you've saved during lessons</div>
+    </div>
+    <div class="method-chev">›</div>
+  </button>
+
+  <!-- Situations -->
+  <div class="section-h">Situations</div>
+  <div id="situations-list"></div>
+
+  <!-- Usage reset info -->
+  <div style="text-align: center; font-size: 12px; color: var(--text-3); padding: 24px 0 12px;">
+    Timmy resets at midnight local time
+  </div>
+</main>
+
+<!-- BOTTOM NAV -->
+<nav id="cw-bottom-nav">
+  <button class="tab" onclick="Nav.go('learn')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+    </svg>
+    <span>Learn</span>
+  </button>
+  <button class="tab active" onclick="Nav.go('practice')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+      <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
+      <line x1="12" y1="19" x2="12" y2="23"></line>
+      <line x1="8" y1="23" x2="16" y2="23"></line>
+    </svg>
+    <span>Practice</span>
+  </button>
+  <button class="tab" onclick="Nav.go('community')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+      <circle cx="9" cy="7" r="4"></circle>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+    </svg>
+    <span>Community</span>
+  </button>
+  <button class="tab" onclick="Nav.go('profile')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+    <span>Profile</span>
+  </button>
+</nav>
+
+<!-- TIMMY CHAT VIEW -->
+<div id="timmy-view">
+  <div class="chat-topbar">
+    <button class="chat-back" onclick="Practice.closeTimmy()">←</button>
+    <div class="chat-avatar" id="timmy-avatar">🤓</div>
+    <div class="chat-name" id="timmy-name">
+      Timmy
+      <small id="timmy-sub">Your Nigerian language tutor</small>
+    </div>
+    <button class="chat-menu-btn" onclick="Practice.toggleMenu(event)">⋮
+      <div class="chat-menu" id="timmy-menu">
+        <button onclick="Practice.exportChat()">📤 Export chat</button>
+        <button class="danger" onclick="Practice.clearChat()">🗑️ Clear this chat</button>
+      </div>
+    </button>
+  </div>
+
+  <div class="chat-scroll" id="timmy-scroll"></div>
+
+  <div class="scaffold-row" id="scaffold-row" style="display:none;"></div>
+
+  <div class="chat-foot">
+    <textarea class="chat-input" id="timmy-input" rows="1" placeholder="Type a message…"></textarea>
+    <button class="chat-send" id="timmy-send" onclick="Practice.sendMessage()">➤</button>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+/* ============================================================
+   PRACTICE TAB
+   ============================================================ */
+const Practice = {
+  user: null,
+  messages: [],
+  mode: 'practice',       // practice | cultural | quick
+  sending: false,
+
+  /* ---------- Boot ---------- */
+  async init() {
+    const ok = await cwBoot();
+    if (!ok) return;
+    Header.render('practice');
+    this.user = State.user;
+
+    // Fill in language name in the method description
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    document.querySelectorAll('.method-desc').forEach(el => {
+      el.innerHTML = el.innerHTML.replace('${LANGNAME}', esc(langCfg.name));
+    });
+    document.title = 'ClearWords — Practice (' + langCfg.name + ')';
+
+    this.renderSituations();
+    this.renderSavedCount();
+    this.loadUsage();
+
+    // Refresh when user state changes
+    State.on('hydrated', () => { this.user = State.user; this.renderSavedCount(); });
+  },
+
+  /* ---------- Usage bar ---------- */
+  async loadUsage() {
+    try {
+      const u = await Backend.getAIUsage();
+      // Try several possible shapes
+      const chat = u?.chat || u?.ai_chat_message || u?.chatMessages || 0;
+      const limit = u?.chatLimit || u?.limits?.chat || 200;
+      const remaining = Math.max(0, limit - chat);
+      const bar = document.getElementById('usage-bar');
+      const count = document.getElementById('usage-count');
+      if (!bar || !count) return;
+
+      bar.style.display = 'flex';
+      count.textContent = remaining + ' / ' + limit;
+
+      bar.classList.remove('warning', 'limit');
+      if (remaining === 0) bar.classList.add('limit');
+      else if (remaining <= limit * 0.15) bar.classList.add('warning');
+
+      const label = bar.querySelector('.label');
+      if (label) {
+        label.textContent = remaining === 0
+          ? 'Daily limit reached — resets at midnight'
+          : 'Timmy messages remaining today';
+      }
+    } catch (e) {
+      // Usage endpoint may not exist for some tiers — silently hide
+      const bar = document.getElementById('usage-bar');
+      if (bar) bar.style.display = 'none';
+    }
+  },
+
+  /* ---------- Saved words count ---------- */
+  renderSavedCount() {
+    const el = document.getElementById('saved-count-text');
+    if (!el) return;
+    const words = (this.user && this.user.savedWords) || [];
+    el.textContent = words.length
+      ? words.length + ' word' + (words.length === 1 ? '' : 's') + ' saved from your lessons'
+      : "Review words you've saved during lessons";
+  },
+
+  /* ---------- Situations ---------- */
+  renderSituations() {
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    const items = [
+      { icon: '🏠', title: 'Greeting a parent',      desc: 'Respectful morning and evening greetings', prompt: 'Practice greetings with an older family member in ' + langCfg.name + '. I will play the younger person.' },
+      { icon: '👋', title: 'Meeting a friend',       desc: 'Casual, warm, and natural',                prompt: 'Practice a casual, friendly greeting with a peer in ' + langCfg.name + '.' },
+      { icon: '🛒', title: 'At the market',          desc: 'Asking prices and haggling politely',      prompt: 'Practice a market conversation in ' + langCfg.name + '. I want to buy tomatoes and ask the price.' },
+      { icon: '🍲', title: 'Sharing a meal',         desc: 'Offering and accepting food',              prompt: 'Practice a Nigerian meal-sharing conversation in ' + langCfg.name + '.' },
+      { icon: '🚗', title: 'Asking for directions',  desc: 'Finding your way without a phone',         prompt: 'Practice asking for directions in ' + langCfg.name + '. I am lost and asking a stranger.' },
+      { icon: '🙏', title: 'Showing respect',        desc: 'The right words for elders',               prompt: 'Practice showing respect to an elder in ' + langCfg.name + ' using the right phrases.' }
+    ];
+
+    const list = document.getElementById('situations-list');
+    if (!list) return;
+    list.innerHTML = items.map(s => `
+      <button class="situation-card" onclick='Practice.startSituation(${JSON.stringify(s.prompt).replace(/'/g, "\\'")})'>
+        <div class="situation-icon">${s.icon}</div>
+        <div class="situation-body">
+          <div class="situation-title">${esc(s.title)}</div>
+          <div class="situation-desc">${esc(s.desc)}</div>
+        </div>
+        <div class="method-chev">›</div>
+      </button>`).join('');
+  },
+
+  startSituation(prompt) {
+    this.openTimmy('practice', prompt);
+  },
+
+  /* ============================================================
+     TIMMY CHAT
+     ============================================================ */
+  openTimmy(mode, seedPrompt) {
+    this.mode = mode;
+    document.getElementById('timmy-view').classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Header state
+    const avatar = document.getElementById('timmy-avatar');
+    const name = document.getElementById('timmy-name');
+    const sub = document.getElementById('timmy-sub');
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+
+    const modes = {
+      practice: { emoji: '🤓', title: 'Timmy', sub: 'Practice conversation in ' + langCfg.name },
+      cultural: { emoji: '🎭', title: 'Timmy · Culture', sub: 'Ask about Nigerian customs and context' },
+      quick:    { emoji: '⚡', title: 'Timmy · Quick', sub: 'Fast translations and explanations' }
+    };
+    const m = modes[mode] || modes.practice;
+    avatar.textContent = m.emoji;
+    name.childNodes[0].nodeValue = m.title + ' ';
+    sub.textContent = m.sub;
+
+    // Restore any existing chat in this session for this mode
+    this.messages = this.loadLocalChat(mode);
+
+    if (!this.messages.length) {
+      // Opening greeting
+      const greeting = {
+        practice: `Sannu ${esc((this.user && this.user.fullName || 'friend').split(' ')[0])}! Ready to practice ${langCfg.name}? We can start with something simple, or you can type whatever you like.`,
+        cultural: `Let's talk about Nigerian culture — especially ${langCfg.name} traditions, food, family customs, or anything you're curious about.`,
+        quick:    `Give me a word or phrase and I'll translate it into ${langCfg.name} with pronunciation. Or type a ${langCfg.name} word you heard and I'll break it down.`
+      }[mode];
+
+      this.messages.push({ role: 'assistant', content: greeting, ts: Date.now() });
+    }
+
+    this.renderChat();
+    this.renderScaffold();
+
+    // Seed prompt (for situations) — auto-send it as the user's first message
+    if (seedPrompt) {
+      setTimeout(() => {
+        const inp = document.getElementById('timmy-input');
+        if (inp) inp.value = seedPrompt;
+        this.sendMessage();
+      }, 300);
+    }
+  },
+
+  closeTimmy() {
+    document.getElementById('timmy-view').classList.remove('active');
+    document.body.style.overflow = '';
+    this.saveLocalChat();
+    this.loadUsage();
+  },
+
+  toggleMenu(e) {
+    e.stopPropagation();
+    const menu = document.getElementById('timmy-menu');
+    if (menu) menu.classList.toggle('show');
+  },
+
+  exportChat() {
+    const lines = this.messages.map(m => `[${m.role.toUpperCase()}] ${m.content}`);
+    const text = `ClearWords chat export\nLanguage: ${State.currentLanguage}\nMode: ${this.mode}\nDate: ${new Date().toISOString()}\n\n${lines.join('\n\n')}`;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'timmy-chat-' + new Date().toISOString().slice(0, 10) + '.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast('Chat exported', 'success');
+    document.getElementById('timmy-menu')?.classList.remove('show');
+  },
+
+  clearChat() {
+    if (!confirm('Clear this conversation?')) return;
+    this.messages = [];
+    localStorage.removeItem(this.localKey());
+    document.getElementById('timmy-menu')?.classList.remove('show');
+    this.openTimmy(this.mode);
+  },
+
+  localKey() { return 'cw_chat_' + this.mode + '_' + State.currentLanguage; },
+  loadLocalChat(mode) {
+    try { return JSON.parse(localStorage.getItem('cw_chat_' + mode + '_' + State.currentLanguage) || '[]'); }
+    catch { return []; }
+  },
+  saveLocalChat() {
+    try { localStorage.setItem(this.localKey(), JSON.stringify(this.messages.slice(-40))); }
+    catch {}
+  },
+
+  /* ---------- Rendering ---------- */
+  renderChat() {
+    const scroll = document.getElementById('timmy-scroll');
+    if (!scroll) return;
+    scroll.innerHTML = this.messages.map(m => {
+      const cls = m.role === 'user' ? 'user' : 'bot';
+      const html = m.role === 'user' ? esc(m.content) : this.formatBotHTML(m.content);
+      return `<div class="msg ${cls}">${html}</div>`;
+    }).join('');
+    scroll.scrollTop = scroll.scrollHeight;
+  },
+
+  formatBotHTML(text) {
+    // Bot replies come as HTML from /api/ai/chat — but be safe and allow
+    // only a small set of tags. Fall back to plain-text paragraphs.
+    if (!text) return '';
+    // If it looks like plain text (no tags), escape it and wrap in <p>.
+    if (!/<[a-z][\s\S]*>/i.test(text)) {
+      return String(text).split(/\n\n+/).map(p => `<p>${esc(p)}</p>`).join('');
+    }
+    // Already HTML — assume backend produced safe tags. Still strip script/style.
+    return String(text).replace(/<script[\s\S]*?<\/script>/gi, '')
+                       .replace(/<style[\s\S]*?<\/style>/gi, '');
+  },
+
+  renderScaffold() {
+    // Show a couple of suggested reply chips only in practice mode, right
+    // after the bot's first message — helps beginners start.
+    const row = document.getElementById('scaffold-row');
+    if (!row) return;
+    if (this.mode !== 'practice') { row.style.display = 'none'; return; }
+    const userTurnCount = this.messages.filter(m => m.role === 'user').length;
+    if (userTurnCount > 1) { row.style.display = 'none'; return; }
+
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    const samples = {
+      yoruba:  ["Ẹ káàrọ̀", "Báwo ni?", "Mo wà dáadáa"],
+      igbo:    ["Ndeewo", "Kedu?", "Ọ dị mma"],
+      hausa:   ["Sannu", "Yaya kake?", "Lafiya lau"],
+      pidgin:  ["How you dey?", "I dey fine", "Wetin dey happen?"]
+    }[State.currentLanguage] || ["Hello", "How are you?", "I'm fine"];
+
+    row.innerHTML = samples.map(s =>
+      `<button class="scaffold-chip" onclick="Practice.useScaffold(${JSON.stringify(s).replace(/"/g, '&quot;')})">${esc(s)}</button>`
+    ).join('');
+    row.style.display = 'flex';
+  },
+
+  useScaffold(text) {
+    const inp = document.getElementById('timmy-input');
+    if (!inp) return;
+    inp.value = text;
+    this.sendMessage();
+  },
+
+  /* ---------- Sending ---------- */
+  async sendMessage() {
+    if (this.sending) return;
+    const inp = document.getElementById('timmy-input');
+    if (!inp) return;
+    const text = inp.value.trim();
+    if (!text) return;
+
+    this.sending = true;
+    inp.value = '';
+    document.getElementById('scaffold-row').style.display = 'none';
+
+    this.messages.push({ role: 'user', content: text, ts: Date.now() });
+    this.renderChat();
+    this.saveLocalChat();
+
+    // Typing indicator
+    const scroll = document.getElementById('timmy-scroll');
+    const typing = document.createElement('div');
+    typing.className = 'msg bot typing';
+    typing.id = 'typing';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    scroll.appendChild(typing);
+    scroll.scrollTop = scroll.scrollHeight;
+
+    const sendBtn = document.getElementById('timmy-send');
+    if (sendBtn) sendBtn.disabled = true;
+
+    try {
+      // Build a context string describing what the user is learning
+      const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+      const user = State.user || {};
+      const context = [
+        `Language: ${langCfg.name} (${State.currentLanguage})`,
+        `Learner: ${user.fullName || 'learner'}`,
+        `Level: ${(State.progress && State.progress.currentLevel) || user.currentLevel || 1}`,
+        `Mode: ${this.mode}`
+      ].join(' | ');
+
+      const res = await Backend.aiChat(text, context);
+      const reply = res.data || res.reply || res.message || 'Sorry — I didn\'t catch that.';
+
+      document.getElementById('typing')?.remove();
+      this.messages.push({ role: 'assistant', content: reply, ts: Date.now() });
+      this.renderChat();
+      this.saveLocalChat();
+      this.loadUsage();
+    } catch (e) {
+      document.getElementById('typing')?.remove();
+      let msg = "Couldn't reach Timmy.";
+      if (e.status === 429) {
+        msg = "You've hit today's free limit. Upgrade to Premium for unlimited Timmy, or come back tomorrow.";
+      } else if (e.code === 'timeout') {
+        msg = "Timmy is waking up — this can take 20–30 seconds on the free tier. Try again.";
+      } else if (e.message) {
+        msg = e.message;
+      }
+      this.messages.push({ role: 'assistant', content: msg, ts: Date.now() });
+      this.renderChat();
+    } finally {
+      this.sending = false;
+      if (sendBtn) sendBtn.disabled = false;
+    }
+  },
+
+  /* ============================================================
+     SPEAK MODE (Pronunciation practice)
+     ============================================================ */
+  async openSpeak() {
+    // Use saved words first, then fall back to current curriculum vocab
+    const saved = (State.user && State.user.savedWords) || [];
+    const curriculum = State.curriculumCache[State.currentLanguage] || await State.loadCurriculum(State.currentLanguage);
+    let pool = saved.slice();
+    if (!pool.length && curriculum) {
+      const lessons = Curriculum.allLessons(curriculum);
+      pool = lessons.flatMap(l => l.vocabulary || []).slice(0, 20);
+    }
+    if (!pool.length) {
+      showToast('Complete a lesson first to practice pronunciation.', 'info');
+      return;
+    }
+
+    const header = `Pronunciation practice`;
+    const body = this.speakBody(pool[0], 0, pool);
+    Header._modal(header, body);
+    this._speakPool = pool;
+    this._speakIndex = 0;
+    this._speakList = pool;
+    this._bindSpeakNext();
+  },
+
+  speakBody(word, index, pool) {
+    const supported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    const note = supported
+      ? `<div class="mic-hint">Speech recognition uses your browser's built-in engine. For non-English languages, accuracy varies — treat it as a warm-up, not a score.</div>`
+      : `<div class="mic-hint">Your browser doesn't support speech recognition. You can still listen and repeat out loud.</div>`;
+
+    return `
+      <div class="speak-card">
+        <div class="speak-word">${esc(word.word)}</div>
+        ${word.pronunciation ? `<div class="speak-pron">/${esc(word.pronunciation)}/</div>` : ''}
+        <div class="speak-trans">${esc(word.translation || '')}</div>
+        <button class="btn btn-ghost" onclick="Practice.playSpeakWord(${index})" style="margin-top: 18px;">🔊 Listen</button>
+      </div>
+      ${supported ? `<button class="mic-btn" id="mic-btn" onclick="Practice.recordSpeak(${index})">🎤</button>` : ''}
+      ${note}
+      <div id="speak-result"></div>
+      <div style="display: flex; gap: 10px; margin-top: 18px;">
+        <button class="btn btn-ghost" style="flex: 1;" onclick="Practice.speakPrev(${index})" ${index === 0 ? 'disabled' : ''}>← Prev</button>
+        <button class="btn" style="flex: 1;" onclick="Practice.speakNext(${index}, ${pool.length})" ${index === pool.length - 1 ? 'disabled' : ''}>Next →</button>
+      </div>`;
+  },
+
+  _bindSpeakNext() {
+    // Enter-key on next — no-op but keeps hook in case we add keyboard later
+  },
+
+  async playSpeakWord(index) {
+    const w = this._speakList[index];
+    if (!w) return;
+    await AudioMgr.play(w.word, State.currentLanguage);
+  },
+
+  speakPrev(index) {
+    if (index <= 0) return;
+    this._speakIndex = index - 1;
+    Header._modal('Pronunciation practice', this.speakBody(this._speakList[index - 1], index - 1, this._speakList));
+    this._bindSpeakNext();
+  },
+
+  speakNext(index, total) {
+    if (index >= total - 1) return;
+    this._speakIndex = index + 1;
+    Header._modal('Pronunciation practice', this.speakBody(this._speakList[index + 1], index + 1, this._speakList));
+    this._bindSpeakNext();
+  },
+
+  recordSpeak(index) {
+    const w = this._speakList[index];
+    if (!w) return;
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { showToast('Speech recognition not supported here.', 'info'); return; }
+
+    const btn = document.getElementById('mic-btn');
+    const result = document.getElementById('speak-result');
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+
+    const rec = new SR();
+    rec.lang = langCfg.ttsLang || 'en-NG';
+    rec.interimResults = false;
+    rec.maxAlternatives = 1;
+
+    if (btn) { btn.classList.add('recording'); btn.textContent = '⏹'; }
+    if (result) result.innerHTML = '<div class="speak-result info">Listening… speak now.</div>';
+
+    rec.onresult = (e) => {
+      const said = (e.results[0][0].transcript || '').trim();
+      const target = String(w.word).toLowerCase().trim();
+      const got = said.toLowerCase().trim();
+      const exact = got === target;
+      const close = !exact && this.levenshtein(got, target) <= Math.max(2, Math.floor(target.length / 3));
+
+      if (result) {
+        if (exact) {
+          result.innerHTML = `<div class="speak-result info"><strong>Nice — match!</strong><br>You said: <em>${esc(said)}</em></div>`;
+          showToast('Perfect match! 🎉', 'success');
+        } else if (close) {
+          result.innerHTML = `<div class="speak-result info"><strong>Close.</strong><br>You said: <em>${esc(said)}</em><br>Target: <em>${esc(w.word)}</em><br>Try listening again and repeating.</div>`;
+        } else {
+          result.innerHTML = `<div class="speak-result warn"><strong>Different sound.</strong><br>You said: <em>${esc(said)}</em><br>Target: <em>${esc(w.word)}</em><br>Use 🔊 Listen to hear it again.</div>`;
+        }
+      }
+    };
+
+    rec.onerror = (e) => {
+      if (result) result.innerHTML = `<div class="speak-result warn">Couldn't capture audio (${e.error || 'unknown'}).</div>`;
+    };
+
+    rec.onend = () => {
+      if (btn) { btn.classList.remove('recording'); btn.textContent = '🎤'; }
+    };
+
+    try { rec.start(); }
+    catch (e) {
+      if (btn) { btn.classList.remove('recording'); btn.textContent = '🎤'; }
+      showToast('Could not start microphone.', 'error');
+    }
+  },
+
+  levenshtein(a, b) {
+    if (a === b) return 0;
+    const m = a.length, n = b.length;
+    if (!m) return n;
+    if (!n) return m;
+    const d = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+    for (let i = 0; i <= m; i++) d[i][0] = i;
+    for (let j = 0; j <= n; j++) d[0][j] = j;
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+      }
+    }
+    return d[m][n];
+  },
+
+  /* ============================================================
+     REVIEW (Saved words)
+     ============================================================ */
+  async openReview() {
+    const saved = (State.user && State.user.savedWords) || [];
+    if (!saved.length) {
+      Header._modal('Saved words', `
+        <div class="empty-note">
+          <strong>No saved words yet</strong>
+          In any lesson, tap ☆ Save next to a word to keep it here for review.
+        </div>`);
+      return;
+    }
+
+    const list = saved.map((w, i) => `
+      <div class="word-row">
+        <div class="word-row-body">
+          <div class="word-row-term">${esc(w.word)}</div>
+          ${w.pronunciation ? `<div class="word-row-pron">/${esc(w.pronunciation)}/</div>` : ''}
+          <div class="word-row-trans">${esc(w.translation || '')}</div>
+        </div>
+        <button class="word-row-play" onclick="Practice.playSaved(${i})">🔊</button>
+      </div>`).join('');
+
+    Header._modal('Saved words', list + `
+      <button class="btn btn-ghost btn-block" onclick="Practice.startReviewQuiz()" style="margin-top: 14px;">
+        Quiz me on these ${saved.length} word${saved.length === 1 ? '' : 's'} →
+      </button>`);
+    this._saved = saved;
+  },
+
+  async playSaved(i) {
+    const w = this._saved[i];
+    if (w) await AudioMgr.play(w.word, w.language || State.currentLanguage);
+  },
+
+  async startReviewQuiz() {
+    const saved = this._saved || [];
+    if (saved.length < 4) {
+      showToast('Save at least 4 words to build a quiz.', 'info');
+      return;
+    }
+    closeModal('cw-generic-modal');
+
+    // Build multiple-choice questions: prompt in target language, options in English
+    const questions = saved.slice(0, Math.min(8, saved.length)).map(w => {
+      const wrong = saved.filter(x => x.word !== w.word).sort(() => Math.random() - 0.5).slice(0, 3);
+      const options = [w.translation, ...wrong.map(x => x.translation)].sort(() => Math.random() - 0.5);
+      return {
+        word: w.word,
+        correctIndex: options.indexOf(w.translation),
+        options
+      };
+    });
+    this._quiz = questions;
+    this._quizIndex = 0;
+    this._quizCorrect = 0;
+    this.renderQuizQuestion();
+  },
+
+  renderQuizQuestion() {
+    const q = this._quiz[this._quizIndex];
+    const total = this._quiz.length;
+    const pct = Math.round(((this._quizIndex) / total) * 100);
+
+    Header._modal('Review quiz', `
+      <div style="font-size: 12px; color: var(--text-3); font-weight: 800; letter-spacing: .08em; text-transform: uppercase;">Question ${this._quizIndex + 1} of ${total}</div>
+      <div style="height: 6px; background: var(--border); border-radius: 3px; margin: 8px 0 22px; overflow: hidden;">
+        <div style="height: 100%; width: ${pct}%; background: var(--brand); border-radius: 3px;"></div>
+      </div>
+      <div style="font-size: 26px; font-weight: 800; color: var(--brand); text-align: center; padding: 20px 0;">${esc(q.word)}</div>
+      <div style="text-align: center; color: var(--text-2); font-size: 14px; margin-bottom: 18px;">What does this mean?</div>
+      <div style="display: flex; flex-direction: column; gap: 10px;" id="quiz-opts">
+        ${q.options.map((opt, i) => `
+          <button class="ex-opt" onclick="Practice.answerQuiz(${i})" id="quiz-opt-${i}">${esc(opt)}</button>
+        `).join('')}
+      </div>
+      <div id="quiz-feedback" style="margin-top: 14px;"></div>
+    `);
+  },
+
+  answerQuiz(index) {
+    const q = this._quiz[this._quizIndex];
+    const correct = q.correctIndex;
+    document.querySelectorAll('#quiz-opts .ex-opt').forEach((b, i) => {
+      b.disabled = true;
+      b.style.padding = '16px 18px';
+      b.style.borderRadius = '12px';
+      b.style.fontWeight = '600';
+      b.style.fontSize = '15px';
+      if (i === correct) { b.style.borderColor = 'var(--brand)'; b.style.background = 'rgba(46,139,87,0.10)'; b.style.color = 'var(--brand)'; }
+      else if (i === index) { b.style.borderColor = 'var(--danger)'; b.style.background = 'rgba(229,72,77,0.08)'; b.style.color = 'var(--danger)'; }
+    });
+    if (index === correct) this._quizCorrect++;
+
+    const fb = document.getElementById('quiz-feedback');
+    if (fb) fb.innerHTML = `<button class="btn btn-block" onclick="Practice.nextQuizQuestion()">${this._quizIndex === this._quiz.length - 1 ? 'See results →' : 'Next question →'}</button>`;
+  },
+
+  nextQuizQuestion() {
+    if (this._quizIndex < this._quiz.length - 1) {
+      this._quizIndex++;
+      this.renderQuizQuestion();
+    } else {
+      const score = this._quizCorrect;
+      const total = this._quiz.length;
+      const pct = Math.round((score / total) * 100);
+      const msg = pct === 100 ? 'Perfect!' : pct >= 80 ? 'Great work!' : pct >= 50 ? 'Solid start.' : 'Keep practicing.';
+      Header._modal('Review quiz', `
+        <div style="text-align: center; padding: 16px 0;">
+          <div style="font-size: 64px;">${pct >= 80 ? '🎉' : '💪'}</div>
+          <div style="font-size: 26px; font-weight: 800; margin-top: 8px;">${msg}</div>
+          <div style="font-size: 15px; color: var(--text-2); margin-top: 6px;">You scored ${score}/${total} (${pct}%)</div>
+          <button class="btn btn-block" onclick="closeModal('cw-generic-modal')" style="margin-top: 22px;">Done</button>
+        </div>`);
+    }
+  }
+};
+
+/* ============================================================
+   INPUT — enter to send, auto-grow textarea
+   ============================================================ */
+document.addEventListener('input', (e) => {
+  if (e.target.id === 'timmy-input') {
+    e.target.style.height = 'auto';
+    e.target.style.height = Math.min(120, e.target.scrollHeight) + 'px';
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.target.id === 'timmy-input' && e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    Practice.sendMessage();
+  }
+});
+
+/* Close chat menu when clicking elsewhere */
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('timmy-menu');
+  if (!menu || !menu.classList.contains('show')) return;
+  const btn = e.target.closest('.chat-menu-btn');
+  if (!btn) menu.classList.remove('show');
+});
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => Practice.init());
+window.Practice = Practice;
+</script>
+</body>
+</html>

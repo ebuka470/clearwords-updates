@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2E8B57">
+<title>ClearWords — Community</title>
+<style>
+/* ============ DESIGN TOKENS (matched to learn/practice) ============ */
+:root {
+  --brand: #2E8B57;
+  --brand-rgb: 46,139,87;
+  --gold: #E8B33C;
+  --gold-rgb: 232,179,60;
+  --indigo: #3B5BA5;
+  --indigo-rgb: 59,91,165;
+  --terracotta: #D97757;
+  --terracotta-rgb: 217,119,87;
+  --danger: #E5484D;
+  --danger-rgb: 229,72,77;
+  --bg: #FAF7F2;
+  --bg-elev: #FFFFFF;
+  --card: #FFFFFF;
+  --text: #1C1E21;
+  --text-2: #6B6F76;
+  --text-3: #9AA0A6;
+  --border: #E5E1D8;
+  --border-strong: #D4CFC2;
+  --shadow: 0 2px 12px rgba(28,30,33,0.06);
+  --shadow-lg: 0 8px 28px rgba(28,30,33,0.10);
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+[data-theme="dark"] {
+  --bg: #0F1114;
+  --bg-elev: #16191D;
+  --card: #1A1D21;
+  --text: #F2EFE9;
+  --text-2: #9AA0A6;
+  --text-3: #6B6F76;
+  --border: #2A2E33;
+  --border-strong: #3A3E44;
+  --shadow: 0 2px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.6);
+  --brand: #4CAF7A;
+  --brand-rgb: 76,175,122;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: contain;
+  padding-bottom: calc(84px + var(--safe-bot));
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea { font-family: inherit; }
+::-webkit-scrollbar { width: 0; height: 0; }
+
+/* ============ HEADER ============ */
+#cw-header {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: calc(12px + var(--safe-top)) 16px 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: saturate(180%) blur(12px);
+}
+.hdr-left, .hdr-right { display: flex; align-items: center; gap: 8px; }
+.lang-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border-radius: var(--radius-full);
+  background: var(--card); border: 1px solid var(--border);
+  font-size: 14px; font-weight: 700;
+}
+.lang-pill .chev { color: var(--text-3); font-size: 11px; }
+.icon-btn {
+  width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: var(--card); border: 1px solid var(--border);
+  position: relative; color: var(--text);
+}
+.streak-btn { width: auto; padding: 0 12px; gap: 4px; font-weight: 700; font-size: 13px; color: var(--gold); background: rgba(var(--gold-rgb), 0.12); border-color: rgba(var(--gold-rgb), 0.28); }
+.notif-dot {
+  position: absolute; top: 8px; right: 9px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--danger); border: 2px solid var(--card);
+}
+
+/* ============ PAGE ============ */
+.page { max-width: 520px; margin: 0 auto; padding: 0 16px; }
+.page-hero { padding: 22px 4px 18px; }
+.page-hero h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+.page-hero p { font-size: 14px; color: var(--text-2); margin-top: 4px; }
+
+.section-h {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; font-weight: 800; letter-spacing: .08em; color: var(--text-3);
+  text-transform: uppercase; margin: 26px 4px 12px;
+}
+.section-h .action {
+  font-size: 12.5px; font-weight: 700; letter-spacing: 0; text-transform: none;
+  color: var(--brand); cursor: pointer;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px;
+  margin-bottom: 12px; box-shadow: var(--shadow);
+}
+.card-tint-primary { background: rgba(var(--brand-rgb), 0.06); border-color: rgba(var(--brand-rgb), 0.22); }
+.card-tint-gold { background: rgba(var(--gold-rgb), 0.06); border-color: rgba(var(--gold-rgb), 0.25); }
+.card-tint-indigo { background: rgba(var(--indigo-rgb), 0.06); border-color: rgba(var(--indigo-rgb), 0.25); }
+
+/* ============ PODS ============ */
+.pod-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+  margin-bottom: 12px;
+  text-align: left;
+  width: 100%;
+  transition: transform .08s, border-color .15s;
+}
+.pod-card:active { transform: scale(.99); }
+.pod-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.pod-emoji {
+  width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+  background: rgba(var(--brand-rgb), 0.14);
+}
+.pod-title { font-weight: 800; font-size: 15px; }
+.pod-sub { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
+.pod-goal { font-size: 13px; color: var(--text-2); margin-top: 12px; }
+.pod-bar { height: 6px; border-radius: 3px; background: var(--border); margin-top: 8px; overflow: hidden; }
+.pod-bar-fill { height: 100%; background: linear-gradient(90deg, var(--brand), var(--gold)); border-radius: 3px; }
+.pod-meta { display: flex; gap: 14px; margin-top: 10px; font-size: 12px; color: var(--text-3); }
+.pod-meta span { display: inline-flex; align-items: center; gap: 4px; }
+
+/* ============ PAIRS ============ */
+.pair-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px; border-radius: var(--radius);
+  background: var(--card); border: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+.pair-avatar {
+  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+  background: var(--indigo); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 15px;
+}
+.pair-body { flex: 1; min-width: 0; }
+.pair-name { font-weight: 700; font-size: 15px; }
+.pair-sub { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
+.pair-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.chip-btn {
+  padding: 8px 14px; border-radius: var(--radius-full);
+  font-size: 12.5px; font-weight: 700;
+  background: var(--bg-elev); border: 1.5px solid var(--border);
+  color: var(--text);
+}
+.chip-btn.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+.chip-btn.danger { background: transparent; color: var(--danger); border-color: rgba(var(--danger-rgb), 0.4); }
+.chip-btn.warn { background: transparent; color: var(--gold); border-color: rgba(var(--gold-rgb), 0.4); }
+.chip-btn:active { transform: scale(.97); }
+
+/* ============ PROGRESS CARDS ============ */
+.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.pcard {
+  border-radius: var(--radius);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--brand), var(--indigo));
+  color: #fff;
+  min-height: 150px;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  width: 100%;
+  transition: transform .08s;
+}
+.pcard:active { transform: scale(.98); }
+.pcard.gold { background: linear-gradient(135deg, var(--gold), var(--terracotta)); }
+.pcard.terracotta { background: linear-gradient(135deg, var(--terracotta), var(--gold)); }
+.pcard-head { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
+.pcard-big { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; margin-top: 6px; }
+.pcard-sub { font-size: 12px; opacity: .9; margin-top: 4px; }
+.pcard-foot { font-size: 11px; opacity: .75; margin-top: 10px; }
+.pcard.empty {
+  background: var(--card);
+  color: var(--text-2);
+  border: 1.5px dashed var(--border-strong);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* ============ BOTTOM NAV ============ */
+#cw-bottom-nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 8px 8px calc(8px + var(--safe-bot));
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  backdrop-filter: saturate(180%) blur(16px);
+  border-top: 1px solid var(--border);
+  max-width: 520px; margin: 0 auto;
+}
+.tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 6px 4px; border-radius: 10px;
+  color: var(--text-3); font-size: 11px; font-weight: 600;
+}
+.tab.active { color: var(--brand); }
+.tab svg { width: 22px; height: 22px; }
+.tab:active { transform: scale(.94); }
+
+/* ============ MODAL ============ */
+.cw-modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
+  display: none; align-items: flex-end; justify-content: center;
+}
+.cw-modal-overlay.active { display: flex; }
+.cw-modal {
+  width: 100%; max-width: 520px;
+  max-height: 90vh; display: flex; flex-direction: column;
+  background: var(--card); border-radius: 24px 24px 0 0;
+  animation: modalUp .25s ease;
+  border: 1px solid var(--border); border-bottom: none;
+}
+@keyframes modalUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.cw-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 12px; border-bottom: 1px solid var(--border); }
+.cw-modal-title { font-weight: 800; font-size: 16px; }
+.cw-modal-close { font-size: 26px; line-height: 1; color: var(--text-2); padding: 0 4px; }
+.cw-modal-body { padding: 16px 20px 24px; overflow-y: auto; flex: 1; }
+
+/* Language picker, notifications etc. shared via Header._modal */
+.lang-option {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 14px 16px; margin-bottom: 8px;
+  border-radius: 12px; border: 1.5px solid var(--border);
+  background: var(--bg-elev); text-align: left;
+}
+.lang-option.active { border-color: var(--brand); background: rgba(var(--brand-rgb), 0.08); }
+.lang-emoji { font-size: 22px; }
+.lang-name { flex: 1; font-weight: 700; font-size: 15px; }
+.lang-check { color: var(--brand); font-weight: 800; }
+
+.notif-item { display: flex; gap: 12px; padding: 12px; border-radius: 12px; background: var(--bg-elev); border: 1px solid var(--border); margin-bottom: 8px; }
+.notif-item.unread { border-color: rgba(var(--brand-rgb), 0.35); background: rgba(var(--brand-rgb), 0.05); }
+.notif-icon { font-size: 20px; flex-shrink: 0; }
+.notif-body { flex: 1; min-width: 0; }
+.notif-title { font-weight: 700; font-size: 13px; }
+.notif-text { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
+.notif-time { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+.modal-loading { padding: 40px; text-align: center; color: var(--text-2); font-size: 14px; }
+
+/* ============ FORM ELEMENTS ============ */
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.field label { font-size: 13px; font-weight: 700; color: var(--text-2); }
+.field input, .field textarea, .field select {
+  width: 100%; padding: 14px 16px;
+  font-size: 16px; border-radius: 12px;
+  background: var(--bg-elev); border: 1.5px solid var(--border);
+  color: var(--text);
+  -webkit-appearance: none; appearance: none;
+}
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+.field input:focus, .field textarea:focus, .field select:focus {
+  outline: none; border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(var(--brand-rgb), 0.12);
+}
+.field-hint { font-size: 12px; color: var(--text-3); }
+.field-error { font-size: 12.5px; color: var(--danger); min-height: 16px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 20px; border-radius: var(--radius-full);
+  font-weight: 700; font-size: 15px;
+  background: var(--brand); color: #fff;
+  min-height: 46px;
+  transition: transform .08s, opacity .15s;
+}
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .55; }
+.btn-ghost { background: transparent; color: var(--brand); border: 1.5px solid var(--brand); }
+.btn-secondary { background: var(--text); color: var(--bg); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-block { width: 100%; }
+.btn-sm { padding: 9px 16px; min-height: 36px; font-size: 13px; }
+
+.spinner-inline {
+  width: 16px; height: 16px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin .7s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============ POD CHAT ============ */
+#pod-view {
+  position: fixed; inset: 0; z-index: 70;
+  background: var(--bg);
+  display: none; flex-direction: column;
+}
+#pod-view.active { display: flex; }
+.pod-topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: calc(12px + var(--safe-top)) 16px 12px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+.pod-back { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--text-2); }
+.pod-avatar { width: 38px; height: 38px; border-radius: 12px; background: rgba(var(--brand-rgb), 0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.pod-name { flex: 1; font-weight: 800; font-size: 15px; }
+.pod-name small { display: block; font-weight: 500; font-size: 11.5px; color: var(--text-2); }
+
+.pod-tabs { display: flex; padding: 0 16px; background: var(--card); border-bottom: 1px solid var(--border); }
+.pod-tab {
+  flex: 1; padding: 12px 4px; text-align: center;
+  font-size: 13px; font-weight: 700; color: var(--text-3);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.pod-tab.active { color: var(--brand); border-bottom-color: var(--brand); }
+
+.pod-scroll { flex: 1; overflow-y: auto; padding: 16px; }
+.pod-msg { margin-bottom: 12px; max-width: 84%; }
+.pod-msg.self { margin-left: auto; text-align: right; }
+.pod-msg-author { font-size: 11.5px; font-weight: 800; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 3px; }
+.pod-msg-bubble { display: inline-block; padding: 10px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.5; text-align: left; word-wrap: break-word; }
+.pod-msg.self .pod-msg-bubble { background: var(--brand); color: #fff; border-bottom-right-radius: 4px; }
+.pod-msg:not(.self) .pod-msg-bubble { background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+.pod-msg-system { text-align: center; font-size: 12.5px; color: var(--text-3); padding: 8px 0; font-style: italic; }
+.pod-msg-time { font-size: 10.5px; color: var(--text-3); margin-top: 3px; }
+
+.pod-input-row {
+  display: flex; gap: 8px; align-items: flex-end;
+  padding: 12px 16px calc(14px + var(--safe-bot));
+  background: var(--card);
+  border-top: 1px solid var(--border);
+}
+.pod-input {
+  flex: 1; padding: 12px 16px; font-size: 16px;
+  border-radius: 22px; background: var(--bg-elev);
+  border: 1.5px solid var(--border); color: var(--text);
+  font-family: inherit; resize: none; max-height: 120px;
+  line-height: 1.4;
+}
+.pod-input:focus { outline: none; border-color: var(--brand); }
+.pod-send {
+  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+  background: var(--brand); color: #fff; display: flex;
+  align-items: center; justify-content: center; font-size: 18px;
+}
+.pod-send:disabled { opacity: .4; }
+
+/* Members list */
+.member-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.member-row:last-child { border-bottom: none; }
+.member-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--indigo); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; flex-shrink: 0; }
+.member-body { flex: 1; }
+.member-name { font-weight: 700; font-size: 14.5px; }
+.member-sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+/* ============ MISC ============ */
+.empty-note { color: var(--text-2); font-size: 14px; text-align: center; padding: 40px 16px; }
+.empty-note strong { color: var(--text); display: block; font-size: 16px; margin-bottom: 6px; }
+
+.skel { background: linear-gradient(90deg, var(--border) 0%, var(--border-strong) 50%, var(--border) 100%); background-size: 200% 100%; animation: skel 1.2s infinite; border-radius: 8px; }
+.skel-row { height: 14px; margin: 8px 0; }
+.skel-block { height: 84px; margin-top: 10px; }
+@keyframes skel { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+.cw-toast {
+  position: fixed; left: 50%; bottom: 100px;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--text); color: var(--bg);
+  padding: 12px 20px; border-radius: var(--radius-full);
+  font-size: 14px; font-weight: 600; z-index: 200;
+  opacity: 0; transition: opacity .2s, transform .2s;
+  max-width: 90%; text-align: center; box-shadow: var(--shadow-lg);
+}
+.cw-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.cw-toast-error { background: var(--danger); color: #fff; }
+.cw-toast-success { background: var(--brand); color: #fff; }
+
+@media (max-width: 380px) {
+  .page-hero h1 { font-size: 21px; }
+  .card-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<header id="cw-header"></header>
+
+<main class="page">
+  <div class="page-hero">
+    <h1>Community</h1>
+    <p>Learn together, stay accountable, share your progress.</p>
+  </div>
+
+  <!-- ============ PODS ============ -->
+  <div class="section-h">
+    Your pods
+    <span class="action" onclick="Comm.openPodActions()">Manage</span>
+  </div>
+  <div id="pods-list">
+    <div class="card"><div class="skel skel-row" style="width: 40%"></div><div class="skel skel-block"></div></div>
+  </div>
+
+  <!-- ============ PAIRS ============ -->
+  <div class="section-h">
+    Language exchange
+    <span class="action" onclick="Comm.openPairMenu()">Find a partner</span>
+  </div>
+  <div id="pairs-list">
+    <div class="card"><div class="skel skel-row" style="width: 40%"></div><div class="skel skel-block"></div></div>
+  </div>
+
+  <!-- ============ PROGRESS CARDS ============ -->
+  <div class="section-h">
+    Your progress cards
+    <span class="action" onclick="Comm.createProgressCard()">Create</span>
+  </div>
+  <div id="cards-grid" class="card-grid"></div>
+
+  <!-- ============ FRIENDLY FOOTNOTE ============ -->
+  <div style="text-align: center; font-size: 12px; color: var(--text-3); padding: 24px 16px 12px;">
+    Be kind. Practicing a language takes courage.
+  </div>
+</main>
+
+<!-- BOTTOM NAV -->
+<nav id="cw-bottom-nav">
+  <button class="tab" onclick="Nav.go('learn')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+    </svg>
+    <span>Learn</span>
+  </button>
+  <button class="tab" onclick="Nav.go('practice')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+      <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
+      <line x1="12" y1="19" x2="12" y2="23"></line>
+      <line x1="8" y1="23" x2="16" y2="23"></line>
+    </svg>
+    <span>Practice</span>
+  </button>
+  <button class="tab active" onclick="Nav.go('community')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+      <circle cx="9" cy="7" r="4"></circle>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+    </svg>
+    <span>Community</span>
+  </button>
+  <button class="tab" onclick="Nav.go('profile')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+    <span>Profile</span>
+  </button>
+</nav>
+
+<!-- POD VIEW (full-screen) -->
+<div id="pod-view">
+  <div class="pod-topbar">
+    <button class="pod-back" onclick="Comm.closePod()">←</button>
+    <div class="pod-avatar" id="pod-avatar">👥</div>
+    <div class="pod-name" id="pod-name">
+      Pod
+      <small id="pod-sub"></small>
+    </div>
+  </div>
+  <div class="pod-tabs">
+    <button class="pod-tab active" data-tab="chat" onclick="Comm.podTab('chat')">Chat</button>
+    <button class="pod-tab" data-tab="members" onclick="Comm.podTab('members')">Members</button>
+    <button class="pod-tab" data-tab="leaderboard" onclick="Comm.podTab('leaderboard')">Leaderboard</button>
+  </div>
+  <div class="pod-scroll" id="pod-content"></div>
+  <div class="pod-input-row" id="pod-input-row">
+    <textarea class="pod-input" id="pod-input" rows="1" placeholder="Say something kind…"></textarea>
+    <button class="pod-send" id="pod-send" onclick="Comm.sendPodMessage()">➤</button>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+/* ============================================================
+   COMMUNITY TAB
+   ============================================================ */
+const Comm = {
+  user: null,
+  pods: [],
+  pairs: [],
+  cards: [],
+  activePod: null,
+  activePodMessages: [],
+  podTabState: 'chat',
+
+  /* ---------- Boot ---------- */
+  async init() {
+    const ok = await cwBoot();
+    if (!ok) return;
+    Header.render('community');
+    this.user = State.user;
+
+    // Load all three sections in parallel — each renders as it resolves
+    this.loadPods();
+    this.loadPairs();
+    this.loadCards();
+
+    State.on('hydrated', () => { this.user = State.user; });
+  },
+
+  /* ============================================================
+     PODS
+     ============================================================ */
+     getPodLimit() {
+    const sub = State.subscription || {};
+    const fromBackend = sub.limits?.pods;
+
+    // JSON serializes Infinity as null — treat null as unlimited
+    if (fromBackend === null) return Infinity;
+    if (typeof fromBackend === 'number') return fromBackend;
+
+    // Fallback if subscription hasn't loaded yet
+    const tier = (State.user?.subscriptionTier || 'free').toLowerCase();
+    const fallback = { free: 5, premium: 10, immersive: Infinity };
+    return fallback[tier] ?? 5;
+},
+
+getPairLimit() {
+    const sub = State.subscription || {};
+    const fromBackend = sub.limits?.pairs;
+
+    if (fromBackend === null) return Infinity;
+    if (typeof fromBackend === 'number') return fromBackend;
+
+    const tier = (State.user?.subscriptionTier || 'free').toLowerCase();
+    const fallback = { free: 5, premium: 10, immersive: Infinity };
+    return fallback[tier] ?? 5;
+}, 
+
+  async loadPods() {
+    const list = document.getElementById('pods-list');
+    if (!list) return;
+    try {
+      const res = await Backend.listPods();
+      this.pods = res.pods || res.items || res || [];
+      this.renderPods();
+    } catch (e) {
+      console.warn('Pods load failed:', e);
+      list.innerHTML = `
+        <div class="card">
+          <div class="empty-note" style="padding: 20px 0;">
+            <strong>Couldn't load your pods.</strong>
+            <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPods()">Retry</button>
+          </div>
+        </div>`;
+    }
+  },
+
+  renderPods() {
+    const list = document.getElementById('pods-list');
+    if (!list) return;
+    if (!this.pods.length) {
+      list.innerHTML = `
+        <div class="card card-tint-primary">
+          <div class="empty-note" style="padding: 20px 0;">
+            <strong>No pods yet</strong>
+            Small groups of 5–8 learners at your level, learning the same language.
+            <button class="btn" style="margin-top: 14px;" onclick="Comm.openPodActions()">
+              Find or create a pod →
+            </button>
+          </div>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = this.pods.map((pod, i) => {
+      const p = pod.data || pod;
+      const langCfg = CW_CONFIG.LANGUAGES[p.language] || CW_CONFIG.LANGUAGES.yoruba;
+      const members = (p.members || []).length;
+      const weeklyXP = p.weeklyXP || 0;
+      const goal = p.weeklyGoal || 500;
+      const pct = Math.min(100, Math.round((weeklyXP / goal) * 100));
+      const streak = p.sharedStreak || 0;
+
+      return `
+        <button class="pod-card" onclick="Comm.openPod('${pod._id || pod.id}', ${i})">
+          <div class="pod-head">
+            <div class="pod-emoji">${langCfg.emoji}</div>
+            <div style="flex: 1; min-width: 0;">
+              <div class="pod-title">${esc(p.name || (langCfg.name + ' Pod'))}</div>
+              <div class="pod-sub">${members} ${members === 1 ? 'learner' : 'learners'} · Level ${p.level || 1}</div>
+            </div>
+          </div>
+          <div class="pod-goal">
+            This week's goal
+            <span style="float: right; color: var(--brand); font-weight: 700;">${pct}%</span>
+          </div>
+          <div class="pod-bar"><div class="pod-bar-fill" style="width: ${pct}%"></div></div>
+          <div class="pod-meta">
+            <span>🔥 ${streak}-week streak</span>
+            <span>⭐ ${weeklyXP} XP this week</span>
+          </div>
+        </button>`;
+    }).join('');
+  },
+
+  openPodActions() {
+    const podsJoined = (this.pods || []).length;
+    const podLimit = this.getPodLimit();
+    const atCap = Number.isFinite(podLimit) && podsJoined >= podLimit;
+    const limitLabel = Number.isFinite(podLimit) ? podLimit : '∞';
+
+    const tier = (State.user?.subscriptionTier || 'free').toLowerCase();
+    const canCreate = tier === 'premium' || tier === 'immersive';
+
+    const usageLine = atCap
+        ? `<div style="font-size: 12.5px; color: var(--gold); text-align: center; margin: 12px 0; font-weight: 700;">
+             You're in ${podsJoined} of ${limitLabel} pods — leave one to join another.
+           </div>`
+        : `<div style="font-size: 12.5px; color: var(--text-3); text-align: center; margin: 12px 0;">
+             ${podsJoined} of ${limitLabel} pods used
+           </div>`;
+
+    const joinDisabled = atCap ? 'disabled' : '';
+    const joinStyle = atCap ? 'opacity: 0.5;' : '';
+
+    const createBlock = canCreate
+        ? `<button class="chip-btn" style="width: 100%; padding: 14px;" onclick="Comm.showCreatePod()">
+             ✨ Create a new pod
+           </button>`
+        : `<div class="card" style="margin-top: 14px; padding: 14px; background: rgba(232,179,60,0.08); border: 1px solid rgba(232,179,60,0.3);">
+             <div style="font-weight: 800; font-size: 13.5px; color: var(--gold); margin-bottom: 4px;">Create your own pod</div>
+             <div style="font-size: 12.5px; color: var(--text-2); line-height: 1.5;">
+               Premium members can create pods and lead small groups of learners.
+             </div>
+             <button class="btn btn-sm" style="width: 100%; margin-top: 10px;" onclick="closeModal('cw-generic-modal'); Nav.go('profile');">
+               See Premium →
+             </button>
+           </div>`;
+
+    Header._modal('Pods', `
+      <p style="font-size: 14px; color: var(--text-2); margin-bottom: 16px; line-height: 1.55;">
+        Pods are small groups of 5–8 learners at your level learning the same language. Keep each other accountable, share wins, stay motivated.
+      </p>
+
+      <button class="chip-btn primary" style="width: 100%; padding: 14px; margin-bottom: 10px; ${joinStyle}" onclick="Comm.matchPod()" ${joinDisabled}>
+        ⚡ Auto-match me with a pod
+      </button>
+      <button class="chip-btn" style="width: 100%; padding: 14px; margin-bottom: 10px; ${joinStyle}" onclick="Comm.showJoinPod()" ${joinDisabled}>
+        🔑 Join with invite code
+      </button>
+
+      ${usageLine}
+      ${createBlock}
+    `);
+},
+
+  async matchPod() {
+    showToast('Finding your pod…', 'info');
+    closeModal('cw-generic-modal');
+    try {
+        const res = await Backend.matchPod({});
+        const pod = res.pod || res;
+
+        if (res && res.matched === false && res.reason === 'already_in_pod') {
+            showToast("You're already in a pod for this language.", 'info');
+            await this.loadPods();
+            return;
+        }
+
+        if (pod && (pod._id || pod.id)) {
+            showToast('Matched! 🎉', 'success');
+            await this.loadPods();
+            const id = pod._id || pod.id;
+            setTimeout(() => this.openPod(id), 400);
+        } else {
+            showToast('No matching pod right now. Try again later.', 'info');
+        }
+    } catch (e) {
+        console.warn('Pod match failed:', e);
+        if (e.status === 403) {
+            const limit = this.getPodLimit();
+            const label = Number.isFinite(limit) ? limit : '∞';
+            showToast(`You're at your pod limit (${label}). Leave a pod to join another.`, 'info');
+        } else if (e.status === 404) {
+            showToast('No matching pod right now. Try again later.', 'info');
+        } else {
+            showToast(e.message || 'Could not match right now.', 'error');
+        }
+    }
+},
+
+  showJoinPod() {
+    Header._modal('Join with invite code', `
+      <div class="field">
+        <label>Invite code</label>
+        <input type="text" id="pod-invite-code" placeholder="e.g. YORUBA42" autocapitalize="characters" style="text-transform: uppercase;">
+      </div>
+      <button class="btn btn-block" onclick="Comm.joinPodWithCode()">Join pod</button>
+    `);
+  },
+
+  async joinPodWithCode() {
+    const code = (document.getElementById('pod-invite-code')?.value || '').trim().toUpperCase();
+    if (!code) { showToast('Enter an invite code.', 'info'); return; }
+    try {
+        const res = await Backend.joinPodByCode(code);
+        showToast('Joined! 🎉', 'success');
+        closeModal('cw-generic-modal');
+        await this.loadPods();
+        const podId = res.pod?._id || res.podId || res._id;
+        if (podId) setTimeout(() => this.openPod(podId), 300);
+    } catch (e) {
+    console.warn('Join pod failed:', e);
+    if (e.status === 403) {
+        const limit = this.getPodLimit();
+        const label = Number.isFinite(limit) ? limit : '∞';
+        showToast(`You're at your pod limit (${label}). Leave a pod to join another.`, 'info');
+    } else if (e.status === 429) {
+        showToast(e.message || 'You recently left this pod. Try again later.', 'info');
+    } else {
+        showToast(e.message || 'Could not join that pod.', 'error');
+    }
+}
+},
+
+  showCreatePod() {
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    Header._modal('Create a pod', `
+      <div class="field">
+        <label>Pod name</label>
+        <input type="text" id="pod-name-input" placeholder="e.g. ${langCfg.name} Beginners" maxlength="40">
+      </div>
+      <div class="field">
+        <label>Language</label>
+        <input type="text" value="${esc(langCfg.name)}" disabled>
+      </div>
+      <div class="field">
+        <label>Level</label>
+        <input type="text" value="${State.progress?.currentLevel || 1}" disabled>
+      </div>
+      <p style="font-size: 12.5px; color: var(--text-2); margin-bottom: 14px;">
+        Pods are small (5–8 learners). Premium users can create pods.
+      </p>
+      <button class="btn btn-block" onclick="Comm.createPod()">Create pod</button>
+    `);
+  },
+
+  async createPod() {
+    const name = document.getElementById('pod-name-input')?.value.trim();
+    if (!name) { showToast('Give your pod a name.', 'info'); return; }
+    try {
+      await Backend.createPod({
+        name,
+        language: State.currentLanguage,
+        level: State.progress?.currentLevel || 1
+      });
+      showToast('Pod created! 🎉', 'success');
+      closeModal('cw-generic-modal');
+      await this.loadPods();
+   } catch (e) {
+    console.warn('Create pod failed:', e);
+    if (e.status === 403) {
+        showToast('Premium required to create pods.', 'error');
+    } else {
+        showToast(e.message || 'Could not create pod.', 'error');
+    }
+}
+  },
+
+  /* ============================================================
+     OPEN POD — chat / members / leaderboard
+     ============================================================ */
+  async openPod(podId, index) {
+    this.activePod = this.pods.find(p => (p._id || p.id) === podId) || (index != null ? this.pods[index] : null);
+    if (!this.activePod) {
+      // Fetch directly if not in our list
+      try {
+        const res = await Backend.listPods();
+        this.pods = res.pods || res.items || res || [];
+        this.activePod = this.pods.find(p => (p._id || p.id) === podId);
+      } catch {}
+    }
+    if (!this.activePod) { showToast('Pod not found.', 'error'); return; }
+
+    const p = this.activePod.data || this.activePod;
+    const langCfg = CW_CONFIG.LANGUAGES[p.language] || CW_CONFIG.LANGUAGES.yoruba;
+
+    document.getElementById('pod-avatar').textContent = langCfg.emoji;
+    document.getElementById('pod-name').childNodes[0].nodeValue = (p.name || (langCfg.name + ' Pod')) + ' ';
+    document.getElementById('pod-sub').textContent =
+      (p.members || []).length + ' learners · Level ' + (p.level || 1);
+
+    document.getElementById('pod-view').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    this.podTabState = 'chat';
+    this.setPodTab('chat');
+    this.loadPodMessages();
+  },
+
+  closePod() {
+    document.getElementById('pod-view').classList.remove('active');
+    document.body.style.overflow = '';
+    this.activePod = null;
+    this.activePodMessages = [];
+  },
+
+  podTab(tab) {
+    this.setPodTab(tab);
+  },
+
+  setPodTab(tab) {
+    document.querySelectorAll('.pod-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    this.podTabState = tab;
+    const inputRow = document.getElementById('pod-input-row');
+    if (inputRow) inputRow.style.display = tab === 'chat' ? 'flex' : 'none';
+    if (tab === 'chat') this.loadPodMessages();
+    else if (tab === 'members') this.renderPodMembers();
+    else if (tab === 'leaderboard') this.renderPodLeaderboard();
+  },
+
+  async loadPodMessages() {
+    if (!this.activePod) return;
+    const content = document.getElementById('pod-content');
+    if (!content) return;
+    content.innerHTML = '<div class="modal-loading">Loading messages…</div>';
+    const podId = this.activePod._id || this.activePod.id;
+
+    try {
+      const res = await Backend.getPodMessages(podId, { limit: 50 });
+      const items = res.messages || res.items || res || [];
+      this.activePodMessages = items;
+      if (!items.length) {
+        content.innerHTML = `
+          <div class="empty-note">
+            <strong>No messages yet</strong>
+            Say hi, or check in for this week's goal.
+          </div>`;
+        return;
+      }
+      const myId = (State.user && (State.user._id || State.user.id)) || '';
+      content.innerHTML = items.map(m => this.renderPodMessage(m, myId)).join('');
+      content.scrollTop = content.scrollHeight;
+    } catch (e) {
+      console.warn('Pod messages load failed:', e);
+      content.innerHTML = `
+        <div class="empty-note">
+          <strong>Couldn't load messages.</strong>
+          <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPodMessages()">Retry</button>
+        </div>`;
+    }
+  },
+
+  renderPodMessage(m, myId) {
+    const d = m.data || m;
+    // System / check-in messages
+    if (d.type === 'checkin' || d.type === 'system') {
+      return `<div class="pod-msg-system">${esc(d.authorName || 'Someone')} checked in${d.note ? ': ' + esc(d.note) : ''}</div>`;
+    }
+    const authorId = d.authorId || d.userId || '';
+    const isSelf = authorId === myId;
+    const initials = initialsOf(d.authorName || 'Learner');
+    return `
+      <div class="pod-msg ${isSelf ? 'self' : ''}">
+        ${!isSelf ? `<div class="pod-msg-author">${esc(d.authorName || 'Learner')}</div>` : ''}
+        <div class="pod-msg-bubble">${esc(d.content || d.message || '')}</div>
+        <div class="pod-msg-time">${fmtTimeAgo(d.createdAt || m._createdAt)}</div>
+      </div>`;
+  },
+
+  async sendPodMessage() {
+    if (!this.activePod) return;
+    const input = document.getElementById('pod-input');
+    const sendBtn = document.getElementById('pod-send');
+    const text = (input?.value || '').trim();
+    if (!text) return;
+
+    input.value = '';
+    input.style.height = 'auto';
+    if (sendBtn) sendBtn.disabled = true;
+
+    // Optimistic append
+    const myId = (State.user && (State.user._id || State.user.id)) || '';
+    const optimistic = {
+      data: {
+        authorId: myId,
+        authorName: State.user?.fullName || 'You',
+        content: text,
+        createdAt: new Date().toISOString()
+      }
+    };
+    const content = document.getElementById('pod-content');
+    if (content.querySelector('.empty-note')) content.innerHTML = '';
+    content.insertAdjacentHTML('beforeend', this.renderPodMessage(optimistic, myId));
+    content.scrollTop = content.scrollHeight;
+
+    const podId = this.activePod._id || this.activePod.id;
+    try {
+      await Backend.sendPodMessage(podId, text);
+    } catch (e) {
+      console.warn('Send pod message failed:', e);
+      showToast('Could not send — check your connection.', 'error');
+    } finally {
+      if (sendBtn) sendBtn.disabled = false;
+    }
+  },
+
+  async renderPodMembers() {
+    if (!this.activePod) return;
+    const content = document.getElementById('pod-content');
+    const p = this.activePod.data || this.activePod;
+    const members = p.members || [];
+
+    if (!members.length) {
+      content.innerHTML = '<div class="empty-note">No member info yet.</div>';
+      return;
+    }
+
+    content.innerHTML = `
+      <div style="margin-bottom: 16px;">
+        <button class="chip-btn primary" style="width: 100%; padding: 14px;" onclick="Comm.checkIn()">
+          ✅ Check in for this week
+        </button>
+      </div>
+      ${members.map(m => {
+        const name = m.fullName || m.name || 'Learner';
+        const initials = initialsOf(name);
+        return `
+          <div class="member-row">
+            <div class="member-avatar">${initials}</div>
+            <div class="member-body">
+              <div class="member-name">${esc(name)}${m.isLeader ? ' 👑' : ''}</div>
+              <div class="member-sub">Level ${m.currentLevel || 1} · ${m.weeklyXP || 0} XP this week</div>
+            </div>
+          </div>`;
+      }).join('')}
+    `;
+  },
+
+  async checkIn() {
+    if (!this.activePod) return;
+    const podId = this.activePod._id || this.activePod.id;
+    try {
+      await Backend.podCheckin(podId, '');
+      showToast('Checked in! 🎉', 'success');
+      this.loadPodMessages();
+    } catch (e) {
+      if (e.status === 409) showToast('Already checked in this week.', 'info');
+      else showToast('Could not check in right now.', 'error');
+    }
+  },
+
+  async renderPodLeaderboard() {
+    if (!this.activePod) return;
+    const content = document.getElementById('pod-content');
+    content.innerHTML = '<div class="modal-loading">Loading leaderboard…</div>';
+    const podId = this.activePod._id || this.activePod.id;
+    try {
+      const res = await Backend.podLeaderboard(podId);
+      const rows = res.members || res.leaderboard || res || [];
+      if (!rows.length) { content.innerHTML = '<div class="empty-note">No leaderboard data yet.</div>'; return; }
+      content.innerHTML = `
+        <div style="padding: 4px 0 12px; font-size: 12.5px; color: var(--text-2); text-align: center;">
+          Ranked by XP earned this week
+        </div>
+        ${rows.map((r, i) => {
+          const rank = i + 1;
+          const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '#' + rank;
+          const name = r.fullName || r.name || 'Learner';
+          return `
+            <div class="member-row">
+              <div style="width: 30px; text-align: center; font-weight: 800; font-size: 14px;">${medal}</div>
+              <div class="member-avatar">${initialsOf(name)}</div>
+              <div class="member-body">
+                <div class="member-name">${esc(name)}</div>
+                <div class="member-sub">${r.weeklyXP || r.xp || 0} XP this week</div>
+              </div>
+            </div>`;
+        }).join('')}
+      `;
+    } catch (e) {
+      content.innerHTML = '<div class="empty-note">Couldn\'t load leaderboard.</div>';
+    }
+  },
+
+  /* ============================================================
+     PAIRS
+     ============================================================ */
+  async loadPairs() {
+    const list = document.getElementById('pairs-list');
+    if (!list) return;
+    try {
+      const res = await Backend.listPairs();
+      this.pairs = res.pairs || res.items || res || [];
+      this.renderPairs();
+    } catch (e) {
+      console.warn('Pairs load failed:', e);
+      list.innerHTML = `
+        <div class="card">
+          <div class="empty-note" style="padding: 20px 0;">
+            <strong>Couldn't load pairs.</strong>
+            <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPairs()">Retry</button>
+          </div>
+        </div>`;
+    }
+  },
+
+  renderPairs() {
+    const list = document.getElementById('pairs-list');
+    if (!list) return;
+    const active = this.pairs.filter(p => (p.status || p.data?.status) !== 'pending');
+    const pending = this.pairs.filter(p => (p.status || p.data?.status) === 'pending');
+    const myId = (State.user && (State.user._id || State.user.id)) || '';
+
+    const pairLimit = this.getPairLimit();
+const limitLabel = Number.isFinite(pairLimit) ? pairLimit : '∞';
+const activeCount = this.pairs.filter(p => (p.status || p.data?.status) === 'active').length;
+const atCap = Number.isFinite(pairLimit) && activeCount >= pairLimit;
+
+if (!this.pairs.length) {
+    list.innerHTML = `
+      <div class="card card-tint-indigo">
+        <div class="empty-note" style="padding: 20px 0;">
+          <strong>No learning partners yet</strong>
+          Pair up with someone learning your language and swap practice.
+          <button class="btn" style="margin-top: 14px;" onclick="Comm.matchPair()">
+            Find a partner →
+          </button>
+          <div style="font-size: 12px; color: var(--text-3); margin-top: 12px;">
+            0 of ${limitLabel} pairs used
+          </div>
+        </div>
+      </div>`;
+    return;
+}
+
+    const usageLine = `
+    <div style="font-size: 12px; color: var(--text-3); text-align: center; padding: 4px 0 12px; font-weight: 600;">
+        ${active.length} of ${limitLabel} pairs used${atCap ? ' · at limit' : ''}
+    </div>`;
+
+list.innerHTML = usageLine + [
+    // Pending requests (that I sent or received)
+    ...pending.map(p => this.renderPairCard(p, myId, true)),
+    // Active
+    ...active.map(p => this.renderPairCard(p, myId, false))
+].join('');
+},
+
+  renderPairCard(pair, myId, isPending) {
+    const d = pair.data || pair;
+    const partner = d.partner || d.other || {};
+    const name = partner.fullName || partner.name || 'Your partner';
+    const initials = initialsOf(name);
+    const langCfg = CW_CONFIG.LANGUAGES[partner.primaryLanguage || d.language] || {};
+
+    if (isPending) {
+      const isIncoming = d.toUserId === myId || d.targetUserId === myId;
+      return `
+        <div class="pair-card">
+          <div class="pair-avatar">${initials}</div>
+          <div class="pair-body">
+            <div class="pair-name">${esc(name)}</div>
+            <div class="pair-sub">${isIncoming ? 'Wants to pair with you' : 'Request sent'}</div>
+          </div>
+          <div class="pair-actions">
+            ${isIncoming ? `
+              <button class="chip-btn primary" onclick="Comm.acceptPair('${pair._id || pair.id}')">Accept</button>
+              <button class="chip-btn" onclick="Comm.endPair('${pair._id || pair.id}')">Decline</button>
+            ` : `
+              <button class="chip-btn" onclick="Comm.endPair('${pair._id || pair.id}')">Cancel</button>
+            `}
+          </div>
+        </div>`;
+    }
+
+    return `
+      <div class="pair-card" style="flex-direction: column; align-items: stretch;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="pair-avatar">${initials}</div>
+          <div class="pair-body">
+            <div class="pair-name">${esc(name)}</div>
+            <div class="pair-sub">${langCfg.name ? langCfg.name + ' · ' : ''}Learning together</div>
+          </div>
+        </div>
+        <div class="pair-actions">
+          <button class="chip-btn primary" onclick="Comm.openPairChat('${pair._id || pair.id}')">💬 Chat</button>
+          <button class="chip-btn" onclick="Comm.reportPair('${pair._id || pair.id}')">Report</button>
+          <button class="chip-btn danger" onclick="Comm.endPair('${pair._id || pair.id}')">End pair</button>
+        </div>
+      </div>`;
+  },
+
+  openPairMenu() {
+    const pairLimit = this.getPairLimit();
+    const limitLabel = Number.isFinite(pairLimit) ? pairLimit : '∞';
+    const activeCount = (this.pairs || []).filter(p => (p.status || p.data?.status) === 'active').length;
+    const atCap = Number.isFinite(pairLimit) && activeCount >= pairLimit;
+
+    const disabledStyle = atCap ? 'opacity: 0.5;' : '';
+    const disabledAttr = atCap ? 'disabled' : '';
+
+    const usageLine = atCap
+        ? `<div style="font-size: 12.5px; color: var(--gold); text-align: center; margin: 12px 0; font-weight: 700;">
+             You're at your pair limit (${activeCount} of ${limitLabel}) — end a pair to start another.
+           </div>`
+        : `<div style="font-size: 12.5px; color: var(--text-3); text-align: center; margin: 12px 0;">
+             ${activeCount} of ${limitLabel} pairs used
+           </div>`;
+
+    Header._modal('Language exchange', `
+      <p style="font-size: 14px; color: var(--text-2); margin-bottom: 16px; line-height: 1.55;">
+        A pair is a one-to-one learning partner. You swap practice, share progress, and encourage each other.
+      </p>
+      <button class="chip-btn primary" style="width: 100%; padding: 14px; margin-bottom: 10px; ${disabledStyle}" onclick="Comm.matchPair()" ${disabledAttr}>
+        ⚡ Auto-match me
+      </button>
+      <button class="chip-btn" style="width: 100%; padding: 14px; ${disabledStyle}" onclick="Comm.showRequestPair()" ${disabledAttr}>
+        🔍 Request someone specific
+      </button>
+      ${usageLine}
+    `);
+},
+
+  async matchPair() {
+    showToast('Finding your partner…', 'info');
+    closeModal('cw-generic-modal');
+    try {
+      const res = await Backend.matchPair();
+      const pair = res.pair || res;
+      showToast('Matched! 🎉', 'success');
+      await this.loadPairs();
+      if (pair && (pair._id || pair.id)) {
+        setTimeout(() => this.openPairChat(pair._id || pair.id), 400);
+      }
+    } catch (e) {
+    console.warn('Pair match failed:', e);
+    if (e.status === 403) {
+        const limit = this.getPairLimit();
+        const label = Number.isFinite(limit) ? limit : '∞';
+        showToast(`You're at your pair limit (${label}). End a pair to match with someone new.`, 'info');
+    } else if (e.status === 404) {
+        showToast('No match available right now. Try again.', 'info');
+    } else {
+        showToast(e.message || 'Could not match right now.', 'error');
+    }
+}
+  },
+
+  showRequestPair() {
+    Header._modal('Request a partner', `
+      <div class="field">
+        <label>Username or learner ID</label>
+        <input type="text" id="pair-target" placeholder="e.g. ebuka470">
+      </div>
+      <div class="field">
+        <label>Short message (optional)</label>
+        <textarea id="pair-message" placeholder="Hi! Want to practice together?"></textarea>
+      </div>
+      <button class="btn btn-block" onclick="Comm.sendPairRequest()">Send request</button>
+    `);
+  },
+
+  async sendPairRequest() {
+    const target = document.getElementById('pair-target')?.value.trim();
+    const message = document.getElementById('pair-message')?.value.trim() || '';
+    if (!target) { showToast('Enter a username.', 'info'); return; }
+    try {
+        await Backend.requestPair(target, message);
+        showToast('Request sent! 📨', 'success');
+        closeModal('cw-generic-modal');
+        this.loadPairs();
+    } catch (e) {
+        if (e.status === 403) {
+            const limit = this.getPairLimit();
+            const label = Number.isFinite(limit) ? limit : '∞';
+            showToast(`You're at your pair limit (${label}). End a pair to request another.`, 'info');
+        } else if (e.status === 404) {
+            showToast('No learner found with that username.', 'error');
+        } else if (e.status === 409) {
+            showToast('You already have a request or pair with them.', 'info');
+        } else {
+            showToast(e.message || 'Could not send request.', 'error');
+        }
+    }
+},
+
+  async acceptPair(pairId) {
+    try {
+      await Backend.acceptPair(pairId);
+      showToast('Pair accepted! 🎉', 'success');
+      this.loadPairs();
+    } catch (e) {
+      showToast(e.message || 'Could not accept.', 'error');
+    }
+  },
+
+  async endPair(pairId) {
+    if (!confirm('End this pair? You can always pair with someone else later.')) return;
+    try {
+      await Backend.endPair(pairId);
+      showToast('Pair ended.', 'info');
+      this.loadPairs();
+    } catch (e) {
+      showToast(e.message || 'Could not end pair.', 'error');
+    }
+  },
+
+  async openPairChat(pairId) {
+    // Reuse the pod chat UI for pairs — simplest approach that works with the
+    // existing endpoints. Backend uses the same message model.
+    const pair = this.pairs.find(p => (p._id || p.id) === pairId);
+    if (!pair) return;
+    const d = pair.data || pair;
+    const partner = d.partner || d.other || {};
+    const name = partner.fullName || partner.name || 'Your partner';
+    const initials = initialsOf(name);
+
+    document.getElementById('pod-avatar').textContent = '💬';
+    document.getElementById('pod-name').childNodes[0].nodeValue = name + ' ';
+    document.getElementById('pod-sub').textContent = 'Language exchange partner';
+    document.getElementById('pod-view').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    this.activePod = { _id: pairId, isPair: true, data: { name, members: [] } };
+    // Hide members/leaderboard tabs for pairs — just chat
+    document.querySelectorAll('.pod-tab').forEach(t => {
+      t.style.display = t.dataset.tab === 'chat' ? '' : 'none';
+    });
+    this.setPodTab('chat');
+    this.loadPairMessages();
+  },
+
+  async loadPairMessages() {
+    const content = document.getElementById('pod-content');
+    content.innerHTML = '<div class="modal-loading">Loading messages…</div>';
+    const pairId = this.activePod._id;
+    try {
+      const res = await Backend.getPairMessages(pairId, { limit: 50 });
+      const items = res.messages || res.items || res || [];
+      const myId = (State.user && (State.user._id || State.user.id)) || '';
+      if (!items.length) {
+        content.innerHTML = `<div class="empty-note"><strong>Say hello</strong>Start your first conversation.</div>`;
+        return;
+      }
+      content.innerHTML = items.map(m => this.renderPodMessage(m, myId)).join('');
+      content.scrollTop = content.scrollHeight;
+    } catch (e) {
+      content.innerHTML = '<div class="empty-note">Couldn\'t load messages.</div>';
+    }
+  },
+
+  async sendPodMessage() {
+    // Same function used for pod + pair chats — the destination depends
+    // on this.activePod.isPair
+    if (!this.activePod) return;
+    const input = document.getElementById('pod-input');
+    const sendBtn = document.getElementById('pod-send');
+    const text = (input?.value || '').trim();
+    if (!text) return;
+
+    input.value = '';
+    input.style.height = 'auto';
+    if (sendBtn) sendBtn.disabled = true;
+
+    const myId = (State.user && (State.user._id || State.user.id)) || '';
+    const optimistic = {
+      data: {
+        authorId: myId,
+        authorName: State.user?.fullName || 'You',
+        content: text,
+        createdAt: new Date().toISOString()
+      }
+    };
+    const content = document.getElementById('pod-content');
+    if (content.querySelector('.empty-note')) content.innerHTML = '';
+    content.insertAdjacentHTML('beforeend', this.renderPodMessage(optimistic, myId));
+    content.scrollTop = content.scrollHeight;
+
+    try {
+      if (this.activePod.isPair) await Backend.sendPairMessage(this.activePod._id, text);
+      else await Backend.sendPodMessage(this.activePod._id, text);
+    } catch (e) {
+      showToast('Could not send — check your connection.', 'error');
+    } finally {
+      if (sendBtn) sendBtn.disabled = false;
+    }
+  },
+
+  reportPair(pairId) {
+    Header._modal('Report a problem', `
+      <p style="font-size: 13.5px; color: var(--text-2); margin-bottom: 14px;">
+        Reports are reviewed. Three reports auto-ban the reported account.
+      </p>
+      <div class="field">
+        <label>What happened?</label>
+        <select id="report-reason">
+          <option value="harassment">Harassment or abuse</option>
+          <option value="spam">Spam or promotional content</option>
+          <option value="inappropriate">Inappropriate content</option>
+          <option value="other">Something else</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Details (optional)</label>
+        <textarea id="report-details" placeholder="Add anything that helps us understand."></textarea>
+      </div>
+      <button class="btn btn-danger btn-block" onclick="Comm.submitReport('${pairId}')">Submit report</button>
+    `);
+  },
+
+  async submitReport(targetId) {
+    const reason = document.getElementById('report-reason')?.value || 'other';
+    const details = document.getElementById('report-details')?.value.trim() || '';
+    try {
+      await Backend.submitReport({
+        targetType: 'pair',
+        targetId,
+        reason,
+        details
+      });
+      showToast('Report submitted.', 'success');
+      closeModal('cw-generic-modal');
+    } catch (e) {
+      showToast(e.message || 'Could not submit report.', 'error');
+    }
+  },
+
+  /* ============================================================
+     PROGRESS CARDS
+     ============================================================ */
+  async loadCards() {
+    const grid = document.getElementById('cards-grid');
+    if (!grid) return;
+    try {
+      const res = await Backend.listMyCards();
+      this.cards = res.cards || res.items || res || [];
+      this.renderCards();
+    } catch (e) {
+      console.warn('Cards load failed:', e);
+      this.renderCards(); // render empty state
+    }
+  },
+
+  renderCards() {
+    const grid = document.getElementById('cards-grid');
+    if (!grid) return;
+    const cards = (this.cards || []).slice(0, 4);
+    const slots = Math.max(2, cards.length);
+    const html = [];
+
+    for (let i = 0; i < slots; i++) {
+      const c = cards[i];
+      if (c) {
+        const d = c.data || c;
+        const palette = i % 3 === 0 ? '' : i % 3 === 1 ? 'gold' : 'terracotta';
+        const title = d.title || d.cardType || 'Progress';
+        const big = d.stats?.streak || d.stats?.xp || d.stats?.level || '—';
+        const sub = d.stats?.xp ? d.stats.xp + ' XP' : d.stats?.lessonsCompleted ? d.stats.lessonsCompleted + ' lessons' : '';
+        html.push(`
+          <button class="pcard ${palette}" onclick="Comm.viewCard('${c._id || c.id}')">
+            <div>
+              <div class="pcard-head">${esc(String(title).toUpperCase())}</div>
+              <div class="pcard-big">${esc(String(big))}</div>
+              ${sub ? `<div class="pcard-sub">${esc(sub)}</div>` : ''}
+            </div>
+            <div class="pcard-foot">${d.language ? esc(String(d.language).toUpperCase()) : 'MY JOURNEY'}</div>
+          </button>`);
+      } else {
+        html.push(`
+          <button class="pcard empty" onclick="Comm.createProgressCard()">
+            <div style="font-size: 30px;">✨</div>
+            <div style="margin-top: 8px; font-weight: 700;">Create a card</div>
+            <div style="font-size: 11.5px; margin-top: 4px;">Share your progress</div>
+          </button>`);
+      }
+    }
+
+    grid.innerHTML = html.join('');
+  },
+
+  async createProgressCard() {
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    const p = State.progress || {};
+    const streak = p.streak || State.user?.streak || 0;
+    const xp = p.totalXP || State.user?.totalXP || 0;
+    const level = p.currentLevel || 1;
+    const lessons = (p.completedLessons || p.completedLevels || []).length;
+
+    Header._modal('Create a progress card', `
+      <p style="font-size: 14px; color: var(--text-2); margin-bottom: 14px;">
+        A shareable card showing your journey in ${langCfg.name}.
+      </p>
+      <div class="field">
+        <label>Card type</label>
+        <select id="card-type">
+          <option value="streak">🔥 Streak</option>
+          <option value="lessons">📚 Lessons completed</option>
+          <option value="vocab">⭐ XP earned</option>
+          <option value="milestone">🏆 Milestone</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Caption (optional)</label>
+        <input type="text" id="card-caption" maxlength="80" placeholder="e.g. 12 days in a row!">
+      </div>
+      <div class="card card-tint-primary" style="margin: 12px 0; padding: 14px;">
+        <div style="font-size: 12px; color: var(--text-2); font-weight: 700; letter-spacing: .06em; text-transform: uppercase;">Preview</div>
+        <div style="margin-top: 8px; font-size: 15px; font-weight: 800;">${esc(langCfg.name)} · Level ${level}</div>
+        <div style="font-size: 13px; color: var(--text-2); margin-top: 4px;">🔥 ${streak} day streak · ${xp} XP · ${lessons} lessons</div>
+      </div>
+      <button class="btn btn-block" id="card-create-btn" onclick="Comm.submitCreateCard()">
+        Create card
+      </button>
+    `);
+  },
+
+  async submitCreateCard() {
+    const btn = document.getElementById('card-create-btn');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-inline"></span> Creating…'; }
+    const cardType = document.getElementById('card-type')?.value || 'streak';
+    const caption = document.getElementById('card-caption')?.value.trim() || '';
+    const p = State.progress || {};
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+
+    try {
+      const res = await Backend.createCard({
+        language: State.currentLanguage,
+        cardType,
+        caption,
+        stats: {
+          streak: p.streak || State.user?.streak || 0,
+          xp: p.totalXP || State.user?.totalXP || 0,
+          level: p.currentLevel || 1,
+          lessonsCompleted: (p.completedLessons || p.completedLevels || []).length
+        }
+      });
+      const cardId = res._id || res.cardId;
+      // Try to render it — best effort, backend may need a beat
+      if (cardId) {
+        Backend.renderCard(cardId).catch(() => {});
+      }
+      showToast('Card created! ✨', 'success');
+      closeModal('cw-generic-modal');
+      this.loadCards();
+    } catch (e) {
+      console.warn('Create card failed:', e);
+      showToast(e.message || 'Could not create card.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = 'Create card'; }
+    }
+  },
+
+  async viewCard(cardId) {
+    const card = (this.cards || []).find(c => (c._id || c.id) === cardId);
+    if (!card) return;
+    const d = card.data || card;
+    const stats = d.stats || {};
+    const langCfg = CW_CONFIG.LANGUAGES[d.language] || CW_CONFIG.LANGUAGES.yoruba;
+
+    Header._modal('Your progress card', `
+      <div class="pcard ${d.cardType === 'streak' ? 'gold' : ''}" style="min-height: 260px; padding: 24px;">
+        <div>
+          <div class="pcard-head">${esc(String(d.cardType || 'PROGRESS').toUpperCase())}</div>
+          <div class="pcard-big" style="font-size: 46px;">${stats.streak || stats.xp || stats.level || '—'}</div>
+          <div class="pcard-sub" style="font-size: 14px;">${langCfg.name}</div>
+          ${d.caption ? `<div class="pcard-sub" style="margin-top: 10px; font-style: italic;">"${esc(d.caption)}"</div>` : ''}
+        </div>
+        <div class="pcard-foot">
+          ⭐ ${stats.xp || 0} XP · 📚 ${stats.lessonsCompleted || 0} lessons · Lvl ${stats.level || 1}
+        </div>
+      </div>
+      <div style="display: flex; gap: 10px; margin-top: 16px;">
+        <button class="btn btn-ghost" style="flex: 1;" onclick="Comm.shareCardToPod('${cardId}')">Share to pod</button>
+        <button class="btn" style="flex: 1;" onclick="Comm.shareCardExternal('${cardId}')">Share externally</button>
+      </div>
+    `);
+  },
+
+  async shareCardToPod(cardId) {
+    if (!this.pods.length) { showToast('Join a pod first to share.', 'info'); return; }
+    const list = this.pods.map((p, i) => {
+      const d = p.data || p;
+      const langCfg = CW_CONFIG.LANGUAGES[d.language] || {};
+      return `<button class="chip-btn" style="width: 100%; padding: 14px; margin-bottom: 8px;" onclick="Comm.doShareCard('${cardId}', '${p._id || p.id}')">${langCfg.emoji || '👥'} ${esc(d.name || 'Pod')}</button>`;
+    }).join('');
+    Header._modal('Share to a pod', list);
+  },
+
+  async doShareCard(cardId, podId) {
+    try {
+      await Backend.shareCardToPod(cardId, podId);
+      showToast('Shared to pod! 🎉', 'success');
+      closeModal('cw-generic-modal');
+    } catch (e) {
+      showToast(e.message || 'Could not share.', 'error');
+    }
+  },
+
+  async shareCardExternal(cardId) {
+    try {
+      const res = await Backend.shareCardExternal(cardId);
+      const url = res.shareUrl || res.url;
+      if (navigator.share && url) {
+        await navigator.share({ title: 'My ClearWords journey', url });
+      } else if (url) {
+        await navigator.clipboard.writeText(url);
+        showToast('Link copied to clipboard! 📋', 'success');
+      } else {
+        showToast('Card ready to share!', 'success');
+      }
+      closeModal('cw-generic-modal');
+    } catch (e) {
+      showToast(e.message || 'Could not share.', 'error');
+    }
+  }
+};
+
+/* ============================================================
+   RESET POD TABS WHEN LEAVING POD VIEW
+   ============================================================ */
+const origClosePod = Comm.closePod.bind(Comm);
+Comm.closePod = function () {
+  document.querySelectorAll('.pod-tab').forEach(t => { t.style.display = ''; });
+  return origClosePod();
+};
+
+/* ============================================================
+   AUTO-GROW TEXTAREA + ENTER-TO-SEND FOR POD INPUT
+   ============================================================ */
+document.addEventListener('input', (e) => {
+  if (e.target.id === 'pod-input') {
+    e.target.style.height = 'auto';
+    e.target.style.height = Math.min(120, e.target.scrollHeight) + 'px';
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.target.id === 'pod-input' && e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    Comm.sendPodMessage();
+  }
+});
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => Comm.init());
+window.Comm = Comm;
+</script>
+</body>
+</html>
