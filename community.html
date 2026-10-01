@@ -170,6 +170,53 @@ input, textarea { font-family: inherit; }
 .chip-btn.warn { background: transparent; color: var(--gold); border-color: rgba(var(--gold-rgb), 0.4); }
 .chip-btn:active { transform: scale(.97); }
 
+  /* Language setup modal */
+.lang-section {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--bg-elev);
+  border: 1.5px solid var(--border);
+}
+.lang-section-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.lang-section-sub {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+.lang-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lang-chip {
+  padding: 9px 15px;
+  border-radius: var(--radius-full);
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-2);
+  transition: all .15s;
+  cursor: pointer;
+}
+.lang-chip:active { transform: scale(.96); }
+.lang-chip.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.lang-error {
+  font-size: 12.5px;
+  color: var(--danger);
+  min-height: 16px;
+  margin-top: 6px;
+}
+
 /* ============ PROGRESS CARDS ============ */
 .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
 .pcard {
@@ -620,29 +667,46 @@ const Comm = {
     `);
   },
 
-  async matchPod() {
+ async matchPod() {
+    // ── Ensure languages are set up before matching ──
+    const ready = await LanguageSetup.ensure();
+    if (!ready) return;   // user cancelled
+
     showToast('Finding your pod…', 'info');
     closeModal('cw-generic-modal');
+
     try {
-      const res = await Backend.matchPod({});
-      const pod = res.pod || res;
-      if (pod) {
+        const res = await Backend.matchPod({});
+        const returnedPod = res.pod || res;
+        if (!returnedPod) {
+            showToast('No matching pod right now. Try again later.', 'info');
+            return;
+        }
         showToast('Matched! 🎉', 'success');
+
         await this.loadPods();
-        const id = pod._id || pod.id;
-        if (id) setTimeout(() => this.openPod(id), 400);
-      } else {
-        showToast('No matching pod right now. Try again later.', 'info');
-      }
+        const id = returnedPod._id || returnedPod.id;
+        const freshPod = this.pods.find(p => (p._id || p.id) === id);
+
+        if (freshPod) {
+            setTimeout(() => this.openPod(id), 600);
+        } else {
+            setTimeout(async () => {
+                await this.loadPods();
+                const second = this.pods.find(p => (p._id || p.id) === id);
+                if (second) this.openPod(id);
+                else showToast('Pod not yet synced. Try reopening in a moment.', 'info');
+            }, 900);
+        }
     } catch (e) {
-      console.warn('Pod match failed:', e);
-      if (e.status === 402 || e.status === 403) {
-        showToast('Premium required to join a pod.', 'error');
-      } else {
-        showToast('Could not match right now. Try again.', 'error');
-      }
+        console.warn('Pod match failed:', e);
+        if (e.status === 402 || e.status === 403) {
+            showToast('Premium required to join a pod.', 'error');
+        } else {
+            showToast('Could not match right now. Try again.', 'error');
+        }
     }
-  },
+},
 
   showJoinPod() {
     Header._modal('Join with invite code', `
@@ -1056,25 +1120,43 @@ const Comm = {
   },
 
   async matchPair() {
+    // ── Ensure languages are set up before matching ──
+    const ready = await LanguageSetup.ensure();
+    if (!ready) return;   // user cancelled
+
     showToast('Finding your partner…', 'info');
     closeModal('cw-generic-modal');
+
     try {
-      const res = await Backend.matchPair();
-      const pair = res.pair || res;
-      showToast('Matched! 🎉', 'success');
-      await this.loadPairs();
-      if (pair && (pair._id || pair.id)) {
-        setTimeout(() => this.openPairChat(pair._id || pair.id), 400);
-      }
+        const res = await Backend.matchPair();
+        const pair = res.pair || res;
+        showToast('Matched! 🎉', 'success');
+        await this.loadPairs();
+        if (pair && (pair._id || pair.id)) {
+            setTimeout(() => this.openPairChat(pair._id || pair.id), 400);
+        }
     } catch (e) {
-      console.warn('Pair match failed:', e);
-      if (e.status === 402 || e.status === 403) {
-        showToast('Premium required to auto-match.', 'error');
-      } else {
-        showToast('No match available right now. Try again.', 'info');
-      }
+        console.warn('Pair match failed:', e);
+        if (e.status === 404) {
+            Header._modal('No partners right now', `
+                <p style="font-size: 14px; color: var(--text-2); line-height: 1.5;">
+                    We couldn't find a match in your language combination just yet.
+                    Try again in a few hours — new learners join daily.
+                </p>
+                <p style="font-size: 13px; color: var(--text-3); margin-top: 10px;">
+                    Tip: add more learning and teaching languages to widen your matches.
+                </p>
+                <button class="btn btn-block" onclick="closeModal('cw-generic-modal'); Nav.go('profile')" style="margin-top: 16px;">
+                    Update my languages
+                </button>
+            `);
+        } else if (e.status === 403) {
+            showToast('Pair limit reached for your tier.', 'error');
+        } else {
+            showToast('Could not match right now. Try again.', 'error');
+        }
     }
-  },
+},
 
   showRequestPair() {
     Header._modal('Request a partner', `
