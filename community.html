@@ -536,7 +536,7 @@ const Comm = {
   /* ============================================================
      PODS
      ============================================================ */
-  async loadPods() {
+ async loadPods() {
     const list = document.getElementById('pods-list');
     if (!list) return;
     try {
@@ -722,31 +722,44 @@ const Comm = {
      OPEN POD — chat / members / leaderboard
      ============================================================ */
   async openPod(podId, index) {
-    this.activePod = this.pods.find(p => (p._id || p.id) === podId) || (index != null ? this.pods[index] : null);
+    // Try the cached list first
+    this.activePod = this.pods.find(p => (p._id || p.id) === podId)
+        || (index != null ? this.pods[index] : null);
+
+    // If not found, refetch the pods list once and retry
     if (!this.activePod) {
-      // Fetch directly if not in our list
-      try {
-        const res = await Backend.listPods();
-        this.pods = res.pods || res.items || res || [];
-        this.activePod = this.pods.find(p => (p._id || p.id) === podId);
-      } catch {}
+        try {
+            const res = await Backend.listPods();
+            this.pods = res.data || res.items || res.pods || (Array.isArray(res) ? res : []) || [];
+            this.activePod = this.pods.find(p => (p._id || p.id) === podId);
+        } catch (err) {
+            console.warn('openPod refetch failed:', err);
+        }
     }
-    if (!this.activePod) { showToast('Pod not found.', 'error'); return; }
+
+    if (!this.activePod) {
+        showToast('Pod not found — try refreshing.', 'error');
+        return;
+    }
 
     const p = this.activePod.data || this.activePod;
     const langCfg = CW_CONFIG.LANGUAGES[p.language] || CW_CONFIG.LANGUAGES.yoruba;
 
     document.getElementById('pod-avatar').textContent = langCfg.emoji;
-    document.getElementById('pod-name').childNodes[0].nodeValue = (p.name || (langCfg.name + ' Pod')) + ' ';
-    document.getElementById('pod-sub').textContent =
-      (p.members || []).length + ' learners · Level ' + (p.level || 1);
+    const nameNode = document.getElementById('pod-name');
+    const nameChildSmall = nameNode.querySelector('small');
+    nameNode.childNodes[0].nodeValue = (p.name || (langCfg.name + ' Pod')) + ' ';
+    if (nameChildSmall) {
+        nameChildSmall.textContent =
+            (p.members || []).length + ' learners · Level ' + (p.level || 1);
+    }
 
     document.getElementById('pod-view').classList.add('active');
     document.body.style.overflow = 'hidden';
     this.podTabState = 'chat';
     this.setPodTab('chat');
     this.loadPodMessages();
-  },
+},
 
   closePod() {
     document.getElementById('pod-view').classList.remove('active');
@@ -936,7 +949,7 @@ const Comm = {
   /* ============================================================
      PAIRS
      ============================================================ */
-  async loadPairs() {
+ async loadPairs() {
     const list = document.getElementById('pairs-list');
     if (!list) return;
     try {
