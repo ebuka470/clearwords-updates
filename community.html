@@ -536,50 +536,24 @@ const Comm = {
   /* ============================================================
      PODS
      ============================================================ */
-     getPodLimit() {
-    const sub = State.subscription || {};
-    const fromBackend = sub.limits?.pods;
-
-    // JSON serializes Infinity as null — treat null as unlimited
-    if (fromBackend === null) return Infinity;
-    if (typeof fromBackend === 'number') return fromBackend;
-
-    // Fallback if subscription hasn't loaded yet
-    const tier = (State.user?.subscriptionTier || 'free').toLowerCase();
-    const fallback = { free: 5, premium: 10, immersive: Infinity };
-    return fallback[tier] ?? 5;
-},
-
-getPairLimit() {
-    const sub = State.subscription || {};
-    const fromBackend = sub.limits?.pairs;
-
-    if (fromBackend === null) return Infinity;
-    if (typeof fromBackend === 'number') return fromBackend;
-
-    const tier = (State.user?.subscriptionTier || 'free').toLowerCase();
-    const fallback = { free: 5, premium: 10, immersive: Infinity };
-    return fallback[tier] ?? 5;
-}, 
-
   async loadPods() {
     const list = document.getElementById('pods-list');
     if (!list) return;
     try {
-      const res = await Backend.listPods();
-      this.pods = res.pods || res.items || res || [];
-      this.renderPods();
+        const res = await Backend.listPods();
+        this.pods = res.data || res.items || res.pods || (Array.isArray(res) ? res : []) || [];
+        this.renderPods();
     } catch (e) {
-      console.warn('Pods load failed:', e);
-      list.innerHTML = `
-        <div class="card">
-          <div class="empty-note" style="padding: 20px 0;">
-            <strong>Couldn't load your pods.</strong>
-            <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPods()">Retry</button>
-          </div>
-        </div>`;
+        console.warn('Pods load failed:', e);
+        list.innerHTML = `
+          <div class="card">
+            <div class="empty-note" style="padding: 20px 0;">
+              <strong>Couldn't load your pods.</strong>
+              <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPods()">Retry</button>
+            </div>
+          </div>`;
     }
-  },
+},
 
   renderPods() {
     const list = document.getElementById('pods-list');
@@ -630,90 +604,45 @@ getPairLimit() {
   },
 
   openPodActions() {
-    const podsJoined = (this.pods || []).length;
-    const podLimit = this.getPodLimit();
-    const atCap = Number.isFinite(podLimit) && podsJoined >= podLimit;
-    const limitLabel = Number.isFinite(podLimit) ? podLimit : '∞';
-
-    const tier = (State.user?.subscriptionTier || 'free').toLowerCase();
-    const canCreate = tier === 'premium' || tier === 'immersive';
-
-    const usageLine = atCap
-        ? `<div style="font-size: 12.5px; color: var(--gold); text-align: center; margin: 12px 0; font-weight: 700;">
-             You're in ${podsJoined} of ${limitLabel} pods — leave one to join another.
-           </div>`
-        : `<div style="font-size: 12.5px; color: var(--text-3); text-align: center; margin: 12px 0;">
-             ${podsJoined} of ${limitLabel} pods used
-           </div>`;
-
-    const joinDisabled = atCap ? 'disabled' : '';
-    const joinStyle = atCap ? 'opacity: 0.5;' : '';
-
-    const createBlock = canCreate
-        ? `<button class="chip-btn" style="width: 100%; padding: 14px;" onclick="Comm.showCreatePod()">
-             ✨ Create a new pod
-           </button>`
-        : `<div class="card" style="margin-top: 14px; padding: 14px; background: rgba(232,179,60,0.08); border: 1px solid rgba(232,179,60,0.3);">
-             <div style="font-weight: 800; font-size: 13.5px; color: var(--gold); margin-bottom: 4px;">Create your own pod</div>
-             <div style="font-size: 12.5px; color: var(--text-2); line-height: 1.5;">
-               Premium members can create pods and lead small groups of learners.
-             </div>
-             <button class="btn btn-sm" style="width: 100%; margin-top: 10px;" onclick="closeModal('cw-generic-modal'); Nav.go('profile');">
-               See Premium →
-             </button>
-           </div>`;
-
     Header._modal('Pods', `
-      <p style="font-size: 14px; color: var(--text-2); margin-bottom: 16px; line-height: 1.55;">
+      <p style="font-size: 14px; color: var(--text-2); margin-bottom: 16px;">
         Pods are small groups of 5–8 learners at your level learning the same language. Keep each other accountable, share wins, stay motivated.
       </p>
-
-      <button class="chip-btn primary" style="width: 100%; padding: 14px; margin-bottom: 10px; ${joinStyle}" onclick="Comm.matchPod()" ${joinDisabled}>
+      <button class="chip-btn primary" style="width: 100%; padding: 14px; margin-bottom: 10px;" onclick="Comm.matchPod()">
         ⚡ Auto-match me with a pod
       </button>
-      <button class="chip-btn" style="width: 100%; padding: 14px; margin-bottom: 10px; ${joinStyle}" onclick="Comm.showJoinPod()" ${joinDisabled}>
+      <button class="chip-btn" style="width: 100%; padding: 14px; margin-bottom: 10px;" onclick="Comm.showJoinPod()">
         🔑 Join with invite code
       </button>
-
-      ${usageLine}
-      ${createBlock}
+      <button class="chip-btn" style="width: 100%; padding: 14px;" onclick="Comm.showCreatePod()">
+        ✨ Create a new pod
+      </button>
     `);
-},
+  },
 
   async matchPod() {
     showToast('Finding your pod…', 'info');
     closeModal('cw-generic-modal');
     try {
-        const res = await Backend.matchPod({});
-        const pod = res.pod || res;
-
-        if (res && res.matched === false && res.reason === 'already_in_pod') {
-            showToast("You're already in a pod for this language.", 'info');
-            await this.loadPods();
-            return;
-        }
-
-        if (pod && (pod._id || pod.id)) {
-            showToast('Matched! 🎉', 'success');
-            await this.loadPods();
-            const id = pod._id || pod.id;
-            setTimeout(() => this.openPod(id), 400);
-        } else {
-            showToast('No matching pod right now. Try again later.', 'info');
-        }
+      const res = await Backend.matchPod({});
+      const pod = res.pod || res;
+      if (pod) {
+        showToast('Matched! 🎉', 'success');
+        await this.loadPods();
+        const id = pod._id || pod.id;
+        if (id) setTimeout(() => this.openPod(id), 400);
+      } else {
+        showToast('No matching pod right now. Try again later.', 'info');
+      }
     } catch (e) {
-        console.warn('Pod match failed:', e);
-        if (e.status === 403) {
-            const limit = this.getPodLimit();
-            const label = Number.isFinite(limit) ? limit : '∞';
-            showToast(`You're at your pod limit (${label}). Leave a pod to join another.`, 'info');
-        } else if (e.status === 404) {
-            showToast('No matching pod right now. Try again later.', 'info');
-        } else {
-            showToast(e.message || 'Could not match right now.', 'error');
-        }
+      console.warn('Pod match failed:', e);
+      if (e.status === 402 || e.status === 403) {
+        showToast('Premium required to join a pod.', 'error');
+      } else {
+        showToast('Could not match right now. Try again.', 'error');
+      }
     }
-},
+  },
 
   showJoinPod() {
     Header._modal('Join with invite code', `
@@ -736,17 +665,9 @@ getPairLimit() {
         const podId = res.pod?._id || res.podId || res._id;
         if (podId) setTimeout(() => this.openPod(podId), 300);
     } catch (e) {
-    console.warn('Join pod failed:', e);
-    if (e.status === 403) {
-        const limit = this.getPodLimit();
-        const label = Number.isFinite(limit) ? limit : '∞';
-        showToast(`You're at your pod limit (${label}). Leave a pod to join another.`, 'info');
-    } else if (e.status === 429) {
-        showToast(e.message || 'You recently left this pod. Try again later.', 'info');
-    } else {
+        console.warn('Join pod failed:', e);
         showToast(e.message || 'Could not join that pod.', 'error');
     }
-}
 },
 
   showCreatePod() {
@@ -774,24 +695,28 @@ getPairLimit() {
   async createPod() {
     const name = document.getElementById('pod-name-input')?.value.trim();
     if (!name) { showToast('Give your pod a name.', 'info'); return; }
+    const lvl = State.progress?.currentLevel || 1;
+    const levelTier = typeof lvl === 'string'
+        ? lvl
+        : (lvl <= 15 ? 'beginner' : lvl <= 35 ? 'intermediate' : 'advanced');
     try {
-      await Backend.createPod({
-        name,
-        language: State.currentLanguage,
-        level: State.progress?.currentLevel || 1
-      });
-      showToast('Pod created! 🎉', 'success');
-      closeModal('cw-generic-modal');
-      await this.loadPods();
-   } catch (e) {
-    console.warn('Create pod failed:', e);
-    if (e.status === 403) {
-        showToast('Premium required to create pods.', 'error');
-    } else {
-        showToast(e.message || 'Could not create pod.', 'error');
+        await Backend.createPod({
+            name,
+            language: State.currentLanguage,
+            level: levelTier
+        });
+        showToast('Pod created! 🎉', 'success');
+        closeModal('cw-generic-modal');
+        await this.loadPods();
+    } catch (e) {
+        console.warn('Create pod failed:', e);
+        if (e.status === 402 || e.status === 403) {
+            showToast('Premium required to create pods.', 'error');
+        } else {
+            showToast(e.message || 'Could not create pod.', 'error');
+        }
     }
-}
-  },
+},
 
   /* ============================================================
      OPEN POD — chat / members / leaderboard
@@ -1015,20 +940,20 @@ getPairLimit() {
     const list = document.getElementById('pairs-list');
     if (!list) return;
     try {
-      const res = await Backend.listPairs();
-      this.pairs = res.pairs || res.items || res || [];
-      this.renderPairs();
+        const res = await Backend.listPairs();
+        this.pairs = res.data || res.items || res.pairs || (Array.isArray(res) ? res : []) || [];
+        this.renderPairs();
     } catch (e) {
-      console.warn('Pairs load failed:', e);
-      list.innerHTML = `
-        <div class="card">
-          <div class="empty-note" style="padding: 20px 0;">
-            <strong>Couldn't load pairs.</strong>
-            <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPairs()">Retry</button>
-          </div>
-        </div>`;
+        console.warn('Pairs load failed:', e);
+        list.innerHTML = `
+          <div class="card">
+            <div class="empty-note" style="padding: 20px 0;">
+              <strong>Couldn't load pairs.</strong>
+              <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPairs()">Retry</button>
+            </div>
+          </div>`;
     }
-  },
+},
 
   renderPairs() {
     const list = document.getElementById('pairs-list');
@@ -1037,40 +962,27 @@ getPairLimit() {
     const pending = this.pairs.filter(p => (p.status || p.data?.status) === 'pending');
     const myId = (State.user && (State.user._id || State.user.id)) || '';
 
-    const pairLimit = this.getPairLimit();
-const limitLabel = Number.isFinite(pairLimit) ? pairLimit : '∞';
-const activeCount = this.pairs.filter(p => (p.status || p.data?.status) === 'active').length;
-const atCap = Number.isFinite(pairLimit) && activeCount >= pairLimit;
-
-if (!this.pairs.length) {
-    list.innerHTML = `
-      <div class="card card-tint-indigo">
-        <div class="empty-note" style="padding: 20px 0;">
-          <strong>No learning partners yet</strong>
-          Pair up with someone learning your language and swap practice.
-          <button class="btn" style="margin-top: 14px;" onclick="Comm.matchPair()">
-            Find a partner →
-          </button>
-          <div style="font-size: 12px; color: var(--text-3); margin-top: 12px;">
-            0 of ${limitLabel} pairs used
+    if (!this.pairs.length) {
+      list.innerHTML = `
+        <div class="card card-tint-indigo">
+          <div class="empty-note" style="padding: 20px 0;">
+            <strong>No learning partners yet</strong>
+            Pair up with someone learning your language and swap practice.
+            <button class="btn" style="margin-top: 14px;" onclick="Comm.matchPair()">
+              Find a partner →
+            </button>
           </div>
-        </div>
-      </div>`;
-    return;
-}
+        </div>`;
+      return;
+    }
 
-    const usageLine = `
-    <div style="font-size: 12px; color: var(--text-3); text-align: center; padding: 4px 0 12px; font-weight: 600;">
-        ${active.length} of ${limitLabel} pairs used${atCap ? ' · at limit' : ''}
-    </div>`;
-
-list.innerHTML = usageLine + [
-    // Pending requests (that I sent or received)
-    ...pending.map(p => this.renderPairCard(p, myId, true)),
-    // Active
-    ...active.map(p => this.renderPairCard(p, myId, false))
-].join('');
-},
+    list.innerHTML = [
+      // Pending requests (that I sent or received)
+      ...pending.map(p => this.renderPairCard(p, myId, true)),
+      // Active
+      ...active.map(p => this.renderPairCard(p, myId, false))
+    ].join('');
+  },
 
   renderPairCard(pair, myId, isPending) {
     const d = pair.data || pair;
@@ -1117,35 +1029,18 @@ list.innerHTML = usageLine + [
   },
 
   openPairMenu() {
-    const pairLimit = this.getPairLimit();
-    const limitLabel = Number.isFinite(pairLimit) ? pairLimit : '∞';
-    const activeCount = (this.pairs || []).filter(p => (p.status || p.data?.status) === 'active').length;
-    const atCap = Number.isFinite(pairLimit) && activeCount >= pairLimit;
-
-    const disabledStyle = atCap ? 'opacity: 0.5;' : '';
-    const disabledAttr = atCap ? 'disabled' : '';
-
-    const usageLine = atCap
-        ? `<div style="font-size: 12.5px; color: var(--gold); text-align: center; margin: 12px 0; font-weight: 700;">
-             You're at your pair limit (${activeCount} of ${limitLabel}) — end a pair to start another.
-           </div>`
-        : `<div style="font-size: 12.5px; color: var(--text-3); text-align: center; margin: 12px 0;">
-             ${activeCount} of ${limitLabel} pairs used
-           </div>`;
-
     Header._modal('Language exchange', `
-      <p style="font-size: 14px; color: var(--text-2); margin-bottom: 16px; line-height: 1.55;">
+      <p style="font-size: 14px; color: var(--text-2); margin-bottom: 16px;">
         A pair is a one-to-one learning partner. You swap practice, share progress, and encourage each other.
       </p>
-      <button class="chip-btn primary" style="width: 100%; padding: 14px; margin-bottom: 10px; ${disabledStyle}" onclick="Comm.matchPair()" ${disabledAttr}>
+      <button class="chip-btn primary" style="width: 100%; padding: 14px; margin-bottom: 10px;" onclick="Comm.matchPair()">
         ⚡ Auto-match me
       </button>
-      <button class="chip-btn" style="width: 100%; padding: 14px; ${disabledStyle}" onclick="Comm.showRequestPair()" ${disabledAttr}>
+      <button class="chip-btn" style="width: 100%; padding: 14px;" onclick="Comm.showRequestPair()">
         🔍 Request someone specific
       </button>
-      ${usageLine}
     `);
-},
+  },
 
   async matchPair() {
     showToast('Finding your partner…', 'info');
@@ -1159,17 +1054,13 @@ list.innerHTML = usageLine + [
         setTimeout(() => this.openPairChat(pair._id || pair.id), 400);
       }
     } catch (e) {
-    console.warn('Pair match failed:', e);
-    if (e.status === 403) {
-        const limit = this.getPairLimit();
-        const label = Number.isFinite(limit) ? limit : '∞';
-        showToast(`You're at your pair limit (${label}). End a pair to match with someone new.`, 'info');
-    } else if (e.status === 404) {
+      console.warn('Pair match failed:', e);
+      if (e.status === 402 || e.status === 403) {
+        showToast('Premium required to auto-match.', 'error');
+      } else {
         showToast('No match available right now. Try again.', 'info');
-    } else {
-        showToast(e.message || 'Could not match right now.', 'error');
+      }
     }
-}
   },
 
   showRequestPair() {
@@ -1191,24 +1082,14 @@ list.innerHTML = usageLine + [
     const message = document.getElementById('pair-message')?.value.trim() || '';
     if (!target) { showToast('Enter a username.', 'info'); return; }
     try {
-        await Backend.requestPair(target, message);
-        showToast('Request sent! 📨', 'success');
-        closeModal('cw-generic-modal');
-        this.loadPairs();
+      await Backend.requestPair(target, message);
+      showToast('Request sent! 📨', 'success');
+      closeModal('cw-generic-modal');
+      this.loadPairs();
     } catch (e) {
-        if (e.status === 403) {
-            const limit = this.getPairLimit();
-            const label = Number.isFinite(limit) ? limit : '∞';
-            showToast(`You're at your pair limit (${label}). End a pair to request another.`, 'info');
-        } else if (e.status === 404) {
-            showToast('No learner found with that username.', 'error');
-        } else if (e.status === 409) {
-            showToast('You already have a request or pair with them.', 'info');
-        } else {
-            showToast(e.message || 'Could not send request.', 'error');
-        }
+      showToast(e.message || 'Could not send request.', 'error');
     }
-},
+  },
 
   async acceptPair(pairId) {
     try {
@@ -1357,14 +1238,15 @@ list.innerHTML = usageLine + [
     const grid = document.getElementById('cards-grid');
     if (!grid) return;
     try {
-      const res = await Backend.listMyCards();
-      this.cards = res.cards || res.items || res || [];
-      this.renderCards();
+        const res = await Backend.listMyCards();
+        this.cards = res.data || res.items || res.cards || (Array.isArray(res) ? res : []) || [];
+        this.renderCards();
     } catch (e) {
-      console.warn('Cards load failed:', e);
-      this.renderCards(); // render empty state
+        console.warn('Cards load failed:', e);
+        this.cards = [];
+        this.renderCards();
     }
-  },
+},
 
   renderCards() {
     const grid = document.getElementById('cards-grid');
