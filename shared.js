@@ -183,7 +183,6 @@ const Backend = {
   },
   generateCustomLesson: (payload) => {
     const tz = -new Date().getTimezoneOffset();
-    // Accept either { topic, language, level } or a raw prompt string
     const body = typeof payload === 'string'
       ? { prompt: payload, timezoneOffsetMinutes: tz }
       : {
@@ -349,98 +348,6 @@ const State = {
     }
   },
 
-  toggle(containerId, langKey) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    const btn = container.querySelector(`[data-lang="${langKey}"]`);
-    if (!btn) return;
-    btn.classList.toggle('active');
-    // Clear any error when they interact
-    const err = document.getElementById(containerId + '-err');
-    if (err) err.textContent = '';
-  },
-
-  cancel() {
-    if (this._pendingResolve) this._pendingResolve(null);
-    this._pendingResolve = null;
-    closeModal('cw-generic-modal');
-  },
-
-  async save() {
-    const learning = Array.from(
-      document.querySelectorAll('#ls-learning .lang-chip.active')
-    ).map(b => b.dataset.lang);
-
-    const teaching = Array.from(
-      document.querySelectorAll('#ls-teaching .lang-chip.active')
-    ).map(b => b.dataset.lang);
-
-    // Validation
-    if (learning.length === 0) {
-      document.getElementById('ls-learning-err').textContent =
-        'Pick at least one language you want to learn.';
-      return;
-    }
-    if (teaching.length === 0) {
-      document.getElementById('ls-teaching-err').textContent =
-        'Pick at least one language you can help with.';
-      return;
-    }
-
-    const btn = document.getElementById('ls-save');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-inline"></span> Saving…';
-
-    try {
-      await Backend.updateProfile({
-        learningLanguages: learning,
-        teachingLanguages: teaching
-      });
-
-      // Refresh user state so subsequent calls see the new values
-      const me = await Backend.me();
-      State.user = me.user || me;
-      Auth.setUser(State.user);
-
-      if (this._pendingResolve) {
-        this._pendingResolve({ learning, teaching });
-      }
-      this._pendingResolve = null;
-      closeModal('cw-generic-modal');
-      showToast('Languages saved ✨', 'success');
-    } catch (e) {
-      console.error('Language setup save failed:', e);
-      btn.disabled = false;
-      btn.textContent = 'Save & match me';
-      document.getElementById('ls-learning-err').textContent =
-        e.message || 'Could not save. Check your connection.';
-    }
-  },
-
-  /**
-   * Convenience: returns true if the user has enough languages set up.
-   */
-  hasLanguages() {
-    const u = State.user || {};
-    const learning = u.learningLanguages || [];
-    const teaching = u.teachingLanguages || [];
-    return learning.length > 0 && teaching.length > 0;
-  },
-
-  /**
-   * Ensure the user has languages set up. If not, prompt them.
-   * Returns true if ready to match, false if user cancelled.
-   */
-  async ensure() {
-    if (this.hasLanguages()) return true;
-    const result = await this.prompt();
-    return result !== null;
-  }
-};
-
-// Expose globally
-window.LanguageSetup = LanguageSetup;
-
   async loadProgress(language) {
     if (!Auth.isLoggedIn()) return null;
     try {
@@ -465,6 +372,175 @@ window.LanguageSetup = LanguageSetup;
     localStorage.setItem(CW_CONFIG.THEME_KEY, theme);
     document.documentElement.setAttribute('data-theme', theme);
     this.emit('theme:changed', theme);
+  }
+};
+
+/* ============================================================
+   5b. LANGUAGE SETUP (lazy prompt on first match)
+   ============================================================ */
+const LanguageSetup = {
+  _pendingResolve: null,
+
+  prompt() {
+    return new Promise(resolve => {
+      this._pendingResolve = resolve;
+
+      const u = State.user || {};
+      const learning = u.learningLanguages || [];
+      const teaching = u.teachingLanguages || [];
+      const primaryLang = u.language || 'yoruba';
+
+      const allLangs = Object.entries(CW_CONFIG.LANGUAGES)
+        .map(([key, cfg]) => ({ key, ...cfg }));
+
+      const renderChips = (containerId, selected) =>
+        allLangs.map(l => `
+          <button type="button"
+                  class="lang-chip ${selected.includes(l.key) ? 'active' : ''}"
+                  data-lang="${l.key}"
+                  onclick="LanguageSetup.toggle('${containerId}', '${l.key}')">
+            ${l.emoji} ${l.name}
+          </button>
+        `).join('');
+
+      const body = `
+        <div style="font-size: 14px; color: var(--text-2); line-height: 1.5; margin-bottom: 18px;">
+          To match you with the right pod and language exchange partner,
+          we need to know two things. It takes 10 seconds and you can
+          change it later.
+        </div>
+
+        <div class="lang-section">
+          <div class="lang-section-title">
+            What do you want to learn?
+            <span style="color: var(--danger);">*</span>
+          </div>
+          <div class="lang-section-sub">
+            Pick every Nigerian language you want to get better at.
+          </div>
+          <div class="lang-chips" id="ls-learning">
+            ${renderChips('ls-learning', learning)}
+          </div>
+          <div class="lang-error" id="ls-learning-err"></div>
+        </div>
+
+        <div class="lang-section" style="margin-top: 18px;">
+          <div class="lang-section-title">
+            What can you help others with?
+            <span style="color: var(--danger);">*</span>
+          </div>
+          <div class="lang-section-sub">
+            Even a little counts — English is common. Language exchange
+            is two-way: you teach, they teach.
+          </div>
+          <div class="lang-chips" id="ls-teaching">
+            ${renderChips('ls-teaching', teaching)}
+          </div>
+          <div class="lang-error" id="ls-teaching-err"></div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 22px;">
+          <button class="btn btn-ghost" style="flex: 1;" onclick="LanguageSetup.cancel()">
+            Not now
+          </button>
+          <button class="btn" id="ls-save" style="flex: 2;" onclick="LanguageSetup.save()">
+            Save &amp; match me
+          </button>
+        </div>
+      `;
+
+      Header._modal('Set up your languages', body);
+
+      setTimeout(() => {
+        ['ls-learning', 'ls-teaching'].forEach(id => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const hasAny = el.querySelector('.lang-chip.active');
+          if (!hasAny && primaryLang) {
+            const btn = el.querySelector(`[data-lang="${primaryLang}"]`);
+            if (btn) btn.classList.add('active');
+          }
+        });
+      }, 50);
+    });
+  },
+
+  toggle(containerId, langKey) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const btn = container.querySelector(`[data-lang="${langKey}"]`);
+    if (!btn) return;
+    btn.classList.toggle('active');
+    const err = document.getElementById(containerId + '-err');
+    if (err) err.textContent = '';
+  },
+
+  cancel() {
+    if (this._pendingResolve) this._pendingResolve(null);
+    this._pendingResolve = null;
+    closeModal('cw-generic-modal');
+  },
+
+  async save() {
+    const learning = Array.from(
+      document.querySelectorAll('#ls-learning .lang-chip.active')
+    ).map(b => b.dataset.lang);
+
+    const teaching = Array.from(
+      document.querySelectorAll('#ls-teaching .lang-chip.active')
+    ).map(b => b.dataset.lang);
+
+    if (learning.length === 0) {
+      document.getElementById('ls-learning-err').textContent =
+        'Pick at least one language you want to learn.';
+      return;
+    }
+    if (teaching.length === 0) {
+      document.getElementById('ls-teaching-err').textContent =
+        'Pick at least one language you can help with.';
+      return;
+    }
+
+    const btn = document.getElementById('ls-save');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-inline"></span> Saving…';
+
+    try {
+      await Backend.updateProfile({
+        learningLanguages: learning,
+        teachingLanguages: teaching
+      });
+
+      const me = await Backend.me();
+      State.user = me.user || me;
+      Auth.setUser(State.user);
+
+      if (this._pendingResolve) {
+        this._pendingResolve({ learning, teaching });
+      }
+      this._pendingResolve = null;
+      closeModal('cw-generic-modal');
+      showToast('Languages saved ✨', 'success');
+    } catch (e) {
+      console.error('Language setup save failed:', e);
+      btn.disabled = false;
+      btn.textContent = 'Save & match me';
+      document.getElementById('ls-learning-err').textContent =
+        e.message || 'Could not save. Check your connection.';
+    }
+  },
+
+  hasLanguages() {
+    const u = State.user || {};
+    const learning = u.learningLanguages || [];
+    const teaching = u.teachingLanguages || [];
+    return learning.length > 0 && teaching.length > 0;
+  },
+
+  async ensure() {
+    if (this.hasLanguages()) return true;
+    const result = await this.prompt();
+    return result !== null;
   }
 };
 
@@ -605,12 +681,10 @@ const AudioMgr = {
     const langCfg = CW_CONFIG.LANGUAGES[language] || CW_CONFIG.LANGUAGES.yoruba;
     const key = this.cacheKey(text, language);
 
-    // 1. Supabase cache
     if (await this.existsInSupabase(key)) {
       return this._playUrl(this.supabaseUrl(key));
     }
 
-    // 2. Backend proxy (raw audio bytes)
     try {
       const res = await Backend.tts(text, langCfg.voice);
       const buf = await res.arrayBuffer();
@@ -621,7 +695,6 @@ const AudioMgr = {
       console.warn('Backend TTS failed, falling back to browser:', e.message);
     }
 
-    // 3. Browser fallback
     return this._browserFallback(text, language);
   },
 
@@ -792,7 +865,6 @@ const Header = {
   pickLanguage(lang) {
     State.setLanguage(lang);
     closeModal('cw-generic-modal');
-    // Persist the language change to the backend (fire and forget)
     Backend.updateProfile({ primaryLanguage: lang }).catch(() => {});
     location.reload();
   },
@@ -890,8 +962,6 @@ async function cwSignup(payload) {
   if (r.token) Auth.setToken(r.token);
   if (r.user) {
     Auth.setUser(r.user);
-    // Sync the app's current language with what the backend actually stored.
-    // Never trust the stale localStorage value from a prior session.
     if (r.user.language && CW_CONFIG.LANGUAGES[r.user.language]) {
       State.currentLanguage = r.user.language;
       localStorage.setItem(CW_CONFIG.LANG_KEY, r.user.language);
@@ -915,8 +985,6 @@ async function cwLogin(email, password) {
 
 function cwLogout() {
   Auth.clear();
-  // Clear per-user local state so the next login on this device starts
-  // fresh — prevents the "signed up for X, got Y" cross-account leak.
   localStorage.removeItem(CW_CONFIG.LANG_KEY);
   localStorage.removeItem('cw_onboarding_partial');
   location.href = 'onboarding.html';
@@ -963,6 +1031,7 @@ window.api = api;
 window.ApiError = ApiError;
 window.Backend = Backend;
 window.State = State;
+window.LanguageSetup = LanguageSetup;
 window.Curriculum = Curriculum;
 window.AudioMgr = AudioMgr;
 window.Nav = Nav;
