@@ -1,6 +1,7 @@
 /* ============================================================
    ClearWords — Shared Runtime
-   Loaded by learn.html, practice.html, community.html, profile.html
+   Loaded by learn.html, practice.html, community.html, profile.html,
+   and onboarding.html.
    Contains: API client, auth, state, audio, curriculum normalizer,
    UI helpers, and every shared modal.
    ============================================================ */
@@ -10,7 +11,7 @@
    ============================================================ */
 const CW_CONFIG = {
   API_BASE: 'https://clearwords-backend.onrender.com',
-  REQUEST_TIMEOUT: 12000,          // 12s — every request has a deadline
+  REQUEST_TIMEOUT: 12000,
   TOKEN_KEY: 'cw_jwt',
   LANG_KEY: 'cw_language',
   THEME_KEY: 'cw_theme',
@@ -76,8 +77,6 @@ async function apiRequest(path, opts = {}) {
   const timer = setTimeout(() => controller.abort(), timeout);
 
   const headers = {};
-  // Only set Content-Type when sending a JSON body. TTS returns raw audio
-  // and we shouldn't send JSON headers when we're not sending JSON.
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   if (auth) {
     const token = Auth.getToken();
@@ -95,6 +94,7 @@ async function apiRequest(path, opts = {}) {
 
     if (res.status === 401 && auth) {
       Auth.clear();
+      localStorage.removeItem(CW_CONFIG.LANG_KEY);
       window.dispatchEvent(new CustomEvent('cw:auth-expired'));
       throw new ApiError('Session expired', 401, 'auth_expired');
     }
@@ -158,7 +158,16 @@ const Backend = {
 
   // --- Progress ---
   getProgress: (language) => api.get('/api/progress', { params: { language } }),
-  completeLesson: (payload) => api.post('/api/progress/complete-lesson', payload),
+  completeLesson: (payload) => api.post('/api/progress/complete-lesson', {
+    language: payload.language || State.currentLanguage,
+    levelId: payload.levelId ?? payload.levelNumber,
+    lessonId: payload.lessonId,
+    perfect: payload.perfect || false,
+    timeSpentSeconds: payload.timeSpentSeconds || 0,
+    mistakesCount: payload.mistakesCount || 0,
+    source: payload.source || 'curriculum',
+    timezoneOffsetMinutes: -new Date().getTimezoneOffset()
+  }),
   syncProgress: (payload) => api.post('/api/progress/sync', payload),
   resetProgress: (language) => api.delete('/api/progress/' + language),
 
@@ -167,17 +176,24 @@ const Backend = {
   getCurriculumVersion: (language) => api.get('/api/curriculum/version/' + language, { auth: false }),
 
   // --- AI ---
-  // Contract: { prompt, timezoneOffsetMinutes } → { status, data, usage }
   aiChat: (prompt, context) => {
     const tz = -new Date().getTimezoneOffset();
-    // If context is provided, prepend it to the prompt so the backend sees
-    // it in a single field (the contract only accepts `prompt`).
     const fullPrompt = context ? context + '\n\n' + prompt : prompt;
     return api.post('/api/ai/chat', { prompt: fullPrompt, timezoneOffsetMinutes: tz });
   },
-  generateCustomLesson: (prompt) => {
+  generateCustomLesson: (payload) => {
     const tz = -new Date().getTimezoneOffset();
-    return api.post('/api/ai/custom-lesson', { prompt, timezoneOffsetMinutes: tz });
+    // Accept either { topic, language, level } or a raw prompt string
+    const body = typeof payload === 'string'
+      ? { prompt: payload, timezoneOffsetMinutes: tz }
+      : {
+          topic: payload.topic,
+          language: payload.language || State.currentLanguage,
+          level: payload.level || 'beginner',
+          context: payload.context,
+          timezoneOffsetMinutes: tz
+        };
+    return api.post('/api/ai/custom-lesson', body);
   },
   getAIUsage: () => api.get('/api/ai/usage'),
 
@@ -189,18 +205,24 @@ const Backend = {
   joinPodByCode: (inviteCode) => api.post('/api/pods/join-by-code', { inviteCode }),
   leavePod: (podId) => api.delete('/api/pods/' + podId + '/leave'),
   getPodMessages: (podId, params) => api.get('/api/pods/' + podId + '/messages', { params }),
-  sendPodMessage: (podId, content) => api.post('/api/pods/' + podId + '/messages', { content }),
-  podCheckin: (podId, note) => api.post('/api/pods/' + podId + '/checkin', { note }),
+  sendPodMessage: (podId, content) => api.post('/api/pods/' + podId + '/messages', { text: content }),
+  podCheckin: (podId, lessonsCompleted) =>
+    api.post('/api/pods/' + podId + '/checkin', { lessonsCompleted: lessonsCompleted || 0 }),
   podLeaderboard: (podId) => api.get('/api/pods/' + podId + '/leaderboard'),
 
   // --- Pairs ---
   listPairs: () => api.get('/api/pairs'),
-  requestPair: (userId, message) => api.post('/api/pairs/request', { userId, message }),
+  requestPair: (targetUserId, languageA, languageB) =>
+    api.post('/api/pairs/request', {
+      targetUserId,
+      languageA: languageA || State.currentLanguage,
+      languageB: languageB || 'english'
+    }),
   matchPair: () => api.post('/api/pairs/match'),
   acceptPair: (pairId) => api.post('/api/pairs/' + pairId + '/accept'),
   endPair: (pairId) => api.delete('/api/pairs/' + pairId),
   getPairMessages: (pairId, params) => api.get('/api/pairs/' + pairId + '/messages', { params }),
-  sendPairMessage: (pairId, content) => api.post('/api/pairs/' + pairId + '/messages', { content }),
+  sendPairMessage: (pairId, content) => api.post('/api/pairs/' + pairId + '/messages', { text: content }),
   startPairCall: (pairId, type) => api.post('/api/pairs/' + pairId + '/call/start', { type }),
 
   // --- Cards ---
@@ -224,7 +246,8 @@ const Backend = {
   // --- Subscription ---
   getSubscription: () => api.get('/api/subscription'),
   getPlans: () => api.get('/api/subscription/plans', { auth: false }),
-  initPayment: (planId) => api.post('/api/subscription/initialize', { planId }),
+  initPayment: (tier, billingCycle = 'monthly', currency = 'NGN') =>
+    api.post('/api/subscription/initialize', { tier, billingCycle, currency }),
   verifyPayment: (reference) => api.post('/api/subscription/verify/' + reference),
 
   // --- Referrals ---
@@ -235,20 +258,13 @@ const Backend = {
   // --- Streak ---
   getFreezes: (language) => api.get('/api/streak/freezes', { params: { language } }),
   buyFreeze: (language) => api.post('/api/streak/freezes/buy', { language }),
-  toggleAutoFreeze: (enabled) => api.post('/api/streak/freezes/toggle-auto', { enabled }),
+  toggleAutoFreeze: (autoApply) => api.post('/api/streak/freezes/toggle-auto', { autoApply }),
   recoverStreak: (language) => api.post('/api/streak/recover', { language }),
 
   // --- TTS ---
-  // Contract: { text, voice, speaker, response_format, temperature, top_p, repetition_penalty }
-  // → raw audio bytes (ArrayBuffer). All fields optional except text.
-  // Only `text` and `voice` are set here; the rest use backend defaults.
   tts: (text, voice) => api.raw('/api/tts', {
     method: 'POST',
-    body: {
-      text,
-      voice: voice || 'titilayo_yo',
-      response_format: 'mp3'
-    },
+    body: { text, voice: voice || 'titilayo_yo', response_format: 'mp3' },
     timeout: 25000
   }),
   ttsUsage: () => api.get('/api/tts/usage'),
@@ -261,7 +277,7 @@ const Backend = {
 const State = {
   user: null,
   progress: null,
-  curriculumCache: {},   // { yoruba: { language, levels: [...] }, igbo: {...} }
+  curriculumCache: {},
   subscription: null,
   notifications: { items: [], unread: 0 },
   currentLanguage: localStorage.getItem(CW_CONFIG.LANG_KEY) || 'yoruba',
@@ -287,25 +303,30 @@ const State = {
         Backend.me(),
         Backend.getSubscription()
       ]);
+
       if (meRes.status === 'fulfilled') {
-        // Contract: { token, user } on login. /me likely returns { user }
         this.user = meRes.value.user || meRes.value;
         Auth.setUser(this.user);
+
+        // Server is authoritative for language. If localStorage disagrees
+        // (stale from a previous account on this device), the server wins.
+        if (this.user && this.user.language && CW_CONFIG.LANGUAGES[this.user.language]) {
+          if (this.currentLanguage !== this.user.language) {
+            this.currentLanguage = this.user.language;
+            localStorage.setItem(CW_CONFIG.LANG_KEY, this.user.language);
+          }
+        }
         this.emit('user:changed', this.user);
       } else if (meRes.reason && meRes.reason.status === 401) {
         Auth.clear();
+        localStorage.removeItem(CW_CONFIG.LANG_KEY);
         return false;
       } else {
-        // Network failed but token exists — keep cached user
         this.user = Auth.getUser();
       }
+
       if (subRes.status === 'fulfilled') this.subscription = subRes.value;
 
-      // Language preference comes from the server user record if set
-      if (this.user && this.user.primaryLanguage) {
-        this.currentLanguage = this.user.primaryLanguage;
-        localStorage.setItem(CW_CONFIG.LANG_KEY, this.currentLanguage);
-      }
       return true;
     } catch (e) {
       console.warn('State.hydrate failed:', e);
@@ -357,7 +378,6 @@ const State = {
 
 /* ============================================================
    6. CURRICULUM NORMALIZER
-   Handles Format B (level = lesson) and Format A (level.lessons).
    ============================================================ */
 const Curriculum = {
   normalize(raw, language) {
@@ -365,7 +385,6 @@ const Curriculum = {
     const rawLevels = Array.isArray(raw) ? raw : (raw.levels || []);
 
     const levels = rawLevels.map(level => {
-      // Format A — a level with nested lessons
       if (Array.isArray(level.lessons) && level.lessons.length) {
         return {
           level: level.level,
@@ -392,7 +411,6 @@ const Curriculum = {
           }))
         };
       }
-      // Format B — the level IS the lesson (your backend's shape)
       return {
         level: level.level,
         title: level.title || ('Level ' + level.level),
@@ -500,7 +518,7 @@ const AudioMgr = {
       return this._playUrl(this.supabaseUrl(key));
     }
 
-    // 2. Backend /api/tts — raw audio bytes
+    // 2. Backend proxy (raw audio bytes)
     try {
       const res = await Backend.tts(text, langCfg.voice);
       const buf = await res.arrayBuffer();
@@ -535,7 +553,6 @@ const AudioMgr = {
     return true;
   },
 
-  // Simple async-iterator over dialogue lines with 400ms pause
   async playDialogue(lines, language) {
     for (const line of lines) {
       await this.play(line.text, language);
@@ -594,9 +611,7 @@ function initialsOf(name) {
 }
 
 /* ============================================================
-   9. NAVIGATION between tab pages
-   Each tab is its own .html file, so navigation is a real
-   location change. History works natively.
+   9. NAVIGATION
    ============================================================ */
 const Nav = {
   TABS: {
@@ -622,9 +637,7 @@ const Nav = {
 };
 
 /* ============================================================
-   10. HEADER (shared across tabs)
-   Every page includes a <header id="cw-header"></header> and
-   calls Header.render() on load.
+   10. HEADER
    ============================================================ */
 const Header = {
   render(activeTab) {
@@ -687,7 +700,7 @@ const Header = {
   pickLanguage(lang) {
     State.setLanguage(lang);
     closeModal('cw-generic-modal');
-    // Update user on backend (fire and forget)
+    // Persist the language change to the backend (fire and forget)
     Backend.updateProfile({ primaryLanguage: lang }).catch(() => {});
     location.reload();
   },
@@ -699,18 +712,18 @@ const Header = {
 
     try {
       const res = await Backend.listNotifications({ limit: 50 });
-      const items = res.items || res.notifications || [];
+      const items = res.data || res.items || res.notifications || [];
       const body = document.querySelector('#cw-generic-modal .cw-modal-body');
       if (!items.length) {
         body.innerHTML = '<div class="empty-note">No notifications yet.</div>';
         return;
       }
       body.innerHTML = items.map(n => `
-        <div class="notif-item ${n.read ? '' : 'unread'}" onclick="Header.readNotif('${n._id}')">
+        <div class="notif-item ${n.read || n.isRead ? '' : 'unread'}" onclick="Header.readNotif('${n._id || n.id}')">
           <div class="notif-icon">${this._notifIcon(n.type)}</div>
           <div class="notif-body">
             <div class="notif-title">${esc(n.title || this._notifTitle(n.type))}</div>
-            <div class="notif-text">${esc(n.message || n.body || '')}</div>
+            <div class="notif-text">${esc(n.message || n.body || n.content || '')}</div>
             <div class="notif-time">${fmtTimeAgo(n.createdAt)}</div>
           </div>
         </div>`).join('');
@@ -754,7 +767,6 @@ const Header = {
     this.refreshNotifDot();
   },
 
-  /* ---- Generic modal host ---- */
   _modal(title, bodyHtml, id) {
     let host = document.getElementById('cw-generic-modal');
     if (!host) {
@@ -779,36 +791,51 @@ const Header = {
 };
 
 /* ============================================================
-   11. AUTH FLOW HELPERS — used by onboarding + profile page
+   11. AUTH FLOW HELPERS
    ============================================================ */
 async function cwSignup(payload) {
   const r = await Backend.signup(payload);
   if (r.token) Auth.setToken(r.token);
-  if (r.user) Auth.setUser(r.user);
+  if (r.user) {
+    Auth.setUser(r.user);
+    // Sync the app's current language with what the backend actually stored.
+    // Never trust the stale localStorage value from a prior session.
+    if (r.user.language && CW_CONFIG.LANGUAGES[r.user.language]) {
+      State.currentLanguage = r.user.language;
+      localStorage.setItem(CW_CONFIG.LANG_KEY, r.user.language);
+    }
+  }
   return r;
 }
 
 async function cwLogin(email, password) {
   const r = await Backend.login(email, password);
   if (r.token) Auth.setToken(r.token);
-  if (r.user) Auth.setUser(r.user);
+  if (r.user) {
+    Auth.setUser(r.user);
+    if (r.user.language && CW_CONFIG.LANGUAGES[r.user.language]) {
+      State.currentLanguage = r.user.language;
+      localStorage.setItem(CW_CONFIG.LANG_KEY, r.user.language);
+    }
+  }
   return r;
 }
 
 function cwLogout() {
   Auth.clear();
+  // Clear per-user local state so the next login on this device starts
+  // fresh — prevents the "signed up for X, got Y" cross-account leak.
+  localStorage.removeItem(CW_CONFIG.LANG_KEY);
+  localStorage.removeItem('cw_onboarding_partial');
   location.href = 'onboarding.html';
 }
 
 /* ============================================================
-   12. BOOT — runs on every page
-   Loads cached user immediately, then hydrates from server.
+   12. BOOT
    ============================================================ */
 async function cwBoot() {
-  // Theme first (no flash)
   State.setTheme(State.theme);
 
-  // Guard: if not logged in, bounce to onboarding
   if (!Auth.isLoggedIn()) {
     if (location.pathname.indexOf('onboarding') === -1) {
       location.href = 'onboarding.html';
@@ -816,13 +843,12 @@ async function cwBoot() {
     return false;
   }
 
-  // Use cached user immediately (fast render)
   State.user = Auth.getUser();
 
-  // Hydrate in background (never blocks the page from rendering)
   State.hydrate().then(ok => {
     if (!ok) {
       Auth.clear();
+      localStorage.removeItem(CW_CONFIG.LANG_KEY);
       location.href = 'onboarding.html';
       return;
     }
