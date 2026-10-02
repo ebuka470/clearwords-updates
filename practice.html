@@ -874,18 +874,24 @@ closeTimmy() {
       this.saveLocalChat();
       this.loadUsage();
     } catch (e) {
-      document.getElementById('typing')?.remove();
-      let msg = "Couldn't reach Timmy.";
-      if (e.status === 429) {
-        msg = "You've hit today's free limit. Upgrade to Premium for unlimited Timmy, or come back tomorrow.";
-      } else if (e.code === 'timeout') {
+    document.getElementById('typing')?.remove();
+
+    // Paywall for daily chat limit
+    if (Paywall.fromError(e)) {
+        this.sending = false;
+        if (sendBtn) sendBtn.disabled = false;
+        return;
+    }
+
+    let msg = "Couldn't reach Timmy.";
+    if (e.code === 'timeout') {
         msg = "Timmy is waking up — this can take 20–30 seconds on the free tier. Try again.";
-      } else if (e.message) {
+    } else if (e.message) {
         msg = e.message;
-      }
-      this.messages.push({ role: 'assistant', content: msg, ts: Date.now() });
-      this.renderChat();
-    } finally {
+    }
+    this.messages.push({ role: 'assistant', content: msg, ts: Date.now() });
+    this.renderChat();
+} finally {
       this.sending = false;
       if (sendBtn) sendBtn.disabled = false;
     }
@@ -947,8 +953,14 @@ closeTimmy() {
   async playSpeakWord(index) {
     const w = this._speakList[index];
     if (!w) return;
-    await AudioMgr.play(w.word, State.currentLanguage);
-  },
+    try {
+        await AudioMgr.play(w.word, State.currentLanguage);
+    } catch (e) {
+        if (!Paywall.fromError(e)) {
+            showToast('Audio unavailable right now.', 'error');
+        }
+    }
+},
 
   speakPrev(index) {
     if (index <= 0) return;
@@ -1066,8 +1078,15 @@ closeTimmy() {
 
   async playSaved(i) {
     const w = this._saved[i];
-    if (w) await AudioMgr.play(w.word, w.language || State.currentLanguage);
-  },
+    if (!w) return;
+    try {
+        await AudioMgr.play(w.word, w.language || State.currentLanguage);
+    } catch (e) {
+        if (!Paywall.fromError(e)) {
+            showToast('Audio unavailable right now.', 'error');
+        }
+    }
+},
 
   async startReviewQuiz() {
     const saved = this._saved || [];
