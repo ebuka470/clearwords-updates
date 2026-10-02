@@ -2,8 +2,6 @@
    ClearWords — Shared Runtime
    Loaded by learn.html, practice.html, community.html, profile.html,
    and onboarding.html.
-   Contains: API client, auth, state, audio, curriculum normalizer,
-   UI helpers, and every shared modal.
    ============================================================ */
 
 /* ============================================================
@@ -31,7 +29,7 @@ const CW_CONFIG = {
 };
 
 /* ============================================================
-   2. AUTH — JWT storage
+   2. AUTH
    ============================================================ */
 const Auth = {
   getToken() { return localStorage.getItem(CW_CONFIG.TOKEN_KEY); },
@@ -144,19 +142,16 @@ const api = {
    4. NAMED BACKEND ENDPOINTS
    ============================================================ */
 const Backend = {
-  // --- Auth ---
   signup: (payload) => api.post('/api/auth/signup', payload, { auth: false }),
   login:  (email, password) => api.post('/api/auth/login', { email, password }, { auth: false }),
   me:     () => api.get('/api/auth/me'),
   changePassword: (currentPassword, newPassword) =>
     api.post('/api/auth/change-password', { currentPassword, newPassword }),
 
-  // --- Users ---
   updateProfile: (payload) => api.put('/api/users/profile', payload),
   getUser: (identifier) => api.get('/api/users/' + encodeURIComponent(identifier)),
   getUserStats: (userId) => api.get('/api/users/' + userId + '/stats', { auth: false }),
 
-  // --- Progress ---
   getProgress: (language) => api.get('/api/progress', { params: { language } }),
   completeLesson: (payload) => api.post('/api/progress/complete-lesson', {
     language: payload.language || State.currentLanguage,
@@ -171,11 +166,9 @@ const Backend = {
   syncProgress: (payload) => api.post('/api/progress/sync', payload),
   resetProgress: (language) => api.delete('/api/progress/' + language),
 
-  // --- Curriculum ---
   getCurriculum: (language) => api.get('/api/curriculum/' + language, { auth: false }),
   getCurriculumVersion: (language) => api.get('/api/curriculum/version/' + language, { auth: false }),
 
-  // --- AI ---
   aiChat: (prompt, context) => {
     const tz = -new Date().getTimezoneOffset();
     const fullPrompt = context ? context + '\n\n' + prompt : prompt;
@@ -196,7 +189,6 @@ const Backend = {
   },
   getAIUsage: () => api.get('/api/ai/usage'),
 
-  // --- Pods ---
   listPods: () => api.get('/api/pods'),
   createPod: (payload) => api.post('/api/pods', payload),
   matchPod: (payload) => api.post('/api/pods/match', payload || {}),
@@ -209,7 +201,6 @@ const Backend = {
     api.post('/api/pods/' + podId + '/checkin', { lessonsCompleted: lessonsCompleted || 0 }),
   podLeaderboard: (podId) => api.get('/api/pods/' + podId + '/leaderboard'),
 
-  // --- Pairs ---
   listPairs: () => api.get('/api/pairs'),
   requestPair: (targetUserId, languageA, languageB) =>
     api.post('/api/pairs/request', {
@@ -224,43 +215,36 @@ const Backend = {
   sendPairMessage: (pairId, content) => api.post('/api/pairs/' + pairId + '/messages', { text: content }),
   startPairCall: (pairId, type) => api.post('/api/pairs/' + pairId + '/call/start', { type }),
 
-  // --- Cards ---
   createCard: (payload) => api.post('/api/cards', payload),
   renderCard: (cardId) => api.post('/api/cards/' + cardId + '/render'),
   listMyCards: () => api.get('/api/cards/mine'),
   shareCardToPod: (cardId, podId) => api.post('/api/cards/' + cardId + '/share/pod/' + podId),
   shareCardExternal: (cardId) => api.post('/api/cards/' + cardId + '/share/external'),
 
-  // --- Notifications ---
   listNotifications: (params) => api.get('/api/notifications', { params }),
   unreadCount: () => api.get('/api/notifications/unread'),
   markNotificationRead: (id) => api.put('/api/notifications/' + id + '/read'),
   markAllNotificationsRead: () => api.put('/api/notifications/read-all'),
   deleteNotification: (id) => api.delete('/api/notifications/' + id),
 
-  // --- Reports ---
   submitReport: (payload) => api.post('/api/reports', payload),
   myReports: () => api.get('/api/reports/mine'),
 
-  // --- Subscription ---
   getSubscription: () => api.get('/api/subscription'),
   getPlans: () => api.get('/api/subscription/plans', { auth: false }),
   initPayment: (tier, billingCycle = 'monthly', currency = 'NGN') =>
     api.post('/api/subscription/initialize', { tier, billingCycle, currency }),
   verifyPayment: (reference) => api.post('/api/subscription/verify/' + reference),
 
-  // --- Referrals ---
   myReferrals: () => api.get('/api/referrals/me'),
   redeemReferral: (code) => api.post('/api/referrals/redeem', { code }),
   claimReferral: () => api.post('/api/referrals/claim'),
 
-  // --- Streak ---
   getFreezes: (language) => api.get('/api/streak/freezes', { params: { language } }),
   buyFreeze: (language) => api.post('/api/streak/freezes/buy', { language }),
   toggleAutoFreeze: (autoApply) => api.post('/api/streak/freezes/toggle-auto', { autoApply }),
   recoverStreak: (language) => api.post('/api/streak/recover', { language }),
 
-  // --- TTS ---
   tts: (text, voice) => api.raw('/api/tts', {
     method: 'POST',
     body: { text, voice: voice || 'titilayo_yo', response_format: 'mp3' },
@@ -307,8 +291,6 @@ const State = {
         this.user = meRes.value.user || meRes.value;
         Auth.setUser(this.user);
 
-        // Server is authoritative for language. If localStorage disagrees
-        // (stale from a previous account on this device), the server wins.
         if (this.user && this.user.language && CW_CONFIG.LANGUAGES[this.user.language]) {
           if (this.currentLanguage !== this.user.language) {
             this.currentLanguage = this.user.language;
@@ -376,7 +358,7 @@ const State = {
 };
 
 /* ============================================================
-   5b. LANGUAGE SETUP (lazy prompt on first match)
+   5b. LANGUAGE SETUP
    ============================================================ */
 const LanguageSetup = {
   _pendingResolve: null,
@@ -545,6 +527,184 @@ const LanguageSetup = {
 };
 
 /* ============================================================
+   5c. PAYWALL PROMPT
+   ============================================================ */
+const Paywall = {
+  show(opts = {}) {
+    const title = opts.title || "You've hit a limit";
+    const message = opts.message || 'Upgrade to Premium to keep going.';
+    const benefit = opts.benefit || '';
+    const feature = opts.feature || 'unknown';
+    const ctaLabel = opts.ctaLabel || 'See Premium plans';
+
+    const body = `
+      <div style="text-align: center; padding: 8px 0 4px;">
+        <div style="
+          width: 72px; height: 72px; border-radius: 50%;
+          background: rgba(232,179,60,0.14);
+          border: 2px solid rgba(232,179,60,0.4);
+          display: flex; align-items: center; justify-content: center;
+          margin: 0 auto 16px; font-size: 34px;
+        ">🌱</div>
+
+        <div style="font-size: 19px; font-weight: 800; margin-bottom: 8px; line-height: 1.25;">
+          ${esc(title)}
+        </div>
+
+        <div style="font-size: 14px; color: var(--text-2); line-height: 1.55; max-width: 320px; margin: 0 auto;">
+          ${esc(message)}
+        </div>
+
+        ${benefit ? `
+          <div style="
+            margin: 18px auto 0; padding: 12px 16px; max-width: 320px;
+            border-radius: 12px;
+            background: rgba(46,139,87,0.06);
+            border: 1px solid rgba(46,139,87,0.22);
+            font-size: 13px; color: var(--text-2); line-height: 1.5; text-align: left;
+          ">
+            <strong style="color: var(--brand);">✨ Premium</strong><br>
+            ${esc(benefit)}
+          </div>
+        ` : ''}
+      </div>
+
+      <button class="btn btn-block" id="paywall-cta" style="margin-top: 20px;">
+        ${esc(ctaLabel)}
+      </button>
+      <button class="btn btn-ghost btn-block" style="margin-top: 8px;" onclick="closeModal('cw-generic-modal')">
+        Maybe later
+      </button>
+    `;
+
+    Header._modal('Upgrade to Premium', body);
+
+    const cta = document.getElementById('paywall-cta');
+    if (cta) {
+      cta.onclick = () => {
+        closeModal('cw-generic-modal');
+        try {
+          console.log(`[paywall] upgrade CTA clicked for feature: ${feature}`);
+        } catch {}
+        if (location.pathname.endsWith('profile.html')) {
+          if (window.Prof && typeof window.Prof.openUpgrade === 'function') {
+            window.Prof.openUpgrade();
+          }
+        } else {
+          Nav.go('profile', { upgrade: '1' });
+        }
+      };
+    }
+  },
+
+  fromError(e) {
+    if (!e) return false;
+
+    const status = e.status;
+    const message = String(e.message || '');
+
+    const isDailyLimit = status === 429 && (/limit/i.test(message) || /daily/i.test(message));
+    const isFeatureGate = status === 403 && (
+      /premium/i.test(message) || /immersive/i.test(message) ||
+      /tier/i.test(message) || /upgrade/i.test(message)
+    );
+
+    if (!isDailyLimit && !isFeatureGate) return false;
+
+    if (/custom lesson/i.test(message) || /instant lesson/i.test(message)) {
+      this.showCustomLessonLimit();
+      return true;
+    }
+
+    if (/chat/i.test(message) || /timmy/i.test(message) || /message/i.test(message)) {
+      this.showChatLimit();
+      return true;
+    }
+
+    if (/pod/i.test(message)) {
+      this.show({
+        title: 'Pod limit reached',
+        message: 'The free plan includes 3 pods. Premium lets you create your own pod.',
+        benefit: 'Create your own pod, lead your own group, unlimited AI lessons.',
+        feature: 'pod_create',
+        ctaLabel: 'Create your own pod'
+      });
+      return true;
+    }
+
+    if (/pair/i.test(message) || /partner/i.test(message)) {
+      this.show({
+        title: 'Partner limit reached',
+        message: 'The free plan includes 1 language exchange partner. Premium opens up to 5.',
+        benefit: 'Up to 5 exchange partners, voice calls with them, unlimited chat.',
+        feature: 'pair_limit',
+        ctaLabel: 'Get more partners'
+      });
+      return true;
+    }
+
+    if (/voice|call/i.test(message)) {
+      this.show({
+        title: 'Voice calls are Premium',
+        message: 'Voice calls with your language exchange partner are part of Premium.',
+        benefit: 'Voice calls with up to 5 partners, unlimited lessons, unlimited chat.',
+        feature: 'voice_call',
+        ctaLabel: 'See Premium'
+      });
+      return true;
+    }
+
+    if (/tts|audio/i.test(message)) {
+      this.show({
+        title: "You've used all your audio clips today",
+        message: 'The free plan includes 30 audio clips per day. Premium gives you 300.',
+        benefit: 'More audio, unlimited lessons, unlimited Timmy chat.',
+        feature: 'tts_limit',
+        ctaLabel: 'See Premium'
+      });
+      return true;
+    }
+
+    this.show({
+      title: "You've hit a limit",
+      message: message || 'Upgrade to Premium to keep going.',
+      feature: 'generic'
+    });
+    return true;
+  },
+
+  showCreatePodGate() {
+    this.show({
+      title: 'Creating a pod is a Premium feature',
+      message: 'On the free plan you can join up to 3 pods. Premium lets you create your own and lead your group.',
+      benefit: 'Create and lead your own pod, unlimited lessons, voice calls with your exchange partner.',
+      feature: 'pod_create',
+      ctaLabel: 'Create your own pod'
+    });
+  },
+
+  showChatLimit() {
+    this.show({
+      title: "You've hit today's Timmy limit",
+      message: 'The free plan includes 200 messages per day. Premium gives you unlimited conversations with Timmy.',
+      benefit: 'Unlimited Timmy chat, unlimited instant lessons, voice calls with your partner.',
+      feature: 'ai_chat',
+      ctaLabel: 'Unlock unlimited chat'
+    });
+  },
+
+  showCustomLessonLimit() {
+    this.show({
+      title: "You've used all your instant lessons today",
+      message: 'The free plan includes 5 instant AI lessons per day. Premium makes them unlimited.',
+      benefit: 'Unlimited instant lessons, unlimited Timmy chat, unlimited lessons per language.',
+      feature: 'ai_custom_lesson',
+      ctaLabel: 'Unlock unlimited lessons'
+    });
+  }
+};
+
+/* ============================================================
    6. CURRICULUM NORMALIZER
    ============================================================ */
 const Curriculum = {
@@ -641,6 +801,8 @@ const Curriculum = {
 /* ============================================================
    7. AUDIO MANAGER
    Priority: Supabase cache → backend /api/tts → browser fallback.
+   Paywall-relevant errors (429/403) are re-thrown so callers can
+   show the upgrade prompt.
    ============================================================ */
 const AudioMgr = {
   current: null,
@@ -692,6 +854,8 @@ const AudioMgr = {
       const url = URL.createObjectURL(blob);
       return this._playUrl(url, true);
     } catch (e) {
+      // Paywall-relevant errors must bubble up so the caller can prompt
+      if (e.status === 429 || e.status === 403) throw e;
       console.warn('Backend TTS failed, falling back to browser:', e.message);
     }
 
@@ -1032,6 +1196,7 @@ window.ApiError = ApiError;
 window.Backend = Backend;
 window.State = State;
 window.LanguageSetup = LanguageSetup;
+window.Paywall = Paywall;
 window.Curriculum = Curriculum;
 window.AudioMgr = AudioMgr;
 window.Nav = Nav;
