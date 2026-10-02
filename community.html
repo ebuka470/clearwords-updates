@@ -700,15 +700,24 @@ const Comm = {
             }, 900);
         }
     } catch (e) {
-        console.warn('Pod match failed:', e);
-        if (e.status === 402 || e.status === 403) {
-            showToast('Premium required to join a pod.', 'error');
-        } else if (e.status === 404) {
-            showToast('No pods available right now — try again later.', 'info');
-        } else {
-            showToast('Could not match right now. Try again.', 'error');
-        }
+    console.warn('Pod match failed:', e);
+
+    if (e.status === 403 && /limit/i.test(e.message || '')) {
+        Paywall.show({
+            title: "You're already in 3 pods",
+            message: 'The free plan lets you join up to 3 pods. Leave one to join another, or upgrade to create your own.',
+            benefit: 'Create your own pod, unlimited lessons, unlimited Timmy chat.',
+            feature: 'pod_limit',
+            ctaLabel: 'See Premium'
+        });
+    } else if (e.status === 402 || e.status === 403) {
+        Paywall.showCreatePodGate();
+    } else if (e.status === 404) {
+        showToast('No pods available right now — try again later.', 'info');
+    } else {
+        showToast('Could not match right now. Try again.', 'error');
     }
+}}
 },
 
   showJoinPod() {
@@ -776,13 +785,17 @@ const Comm = {
         closeModal('cw-generic-modal');
         await this.loadPods();
     } catch (e) {
-        console.warn('Create pod failed:', e);
-        if (e.status === 402 || e.status === 403) {
-            showToast('Premium required to create pods.', 'error');
-        } else {
-            showToast(e.message || 'Could not create pod.', 'error');
-        }
+    console.warn('Create pod failed:', e);
+    closeModal('cw-generic-modal');
+
+    if (e.status === 402 || e.status === 403) {
+        Paywall.showCreatePodGate();
+    } else if (Paywall.fromError(e)) {
+        // handled
+    } else {
+        showToast(e.message || 'Could not create pod.', 'error');
     }
+}
 },
 
   /* ============================================================
@@ -1202,27 +1215,35 @@ async submitCheckin() {
         if (pair && (pair._id || pair.id)) {
             setTimeout(() => this.openPairChat(pair._id || pair.id), 400);
         }
-    } catch (e) {
-        console.warn('Pair match failed:', e);
-        if (e.status === 404) {
-            Header._modal('No partners right now', `
-                <p style="font-size: 14px; color: var(--text-2); line-height: 1.5;">
-                    We couldn't find a match in your language combination just yet.
-                    Try again in a few hours — new learners join daily.
-                </p>
-                <p style="font-size: 13px; color: var(--text-3); margin-top: 10px;">
-                    Tip: add more learning and teaching languages to widen your matches.
-                </p>
-                <button class="btn btn-block" onclick="closeModal('cw-generic-modal'); Nav.go('profile')" style="margin-top: 16px;">
-                    Update my languages
-                </button>
-            `);
-        } else if (e.status === 403) {
-            showToast('Pair limit reached for your tier.', 'error');
-        } else {
-            showToast('Could not match right now. Try again.', 'error');
-        }
+   } catch (e) {
+    console.warn('Pair match failed:', e);
+
+    if (e.status === 403) {
+        Paywall.show({
+            title: "You're at 1 exchange partner",
+            message: 'The free plan includes 1 partner. Premium opens up to 5 — and adds voice calls.',
+            benefit: 'Up to 5 exchange partners, voice calls, unlimited lessons.',
+            feature: 'pair_limit',
+            ctaLabel: 'Get more partners'
+        });
+    } else if (e.status === 404) {
+        // Existing "no partners" empty-state modal
+        Header._modal('No partners right now', `
+            <p style="font-size: 14px; color: var(--text-2); line-height: 1.5;">
+                We couldn't find a match in your language combination just yet.
+                Try again in a few hours — new learners join daily.
+            </p>
+            <p style="font-size: 13px; color: var(--text-3); margin-top: 10px;">
+                Tip: add more learning and teaching languages to widen your matches.
+            </p>
+            <button class="btn btn-block" onclick="closeModal('cw-generic-modal'); Nav.go('profile')" style="margin-top: 16px;">
+                Update my languages
+            </button>
+        `);
+    } else {
+        showToast('Could not match right now. Try again.', 'error');
     }
+}
 },
 
   showRequestPair() {
