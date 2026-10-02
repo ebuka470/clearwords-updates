@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#2E8B57">
 <title>ClearWords — Community</title>
 <style>
-/* ============ DESIGN TOKENS (matched to learn/practice) ============ */
 :root {
   --brand: #2E8B57;
   --brand-rgb: 46,139,87;
@@ -63,7 +62,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 input, textarea { font-family: inherit; }
 ::-webkit-scrollbar { width: 0; height: 0; }
 
-/* ============ HEADER ============ */
 #cw-header {
   position: sticky; top: 0; z-index: 40;
   display: flex; align-items: center; justify-content: space-between;
@@ -92,7 +90,6 @@ input, textarea { font-family: inherit; }
   background: var(--danger); border: 2px solid var(--card);
 }
 
-/* ============ PAGE ============ */
 .page { max-width: 520px; margin: 0 auto; padding: 0 16px; }
 .page-hero { padding: 22px 4px 18px; }
 .page-hero h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
@@ -108,7 +105,6 @@ input, textarea { font-family: inherit; }
   color: var(--brand); cursor: pointer;
 }
 
-/* ============ CARDS ============ */
 .card {
   background: var(--card); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 18px;
@@ -118,7 +114,6 @@ input, textarea { font-family: inherit; }
 .card-tint-gold { background: rgba(var(--gold-rgb), 0.06); border-color: rgba(var(--gold-rgb), 0.25); }
 .card-tint-indigo { background: rgba(var(--indigo-rgb), 0.06); border-color: rgba(var(--indigo-rgb), 0.25); }
 
-/* ============ PODS ============ */
 .pod-card {
   background: var(--card); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 16px;
@@ -142,7 +137,6 @@ input, textarea { font-family: inherit; }
 .pod-meta { display: flex; gap: 14px; margin-top: 10px; font-size: 12px; color: var(--text-3); }
 .pod-meta span { display: inline-flex; align-items: center; gap: 4px; }
 
-/* ============ PAIRS ============ */
 .pair-card {
   display: flex; align-items: center; gap: 12px;
   padding: 14px; border-radius: var(--radius);
@@ -170,29 +164,15 @@ input, textarea { font-family: inherit; }
 .chip-btn.warn { background: transparent; color: var(--gold); border-color: rgba(var(--gold-rgb), 0.4); }
 .chip-btn:active { transform: scale(.97); }
 
-  /* Language setup modal */
 .lang-section {
   padding: 14px 16px;
   border-radius: 12px;
   background: var(--bg-elev);
   border: 1.5px solid var(--border);
 }
-.lang-section-title {
-  font-size: 14.5px;
-  font-weight: 800;
-  margin-bottom: 4px;
-}
-.lang-section-sub {
-  font-size: 12.5px;
-  color: var(--text-2);
-  line-height: 1.45;
-  margin-bottom: 12px;
-}
-.lang-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
+.lang-section-title { font-size: 14.5px; font-weight: 800; margin-bottom: 4px; }
+.lang-section-sub { font-size: 12.5px; color: var(--text-2); line-height: 1.45; margin-bottom: 12px; }
+.lang-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .lang-chip {
   padding: 9px 15px;
   border-radius: var(--radius-full);
@@ -205,19 +185,9 @@ input, textarea { font-family: inherit; }
   cursor: pointer;
 }
 .lang-chip:active { transform: scale(.96); }
-.lang-chip.active {
-  background: var(--brand);
-  border-color: var(--brand);
-  color: #fff;
-}
-.lang-error {
-  font-size: 12.5px;
-  color: var(--danger);
-  min-height: 16px;
-  margin-top: 6px;
-}
+.lang-chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.lang-error { font-size: 12.5px; color: var(--danger); min-height: 16px; margin-top: 6px; }
 
-/* ============ PROGRESS CARDS ============ */
 .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
 .pcard {
   border-radius: var(--radius);
@@ -249,7 +219,6 @@ input, textarea { font-family: inherit; }
   text-align: center;
 }
 
-/* ============ BOTTOM NAV ============ */
 #cw-bottom-nav {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
   display: flex; justify-content: space-around; align-items: center;
@@ -268,7 +237,6 @@ input, textarea { font-family: inherit; }
 .tab svg { width: 22px; height: 22px; }
 .tab:active { transform: scale(.94); }
 
-/* ============ MODAL ============ */
 .cw-modal-overlay {
   position: fixed; inset: 0; z-index: 100;
   background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
@@ -288,7 +256,6 @@ input, textarea { font-family: inherit; }
 .cw-modal-close { font-size: 26px; line-height: 1; color: var(--text-2); padding: 0 4px; }
 .cw-modal-body { padding: 16px 20px 24px; overflow-y: auto; flex: 1; }
 
-/* Language picker, notifications etc. shared via Header._modal */
 .lang-option {
   display: flex; align-items: center; gap: 12px;
   width: 100%; padding: 14px 16px; margin-bottom: 8px;
@@ -309,7 +276,6 @@ input, textarea { font-family: inherit; }
 .notif-time { font-size: 11px; color: var(--text-3); margin-top: 4px; }
 .modal-loading { padding: 40px; text-align: center; color: var(--text-2); font-size: 14px; }
 
-/* ============ FORM ELEMENTS ============ */
 .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 .field label { font-size: 13px; font-weight: 700; color: var(--text-2); }
 .field input, .field textarea, .field select {
@@ -352,7 +318,6 @@ input, textarea { font-family: inherit; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ============ POD CHAT ============ */
 #pod-view {
   position: fixed; inset: 0; z-index: 70;
   background: var(--bg);
@@ -410,7 +375,6 @@ input, textarea { font-family: inherit; }
 }
 .pod-send:disabled { opacity: .4; }
 
-/* Members list */
 .member-row {
   display: flex; align-items: center; gap: 12px;
   padding: 10px 0; border-bottom: 1px solid var(--border);
@@ -421,7 +385,6 @@ input, textarea { font-family: inherit; }
 .member-name { font-weight: 700; font-size: 14.5px; }
 .member-sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
 
-/* ============ MISC ============ */
 .empty-note { color: var(--text-2); font-size: 14px; text-align: center; padding: 40px 16px; }
 .empty-note strong { color: var(--text); display: block; font-size: 16px; margin-bottom: 6px; }
 
@@ -462,7 +425,6 @@ input, textarea { font-family: inherit; }
     <p>Learn together, stay accountable, share your progress.</p>
   </div>
 
-  <!-- ============ PODS ============ -->
   <div class="section-h">
     Your pods
     <span class="action" onclick="Comm.openPodActions()">Manage</span>
@@ -471,7 +433,6 @@ input, textarea { font-family: inherit; }
     <div class="card"><div class="skel skel-row" style="width: 40%"></div><div class="skel skel-block"></div></div>
   </div>
 
-  <!-- ============ PAIRS ============ -->
   <div class="section-h">
     Language exchange
     <span class="action" onclick="Comm.openPairMenu()">Find a partner</span>
@@ -480,20 +441,17 @@ input, textarea { font-family: inherit; }
     <div class="card"><div class="skel skel-row" style="width: 40%"></div><div class="skel skel-block"></div></div>
   </div>
 
-  <!-- ============ PROGRESS CARDS ============ -->
   <div class="section-h">
     Your progress cards
     <span class="action" onclick="Comm.createProgressCard()">Create</span>
   </div>
   <div id="cards-grid" class="card-grid"></div>
 
-  <!-- ============ FRIENDLY FOOTNOTE ============ -->
   <div style="text-align: center; font-size: 12px; color: var(--text-3); padding: 24px 16px 12px;">
     Be kind. Practicing a language takes courage.
   </div>
 </main>
 
-<!-- BOTTOM NAV -->
 <nav id="cw-bottom-nav">
   <button class="tab" onclick="Nav.go('learn')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -529,7 +487,6 @@ input, textarea { font-family: inherit; }
   </button>
 </nav>
 
-<!-- POD VIEW (full-screen) -->
 <div id="pod-view">
   <div class="pod-topbar">
     <button class="pod-back" onclick="Comm.closePod()">←</button>
@@ -553,9 +510,6 @@ input, textarea { font-family: inherit; }
 
 <script src="shared.js"></script>
 <script>
-/* ============================================================
-   COMMUNITY TAB
-   ============================================================ */
 const Comm = {
   user: null,
   pods: [],
@@ -565,14 +519,12 @@ const Comm = {
   activePodMessages: [],
   podTabState: 'chat',
 
-  /* ---------- Boot ---------- */
   async init() {
     const ok = await cwBoot();
     if (!ok) return;
     Header.render('community');
     this.user = State.user;
 
-    // Load all three sections in parallel — each renders as it resolves
     this.loadPods();
     this.loadPairs();
     this.loadCards();
@@ -583,24 +535,24 @@ const Comm = {
   /* ============================================================
      PODS
      ============================================================ */
- async loadPods() {
+  async loadPods() {
     const list = document.getElementById('pods-list');
     if (!list) return;
     try {
-        const res = await Backend.listPods();
-        this.pods = res.data || res.items || res.pods || (Array.isArray(res) ? res : []) || [];
-        this.renderPods();
+      const res = await Backend.listPods();
+      this.pods = res.data || res.items || res.pods || (Array.isArray(res) ? res : []) || [];
+      this.renderPods();
     } catch (e) {
-        console.warn('Pods load failed:', e);
-        list.innerHTML = `
-          <div class="card">
-            <div class="empty-note" style="padding: 20px 0;">
-              <strong>Couldn't load your pods.</strong>
-              <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPods()">Retry</button>
-            </div>
-          </div>`;
+      console.warn('Pods load failed:', e);
+      list.innerHTML = `
+        <div class="card">
+          <div class="empty-note" style="padding: 20px 0;">
+            <strong>Couldn't load your pods.</strong>
+            <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPods()">Retry</button>
+          </div>
+        </div>`;
     }
-},
+  },
 
   renderPods() {
     const list = document.getElementById('pods-list');
@@ -667,7 +619,7 @@ const Comm = {
     `);
   },
 
- async matchPod() {
+  async matchPod() {
     const ready = await LanguageSetup.ensure();
     if (!ready) return;
 
@@ -675,50 +627,48 @@ const Comm = {
     closeModal('cw-generic-modal');
 
     try {
-        const res = await Backend.matchPod({});
-        const returnedPod = res.pod || res;
-        if (!returnedPod) {
-            showToast('No matching pod right now. Try again later.', 'info');
-            return;
-        }
-        showToast('Matched! 🎉', 'success');
+      const res = await Backend.matchPod({});
+      const returnedPod = res.pod || res;
+      if (!returnedPod) {
+        showToast('No matching pod right now. Try again later.', 'info');
+        return;
+      }
+      showToast('Matched! 🎉', 'success');
 
-        // Refresh the pods list first
-        await this.loadPods();
-        const id = returnedPod._id || returnedPod.id;
-        const freshPod = this.pods.find(p => (p._id || p.id) === id);
+      await this.loadPods();
+      const id = returnedPod._id || returnedPod.id;
+      const freshPod = this.pods.find(p => (p._id || p.id) === id);
 
-        if (freshPod) {
-            setTimeout(() => this.openPod(id), 600);
-        } else {
-            // Give MongoDB one more beat
-            setTimeout(async () => {
-                await this.loadPods();
-                const second = this.pods.find(p => (p._id || p.id) === id);
-                if (second) this.openPod(id);
-                else showToast('Pod not yet synced. Try reopening in a moment.', 'info');
-            }, 900);
-        }
+      if (freshPod) {
+        setTimeout(() => this.openPod(id), 600);
+      } else {
+        setTimeout(async () => {
+          await this.loadPods();
+          const second = this.pods.find(p => (p._id || p.id) === id);
+          if (second) this.openPod(id);
+          else showToast('Pod not yet synced. Try reopening in a moment.', 'info');
+        }, 900);
+      }
     } catch (e) {
-    console.warn('Pod match failed:', e);
+      console.warn('Pod match failed:', e);
 
-    if (e.status === 403 && /limit/i.test(e.message || '')) {
+      if (e.status === 403 && /limit/i.test(e.message || '')) {
         Paywall.show({
-            title: "You're already in 3 pods",
-            message: 'The free plan lets you join up to 3 pods. Leave one to join another, or upgrade to create your own.',
-            benefit: 'Create your own pod, unlimited lessons, unlimited Timmy chat.',
-            feature: 'pod_limit',
-            ctaLabel: 'See Premium'
+          title: "You're already in 3 pods",
+          message: 'The free plan lets you join up to 3 pods. Leave one to join another, or upgrade to create your own.',
+          benefit: 'Create your own pod, unlimited lessons, unlimited Timmy chat.',
+          feature: 'pod_limit',
+          ctaLabel: 'See Premium'
         });
-    } else if (e.status === 402 || e.status === 403) {
+      } else if (e.status === 402 || e.status === 403) {
         Paywall.showCreatePodGate();
-    } else if (e.status === 404) {
+      } else if (e.status === 404) {
         showToast('No pods available right now — try again later.', 'info');
-    } else {
+      } else {
         showToast('Could not match right now. Try again.', 'error');
+      }
     }
-}}
-},
+  },
 
   showJoinPod() {
     Header._modal('Join with invite code', `
@@ -734,17 +684,17 @@ const Comm = {
     const code = (document.getElementById('pod-invite-code')?.value || '').trim().toUpperCase();
     if (!code) { showToast('Enter an invite code.', 'info'); return; }
     try {
-        const res = await Backend.joinPodByCode(code);
-        showToast('Joined! 🎉', 'success');
-        closeModal('cw-generic-modal');
-        await this.loadPods();
-        const podId = res.pod?._id || res.podId || res._id;
-        if (podId) setTimeout(() => this.openPod(podId), 300);
+      const res = await Backend.joinPodByCode(code);
+      showToast('Joined! 🎉', 'success');
+      closeModal('cw-generic-modal');
+      await this.loadPods();
+      const podId = res.pod?._id || res.podId || res._id;
+      if (podId) setTimeout(() => this.openPod(podId), 300);
     } catch (e) {
-        console.warn('Join pod failed:', e);
-        showToast(e.message || 'Could not join that pod.', 'error');
+      console.warn('Join pod failed:', e);
+      showToast(e.message || 'Could not join that pod.', 'error');
     }
-},
+  },
 
   showCreatePod() {
     const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
@@ -773,53 +723,51 @@ const Comm = {
     if (!name) { showToast('Give your pod a name.', 'info'); return; }
     const lvl = State.progress?.currentLevel || 1;
     const levelTier = typeof lvl === 'string'
-        ? lvl
-        : (lvl <= 15 ? 'beginner' : lvl <= 35 ? 'intermediate' : 'advanced');
+      ? lvl
+      : (lvl <= 15 ? 'beginner' : lvl <= 35 ? 'intermediate' : 'advanced');
     try {
-        await Backend.createPod({
-            name,
-            language: State.currentLanguage,
-            level: levelTier
-        });
-        showToast('Pod created! 🎉', 'success');
-        closeModal('cw-generic-modal');
-        await this.loadPods();
+      await Backend.createPod({
+        name,
+        language: State.currentLanguage,
+        level: levelTier
+      });
+      showToast('Pod created! 🎉', 'success');
+      closeModal('cw-generic-modal');
+      await this.loadPods();
     } catch (e) {
-    console.warn('Create pod failed:', e);
-    closeModal('cw-generic-modal');
+      console.warn('Create pod failed:', e);
+      closeModal('cw-generic-modal');
 
-    if (e.status === 402 || e.status === 403) {
+      if (e.status === 402 || e.status === 403) {
         Paywall.showCreatePodGate();
-    } else if (Paywall.fromError(e)) {
+      } else if (Paywall.fromError(e)) {
         // handled
-    } else {
+      } else {
         showToast(e.message || 'Could not create pod.', 'error');
+      }
     }
-}
-},
+  },
 
   /* ============================================================
      OPEN POD — chat / members / leaderboard
      ============================================================ */
   async openPod(podId, index) {
-    // Try the cached list first
     this.activePod = this.pods.find(p => (p._id || p.id) === podId)
-        || (index != null ? this.pods[index] : null);
+      || (index != null ? this.pods[index] : null);
 
-    // If not found, refetch the pods list once and retry
     if (!this.activePod) {
-        try {
-            const res = await Backend.listPods();
-            this.pods = res.data || res.items || res.pods || (Array.isArray(res) ? res : []) || [];
-            this.activePod = this.pods.find(p => (p._id || p.id) === podId);
-        } catch (err) {
-            console.warn('openPod refetch failed:', err);
-        }
+      try {
+        const res = await Backend.listPods();
+        this.pods = res.data || res.items || res.pods || (Array.isArray(res) ? res : []) || [];
+        this.activePod = this.pods.find(p => (p._id || p.id) === podId);
+      } catch (err) {
+        console.warn('openPod refetch failed:', err);
+      }
     }
 
     if (!this.activePod) {
-        showToast('Pod not found — try refreshing.', 'error');
-        return;
+      showToast('Pod not found — try refreshing.', 'error');
+      return;
     }
 
     const p = this.activePod.data || this.activePod;
@@ -830,8 +778,8 @@ const Comm = {
     const nameChildSmall = nameNode.querySelector('small');
     nameNode.childNodes[0].nodeValue = (p.name || (langCfg.name + ' Pod')) + ' ';
     if (nameChildSmall) {
-        nameChildSmall.textContent =
-            (p.members || []).length + ' learners · Level ' + (p.level || 1);
+      nameChildSmall.textContent =
+        (p.members || []).length + ' learners · Level ' + (p.level || 1);
     }
 
     document.getElementById('pod-view').classList.add('active');
@@ -839,13 +787,15 @@ const Comm = {
     this.podTabState = 'chat';
     this.setPodTab('chat');
     this.loadPodMessages();
-},
+  },
 
   closePod() {
     document.getElementById('pod-view').classList.remove('active');
     document.body.style.overflow = '';
     this.activePod = null;
     this.activePodMessages = [];
+    // Restore all pod tabs
+    document.querySelectorAll('.pod-tab').forEach(t => { t.style.display = ''; });
   },
 
   podTab(tab) {
@@ -873,55 +823,52 @@ const Comm = {
     const isPair = !!this.activePod.isPair;
 
     try {
-        // Route to the correct endpoint based on chat type
-        const res = isPair
-            ? await Backend.getPairMessages(chatId, { limit: 50 })
-            : await Backend.getPodMessages(chatId, { limit: 50 });
+      const res = isPair
+        ? await Backend.getPairMessages(chatId, { limit: 50 })
+        : await Backend.getPodMessages(chatId, { limit: 50 });
 
-        const items = res.data || res.items || res.messages || (Array.isArray(res) ? res : []) || [];
-        this.activePodMessages = items;
+      const items = res.data || res.items || res.messages || (Array.isArray(res) ? res : []) || [];
+      this.activePodMessages = items;
 
-        if (!items.length) {
-            content.innerHTML = `
-                <div class="empty-note">
-                    <strong>${isPair ? 'Say hello' : 'No messages yet'}</strong>
-                    ${isPair ? 'Start your first conversation.' : 'Say hi, or check in for this week\'s goal.'}
-                </div>`;
-            return;
-        }
-
-        const myId = (State.user && (State.user._id || State.user.id)) || '';
-        content.innerHTML = items.map(m => this.renderPodMessage(m, myId)).join('');
-        content.scrollTop = content.scrollHeight;
-    } catch (e) {
-        console.warn(`${isPair ? 'Pair' : 'Pod'} messages load failed:`, e);
+      if (!items.length) {
         content.innerHTML = `
-            <div class="empty-note">
-                <strong>Couldn't load messages.</strong>
-                <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPodMessages()">Retry</button>
-            </div>`;
-    }
-},
+          <div class="empty-note">
+            <strong>${isPair ? 'Say hello' : 'No messages yet'}</strong>
+            ${isPair ? 'Start your first conversation.' : 'Say hi, or check in for this week\'s goal.'}
+          </div>`;
+        return;
+      }
 
- renderPodMessage(m, myId) {
+      const myId = (State.user && (State.user._id || State.user.id)) || '';
+      content.innerHTML = items.map(m => this.renderPodMessage(m, myId)).join('');
+      content.scrollTop = content.scrollHeight;
+    } catch (e) {
+      console.warn(`${isPair ? 'Pair' : 'Pod'} messages load failed:`, e);
+      content.innerHTML = `
+        <div class="empty-note">
+          <strong>Couldn't load messages.</strong>
+          <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPodMessages()">Retry</button>
+        </div>`;
+    }
+  },
+
+  renderPodMessage(m, myId) {
     const d = m.data || m;
 
-    // System / check-in messages
     if (d.type === 'checkin' || d.type === 'system') {
-        return `<div class="pod-msg-system">${esc(d.authorName || 'Someone')} checked in${d.note ? ': ' + esc(d.note) : ''}</div>`;
+      return `<div class="pod-msg-system">${esc(d.authorName || 'Someone')} checked in${d.note ? ': ' + esc(d.note) : ''}</div>`;
     }
 
-    // Prefer the backend's isMine flag; fall back to string comparison
     const senderId = d.senderId || d.authorId || '';
     const isSelf = d.isMine === true || String(senderId) === String(myId);
 
     return `
-        <div class="pod-msg ${isSelf ? 'self' : ''}">
-            ${!isSelf ? `<div class="pod-msg-author">${esc(d.authorName || 'Learner')}</div>` : ''}
-            <div class="pod-msg-bubble">${esc(d.text || d.content || d.message || '')}</div>
-            <div class="pod-msg-time">${fmtTimeAgo(d.createdAt || m._createdAt)}</div>
-        </div>`;
-},
+      <div class="pod-msg ${isSelf ? 'self' : ''}">
+        ${!isSelf ? `<div class="pod-msg-author">${esc(d.authorName || 'Learner')}</div>` : ''}
+        <div class="pod-msg-bubble">${esc(d.text || d.content || d.message || '')}</div>
+        <div class="pod-msg-time">${fmtTimeAgo(d.createdAt || m._createdAt)}</div>
+      </div>`;
+  },
 
   async sendPodMessage() {
     if (!this.activePod) return;
@@ -937,17 +884,16 @@ const Comm = {
 
     const myId = (State.user && (State.user._id || State.user.id)) || '';
 
-    // Optimistic append
     const optimistic = {
-        data: {
-            senderId: myId,
-            authorId: myId,
-            authorName: State.user?.fullName || 'You',
-            text,
-            content: text,
-            isMine: true,
-            createdAt: new Date().toISOString()
-        }
+      data: {
+        senderId: myId,
+        authorId: myId,
+        authorName: State.user?.fullName || 'You',
+        text,
+        content: text,
+        isMine: true,
+        createdAt: new Date().toISOString()
+      }
     };
 
     const content = document.getElementById('pod-content');
@@ -958,18 +904,18 @@ const Comm = {
     const chatId = this.activePod._id || this.activePod.id;
 
     try {
-        if (this.activePod.isPair) {
-            await Backend.sendPairMessage(chatId, text);
-        } else {
-            await Backend.sendPodMessage(chatId, text);
-        }
+      if (this.activePod.isPair) {
+        await Backend.sendPairMessage(chatId, text);
+      } else {
+        await Backend.sendPodMessage(chatId, text);
+      }
     } catch (e) {
-        console.warn('Send message failed:', e);
-        showToast('Could not send — check your connection.', 'error');
+      console.warn('Send message failed:', e);
+      showToast('Could not send — check your connection.', 'error');
     } finally {
-        if (sendBtn) sendBtn.disabled = false;
+      if (sendBtn) sendBtn.disabled = false;
     }
-},
+  },
 
   async renderPodMembers() {
     if (!this.activePod) return;
@@ -1003,28 +949,26 @@ const Comm = {
     `;
   },
 
- async checkIn() {
+  async checkIn() {
     if (!this.activePod) return;
-    const podId = this.activePod._id || this.activePod.id;
 
-    // Ask how many lessons this week
     Header._modal('Check in for this week', `
-        <p style="font-size: 14px; color: var(--text-2); line-height: 1.5; margin-bottom: 14px;">
-            How many lessons did you complete this week? Your pod sees this,
-            and it counts toward the shared streak.
-        </p>
-        <div class="field">
-            <label>Lessons completed</label>
-            <input type="number" id="checkin-lessons" min="0" max="100" value="5" inputmode="numeric">
-        </div>
-        <button class="btn btn-block" onclick="Comm.submitCheckin()" id="checkin-btn">
-            Check in
-        </button>
-        <div class="field-error" id="checkin-err"></div>
+      <p style="font-size: 14px; color: var(--text-2); line-height: 1.5; margin-bottom: 14px;">
+        How many lessons did you complete this week? Your pod sees this,
+        and it counts toward the shared streak.
+      </p>
+      <div class="field">
+        <label>Lessons completed</label>
+        <input type="number" id="checkin-lessons" min="0" max="100" value="5" inputmode="numeric">
+      </div>
+      <button class="btn btn-block" onclick="Comm.submitCheckin()" id="checkin-btn">
+        Check in
+      </button>
+      <div class="field-error" id="checkin-err"></div>
     `);
-},
+  },
 
-async submitCheckin() {
+  async submitCheckin() {
     if (!this.activePod) return;
     const podId = this.activePod._id || this.activePod.id;
     const input = document.getElementById('checkin-lessons');
@@ -1033,29 +977,29 @@ async submitCheckin() {
     const lessons = parseInt(input?.value, 10);
 
     if (!Number.isFinite(lessons) || lessons < 0) {
-        if (err) err.textContent = 'Enter a valid number of lessons.';
-        return;
+      if (err) err.textContent = 'Enter a valid number of lessons.';
+      return;
     }
 
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-inline"></span> Checking in…';
 
     try {
-        await Backend.podCheckin(podId, lessons);
-        closeModal('cw-generic-modal');
-        showToast('Checked in! 🎉', 'success');
-        this.loadPodMessages();
+      await Backend.podCheckin(podId, lessons);
+      closeModal('cw-generic-modal');
+      showToast('Checked in! 🎉', 'success');
+      this.loadPodMessages();
     } catch (e) {
-        if (e.status === 400 && /already/i.test(e.message || '')) {
-            showToast('You already checked in this week.', 'info');
-            closeModal('cw-generic-modal');
-        } else {
-            if (err) err.textContent = e.message || 'Could not check in right now.';
-            btn.disabled = false;
-            btn.textContent = 'Check in';
-        }
+      if (e.status === 400 && /already/i.test(e.message || '')) {
+        showToast('You already checked in this week.', 'info');
+        closeModal('cw-generic-modal');
+      } else {
+        if (err) err.textContent = e.message || 'Could not check in right now.';
+        btn.disabled = false;
+        btn.textContent = 'Check in';
+      }
     }
-},
+  },
 
   async renderPodLeaderboard() {
     if (!this.activePod) return;
@@ -1093,24 +1037,24 @@ async submitCheckin() {
   /* ============================================================
      PAIRS
      ============================================================ */
- async loadPairs() {
+  async loadPairs() {
     const list = document.getElementById('pairs-list');
     if (!list) return;
     try {
-        const res = await Backend.listPairs();
-        this.pairs = res.data || res.items || res.pairs || (Array.isArray(res) ? res : []) || [];
-        this.renderPairs();
+      const res = await Backend.listPairs();
+      this.pairs = res.data || res.items || res.pairs || (Array.isArray(res) ? res : []) || [];
+      this.renderPairs();
     } catch (e) {
-        console.warn('Pairs load failed:', e);
-        list.innerHTML = `
-          <div class="card">
-            <div class="empty-note" style="padding: 20px 0;">
-              <strong>Couldn't load pairs.</strong>
-              <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPairs()">Retry</button>
-            </div>
-          </div>`;
+      console.warn('Pairs load failed:', e);
+      list.innerHTML = `
+        <div class="card">
+          <div class="empty-note" style="padding: 20px 0;">
+            <strong>Couldn't load pairs.</strong>
+            <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPairs()">Retry</button>
+          </div>
+        </div>`;
     }
-},
+  },
 
   renderPairs() {
     const list = document.getElementById('pairs-list');
@@ -1134,9 +1078,7 @@ async submitCheckin() {
     }
 
     list.innerHTML = [
-      // Pending requests (that I sent or received)
       ...pending.map(p => this.renderPairCard(p, myId, true)),
-      // Active
       ...active.map(p => this.renderPairCard(p, myId, false))
     ].join('');
   },
@@ -1200,51 +1142,49 @@ async submitCheckin() {
   },
 
   async matchPair() {
-    // ── Ensure languages are set up before matching ──
     const ready = await LanguageSetup.ensure();
-    if (!ready) return;   // user cancelled
+    if (!ready) return;
 
     showToast('Finding your partner…', 'info');
     closeModal('cw-generic-modal');
 
     try {
-        const res = await Backend.matchPair();
-        const pair = res.pair || res;
-        showToast('Matched! 🎉', 'success');
-        await this.loadPairs();
-        if (pair && (pair._id || pair.id)) {
-            setTimeout(() => this.openPairChat(pair._id || pair.id), 400);
-        }
-   } catch (e) {
-    console.warn('Pair match failed:', e);
+      const res = await Backend.matchPair();
+      const pair = res.pair || res;
+      showToast('Matched! 🎉', 'success');
+      await this.loadPairs();
+      if (pair && (pair._id || pair.id)) {
+        setTimeout(() => this.openPairChat(pair._id || pair.id), 400);
+      }
+    } catch (e) {
+      console.warn('Pair match failed:', e);
 
-    if (e.status === 403) {
+      if (e.status === 403) {
         Paywall.show({
-            title: "You're at 1 exchange partner",
-            message: 'The free plan includes 1 partner. Premium opens up to 5 — and adds voice calls.',
-            benefit: 'Up to 5 exchange partners, voice calls, unlimited lessons.',
-            feature: 'pair_limit',
-            ctaLabel: 'Get more partners'
+          title: "You're at 1 exchange partner",
+          message: 'The free plan includes 1 partner. Premium opens up to 5 — and adds voice calls.',
+          benefit: 'Up to 5 exchange partners, voice calls, unlimited lessons.',
+          feature: 'pair_limit',
+          ctaLabel: 'Get more partners'
         });
-    } else if (e.status === 404) {
-        // Existing "no partners" empty-state modal
+      } else if (e.status === 404) {
         Header._modal('No partners right now', `
-            <p style="font-size: 14px; color: var(--text-2); line-height: 1.5;">
-                We couldn't find a match in your language combination just yet.
-                Try again in a few hours — new learners join daily.
-            </p>
-            <p style="font-size: 13px; color: var(--text-3); margin-top: 10px;">
-                Tip: add more learning and teaching languages to widen your matches.
-            </p>
-            <button class="btn btn-block" onclick="closeModal('cw-generic-modal'); Nav.go('profile')" style="margin-top: 16px;">
-                Update my languages
-            </button>
+          <p style="font-size: 14px; color: var(--text-2); line-height: 1.5;">
+            We couldn't find a match in your language combination just yet.
+            Try again in a few hours — new learners join daily.
+          </p>
+          <p style="font-size: 13px; color: var(--text-3); margin-top: 10px;">
+            Tip: add more learning and teaching languages to widen your matches.
+          </p>
+          <button class="btn btn-block" onclick="closeModal('cw-generic-modal'); Nav.go('profile')" style="margin-top: 16px;">
+            Update my languages
+          </button>
         `);
-    } else {
+      } else {
         showToast('Could not match right now. Try again.', 'error');
+      }
     }
-}
-},
+  },
 
   showRequestPair() {
     Header._modal('Request a partner', `
@@ -1295,24 +1235,22 @@ async submitCheckin() {
     }
   },
 
- async openPairChat(pairId) {
+  async openPairChat(pairId) {
     const pair = this.pairs.find(p => (p._id || p.id) === pairId);
     if (!pair) {
-        showToast('Pair not found.', 'error');
-        return;
+      showToast('Pair not found.', 'error');
+      return;
     }
 
-    // Resolve the partner — trust the backend's `partner` field if
-    // present, otherwise compute it from userA / userB.
     const d = pair.data || pair;
     let partner = d.partner;
     if (!partner) {
-        const myId = (State.user && (State.user._id || State.user.id)) || '';
-        const userAId = d.userA && (d.userA._id || d.userA);
-        const userBId = d.userB && (d.userB._id || d.userB);
-        if (String(userAId) === String(myId)) partner = d.userB;
-        else if (String(userBId) === String(myId)) partner = d.userA;
-        else partner = d.userA;
+      const myId = (State.user && (State.user._id || State.user.id)) || '';
+      const userAId = d.userA && (d.userA._id || d.userA);
+      const userBId = d.userB && (d.userB._id || d.userB);
+      if (String(userAId) === String(myId)) partner = d.userB;
+      else if (String(userBId) === String(myId)) partner = d.userA;
+      else partner = d.userA;
     }
     partner = partner || {};
 
@@ -1327,76 +1265,18 @@ async submitCheckin() {
     document.getElementById('pod-view').classList.add('active');
     document.body.style.overflow = 'hidden';
 
-    // Mark this as a pair chat so loadPodMessages routes to the right endpoint
     this.activePod = {
-        _id: pairId,
-        isPair: true,
-        data: { name, members: [] }
+      _id: pairId,
+      isPair: true,
+      data: { name, members: [] }
     };
 
-    // Hide pod-only tabs for pair chats
     document.querySelectorAll('.pod-tab').forEach(t => {
-        t.style.display = t.dataset.tab === 'chat' ? '' : 'none';
+      t.style.display = t.dataset.tab === 'chat' ? '' : 'none';
     });
 
     this.setPodTab('chat');
     this.loadPodMessages();
-},
-
-  async loadPairMessages() {
-    const content = document.getElementById('pod-content');
-    content.innerHTML = '<div class="modal-loading">Loading messages…</div>';
-    const pairId = this.activePod._id;
-    try {
-      const res = await Backend.getPairMessages(pairId, { limit: 50 });
-      const items = res.messages || res.items || res || [];
-      const myId = (State.user && (State.user._id || State.user.id)) || '';
-      if (!items.length) {
-        content.innerHTML = `<div class="empty-note"><strong>Say hello</strong>Start your first conversation.</div>`;
-        return;
-      }
-      content.innerHTML = items.map(m => this.renderPodMessage(m, myId)).join('');
-      content.scrollTop = content.scrollHeight;
-    } catch (e) {
-      content.innerHTML = '<div class="empty-note">Couldn\'t load messages.</div>';
-    }
-  },
-
-  async sendPodMessage() {
-    // Same function used for pod + pair chats — the destination depends
-    // on this.activePod.isPair
-    if (!this.activePod) return;
-    const input = document.getElementById('pod-input');
-    const sendBtn = document.getElementById('pod-send');
-    const text = (input?.value || '').trim();
-    if (!text) return;
-
-    input.value = '';
-    input.style.height = 'auto';
-    if (sendBtn) sendBtn.disabled = true;
-
-    const myId = (State.user && (State.user._id || State.user.id)) || '';
-    const optimistic = {
-      data: {
-        authorId: myId,
-        authorName: State.user?.fullName || 'You',
-        content: text,
-        createdAt: new Date().toISOString()
-      }
-    };
-    const content = document.getElementById('pod-content');
-    if (content.querySelector('.empty-note')) content.innerHTML = '';
-    content.insertAdjacentHTML('beforeend', this.renderPodMessage(optimistic, myId));
-    content.scrollTop = content.scrollHeight;
-
-    try {
-      if (this.activePod.isPair) await Backend.sendPairMessage(this.activePod._id, text);
-      else await Backend.sendPodMessage(this.activePod._id, text);
-    } catch (e) {
-      showToast('Could not send — check your connection.', 'error');
-    } finally {
-      if (sendBtn) sendBtn.disabled = false;
-    }
   },
 
   reportPair(pairId) {
@@ -1445,15 +1325,15 @@ async submitCheckin() {
     const grid = document.getElementById('cards-grid');
     if (!grid) return;
     try {
-        const res = await Backend.listMyCards();
-        this.cards = res.data || res.items || res.cards || (Array.isArray(res) ? res : []) || [];
-        this.renderCards();
+      const res = await Backend.listMyCards();
+      this.cards = res.data || res.items || res.cards || (Array.isArray(res) ? res : []) || [];
+      this.renderCards();
     } catch (e) {
-        console.warn('Cards load failed:', e);
-        this.cards = [];
-        this.renderCards();
+      console.warn('Cards load failed:', e);
+      this.cards = [];
+      this.renderCards();
     }
-},
+  },
 
   renderCards() {
     const grid = document.getElementById('cards-grid');
@@ -1534,7 +1414,6 @@ async submitCheckin() {
     const cardType = document.getElementById('card-type')?.value || 'streak';
     const caption = document.getElementById('card-caption')?.value.trim() || '';
     const p = State.progress || {};
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
 
     try {
       const res = await Backend.createCard({
@@ -1549,7 +1428,6 @@ async submitCheckin() {
         }
       });
       const cardId = res._id || res.cardId;
-      // Try to render it — best effort, backend may need a beat
       if (cardId) {
         Backend.renderCard(cardId).catch(() => {});
       }
@@ -1629,15 +1507,6 @@ async submitCheckin() {
 };
 
 /* ============================================================
-   RESET POD TABS WHEN LEAVING POD VIEW
-   ============================================================ */
-const origClosePod = Comm.closePod.bind(Comm);
-Comm.closePod = function () {
-  document.querySelectorAll('.pod-tab').forEach(t => { t.style.display = ''; });
-  return origClosePod();
-};
-
-/* ============================================================
    AUTO-GROW TEXTAREA + ENTER-TO-SEND FOR POD INPUT
    ============================================================ */
 document.addEventListener('input', (e) => {
@@ -1653,9 +1522,6 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* ============================================================
-   BOOT
-   ============================================================ */
 document.addEventListener('DOMContentLoaded', () => Comm.init());
 window.Comm = Comm;
 </script>
