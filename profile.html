@@ -926,8 +926,8 @@ renderPlans(plansObj) {
         const ngn = prices.NGN?.[cycle];
         const usd = prices.USD?.[cycle];
         const parts = [];
-        if (ngn) parts.push(`₦${(ngn / 100).toLocaleString()}`);
-        if (usd) parts.push(`$${(usd / 100).toFixed(2)}`);
+        if (ngn) parts.push(`₦${(ngn).toLocaleString()}`);
+        if (usd) parts.push(`$${(usd).toFixed(2)}`);
         return parts.join(' · ') || null;
     };
 
@@ -1133,31 +1133,37 @@ async verifyPayment(reference) {
     }
   },
 
-  renderReferrals(r) {
-    const code = r.code || r.referralCode || (r.user && r.user.referralCode) || '—';
-    document.getElementById('ref-code-val').textContent = code;
-    document.getElementById('ref-count').textContent = r.qualified || r.referralCount || 0;
-    document.getElementById('ref-pending').textContent = r.pending || r.pendingReferrals || 0;
-    document.getElementById('ref-rewards').textContent = r.rewards || r.referralsRewarded || 0;
+ renderReferrals(r) {
+    // Backend returns { referralCode, shareUrl, stats: { pending, qualified, rewarded, ... }, recentReferrals }
+    const code = r.referralCode || r.code || (r.user && r.user.referralCode) || '—';
+    const stats = r.stats || {};
 
-    const qualified = r.qualified || r.referralCount || 0;
-    const target = 12;
+    document.getElementById('ref-code-val').textContent = code;
+    document.getElementById('ref-count').textContent = stats.qualified ?? r.qualified ?? r.referralCount ?? 0;
+    document.getElementById('ref-pending').textContent = stats.pending ?? r.pending ?? r.pendingReferrals ?? 0;
+    document.getElementById('ref-rewards').textContent = stats.rewarded ?? r.rewards ?? r.referralsRewarded ?? 0;
+
+    const qualified = stats.qualified ?? r.qualified ?? r.referralCount ?? 0;
+    const target = stats.referralsPerReward || 12;
     const pct = Math.min(100, Math.round((qualified / target) * 100));
     const remaining = Math.max(0, target - qualified);
 
-    document.getElementById('ref-progress').innerHTML = `
-      <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); margin-bottom: 6px;">
-        <span>${qualified} of ${target} for 30 free days of Premium</span>
-        <span style="font-weight: 700;">${pct}%</span>
-      </div>
-      <div style="height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;">
-        <div style="height: 100%; width: ${pct}%; background: linear-gradient(90deg, var(--brand), var(--gold)); border-radius: 3px;"></div>
-      </div>
-      ${remaining > 0
-        ? `<div style="font-size: 12px; color: var(--text-3); margin-top: 8px;">${remaining} more friend${remaining === 1 ? '' : 's'} to unlock your reward.</div>`
-        : `<div style="font-size: 12px; color: var(--brand); margin-top: 8px; font-weight: 700;">🎉 Reward unlocked — claim it in the app or check your email.</div>`
-      }`;
-  },
+    const progressHost = document.getElementById('ref-progress');
+    if (progressHost) {
+        progressHost.innerHTML = `
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); margin-bottom: 6px;">
+                <span>${qualified} of ${target} for 30 free days of Premium</span>
+                <span style="font-weight: 700;">${pct}%</span>
+            </div>
+            <div style="height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;">
+                <div style="height: 100%; width: ${pct}%; background: linear-gradient(90deg, var(--brand), var(--gold)); border-radius: 3px;"></div>
+            </div>
+            ${remaining > 0
+                ? `<div style="font-size: 12px; color: var(--text-3); margin-top: 8px;">${remaining} more friend${remaining === 1 ? '' : 's'} to unlock your reward.</div>`
+                : `<div style="font-size: 12px; color: var(--brand); margin-top: 8px; font-weight: 700;">🎉 Reward unlocked — claim it in the app or check your email.</div>`
+            }`;
+    }
+},
 
   copyReferral() {
     const code = document.getElementById('ref-code-val').textContent;
