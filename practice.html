@@ -217,15 +217,22 @@ img, svg { display: block; max-width: 100%; }
 /* ============ TIMMY CHAT ============ */
 #timmy-view {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   z-index: 9999;
   background: var(--bg);
   display: none;
   flex-direction: column;
-  height: 100dvh;
   overflow: hidden;
 }
-#timmy-view.active { display: flex; }
+#timmy-view.active {
+  display: flex;
+}
 .chat-topbar {
   display: flex; align-items: center; gap: 12px;
   padding: calc(12px + var(--safe-top)) 16px 12px;
@@ -251,8 +258,10 @@ img, svg { display: block; max-width: 100%; }
 }
 .chat-menu button:hover { background: rgba(var(--brand-rgb), 0.08); }
 .chat-menu button.danger { color: var(--danger); }
-  .chat-foot {
-  display: flex; gap: 8px; align-items: flex-end;
+ .chat-foot {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
   padding: 12px 16px calc(14px + var(--safe-bot));
   background: var(--card);
   border-top: 1px solid var(--border);
@@ -263,8 +272,14 @@ img, svg { display: block; max-width: 100%; }
 }
 
 .chat-scroll {
-  flex: 1; overflow-y: auto; padding: 16px;
-  display: flex; flex-direction: column; gap: 12px;
+  flex: 1 1 auto;      /* allow it to grow AND shrink */
+  min-height: 0;       /* critical — without this, flex children can't shrink */
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  -webkit-overflow-scrolling: touch;
 }
 .msg { max-width: 84%; padding: 12px 15px; border-radius: 16px; font-size: 14.5px; line-height: 1.55; word-wrap: break-word; }
 .msg.user { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 4px; }
@@ -661,16 +676,21 @@ const Practice = {
   /* ============================================================
      TIMMY CHAT
      ============================================================ */
-  openTimmy(mode, seedPrompt) {
+ openTimmy(mode, seedPrompt) {
     this.mode = mode;
 
     const view = document.getElementById('timmy-view');
     view.classList.add('active');
 
-    // Lock both html and body scroll so nothing bleeds through on mobile
+    // Lock the page completely on mobile.
+    // overflow alone isn't enough in some Android WebViews;
+    // position: fixed on body prevents background scroll.
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
+    document.body.style.top = '0';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
     document.body.style.width = '100%';
 
     // Header state
@@ -728,6 +748,9 @@ closeTimmy() {
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
     document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
     document.body.style.width = '';
 
     this.saveLocalChat();
