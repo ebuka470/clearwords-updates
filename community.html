@@ -668,9 +668,8 @@ const Comm = {
   },
 
  async matchPod() {
-    // ── Ensure languages are set up before matching ──
     const ready = await LanguageSetup.ensure();
-    if (!ready) return;   // user cancelled
+    if (!ready) return;
 
     showToast('Finding your pod…', 'info');
     closeModal('cw-generic-modal');
@@ -684,6 +683,7 @@ const Comm = {
         }
         showToast('Matched! 🎉', 'success');
 
+        // Refresh the pods list first
         await this.loadPods();
         const id = returnedPod._id || returnedPod.id;
         const freshPod = this.pods.find(p => (p._id || p.id) === id);
@@ -691,6 +691,7 @@ const Comm = {
         if (freshPod) {
             setTimeout(() => this.openPod(id), 600);
         } else {
+            // Give MongoDB one more beat
             setTimeout(async () => {
                 await this.loadPods();
                 const second = this.pods.find(p => (p._id || p.id) === id);
@@ -702,6 +703,8 @@ const Comm = {
         console.warn('Pod match failed:', e);
         if (e.status === 402 || e.status === 403) {
             showToast('Premium required to join a pod.', 'error');
+        } else if (e.status === 404) {
+            showToast('No pods available right now — try again later.', 'info');
         } else {
             showToast('Could not match right now. Try again.', 'error');
         }
@@ -987,18 +990,59 @@ const Comm = {
     `;
   },
 
-  async checkIn() {
+ async checkIn() {
     if (!this.activePod) return;
     const podId = this.activePod._id || this.activePod.id;
-    try {
-      await Backend.podCheckin(podId, '');
-      showToast('Checked in! 🎉', 'success');
-      this.loadPodMessages();
-    } catch (e) {
-      if (e.status === 409) showToast('Already checked in this week.', 'info');
-      else showToast('Could not check in right now.', 'error');
+
+    // Ask how many lessons this week
+    Header._modal('Check in for this week', `
+        <p style="font-size: 14px; color: var(--text-2); line-height: 1.5; margin-bottom: 14px;">
+            How many lessons did you complete this week? Your pod sees this,
+            and it counts toward the shared streak.
+        </p>
+        <div class="field">
+            <label>Lessons completed</label>
+            <input type="number" id="checkin-lessons" min="0" max="100" value="5" inputmode="numeric">
+        </div>
+        <button class="btn btn-block" onclick="Comm.submitCheckin()" id="checkin-btn">
+            Check in
+        </button>
+        <div class="field-error" id="checkin-err"></div>
+    `);
+},
+
+async submitCheckin() {
+    if (!this.activePod) return;
+    const podId = this.activePod._id || this.activePod.id;
+    const input = document.getElementById('checkin-lessons');
+    const err = document.getElementById('checkin-err');
+    const btn = document.getElementById('checkin-btn');
+    const lessons = parseInt(input?.value, 10);
+
+    if (!Number.isFinite(lessons) || lessons < 0) {
+        if (err) err.textContent = 'Enter a valid number of lessons.';
+        return;
     }
-  },
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-inline"></span> Checking in…';
+
+    try {
+        await Backend.podCheckin(podId, lessons);
+        closeModal('cw-generic-modal');
+        showToast('Checked in! 🎉', 'success');
+        this.loadPodMessages();
+    } catch (e) {
+        if (e.status === 400 && /already/i.test(e.message || '')) {
+            showToast('You already checked in this week.', 'info');
+            closeModal('cw-generic-modal');
+        } else {
+            if (err) err.textContent = e.message || 'Could not check in right now.';
+            btn.disabled = false;
+            btn.textContent = 'Check in';
+        }
+    }
+},
 
   async renderPodLeaderboard() {
     if (!this.activePod) return;
