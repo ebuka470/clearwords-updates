@@ -185,8 +185,8 @@ input, textarea, select { font-family: inherit; }
 .sub-desc { font-size: 13.5px; color: var(--text-2); margin-top: 6px; line-height: 1.5; }
 .sub-expiry { font-size: 12px; color: var(--text-3); margin-top: 8px; }
 .sub-actions { display: flex; gap: 10px; margin-top: 14px; }
-  
-  /* Billing cycle toggle chips */
+
+/* Billing cycle toggle chips */
 .chip {
   padding: 8px 16px;
   border-radius: var(--radius-full);
@@ -381,6 +381,53 @@ input, textarea, select { font-family: inherit; }
 .lang-name { flex: 1; font-weight: 700; font-size: 15px; }
 .lang-check { color: var(--brand); font-weight: 800; }
 
+/* Language setup prompt */
+.lang-section {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--bg-elev);
+  border: 1.5px solid var(--border);
+}
+.lang-section-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.lang-section-sub {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+.lang-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lang-chip {
+  padding: 9px 15px;
+  border-radius: var(--radius-full);
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-2);
+  transition: all .15s;
+  cursor: pointer;
+}
+.lang-chip:active { transform: scale(.96); }
+.lang-chip.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.lang-error {
+  font-size: 12.5px;
+  color: var(--danger);
+  min-height: 16px;
+  margin-top: 6px;
+}
+
 .notif-item { display: flex; gap: 12px; padding: 12px; border-radius: 12px; background: var(--bg-elev); border: 1px solid var(--border); margin-bottom: 8px; }
 .notif-item.unread { border-color: rgba(var(--brand-rgb), 0.35); background: rgba(var(--brand-rgb), 0.05); }
 .notif-icon { font-size: 20px; flex-shrink: 0; }
@@ -519,6 +566,7 @@ input, textarea, select { font-family: inherit; }
     <div class="profile-handle" id="p-handle"></div>
     <div class="profile-bio" id="p-bio"></div>
     <div class="profile-location" id="p-loc"></div>
+    <div id="profile-goals" style="margin-top: 10px; position: relative; z-index: 1;"></div>
     <div class="profile-meta-row">
       <div class="profile-meta-item">
         <div class="profile-meta-val" id="p-streak">0</div>
@@ -729,6 +777,15 @@ const Prof = {
       this.progress = p;
       this.renderBanner();
     });
+
+    // Auto-open the upgrade modal if redirected from a paywall prompt
+    const urlParams = new URLSearchParams(location.search);
+    if (urlParams.get('upgrade') === '1') {
+      setTimeout(() => {
+        if (typeof Prof.openUpgrade === 'function') Prof.openUpgrade();
+      }, 400);
+      history.replaceState({}, '', location.pathname);
+    }
   },
 
   /* ============================================================
@@ -750,29 +807,29 @@ const Prof = {
     document.getElementById('p-streak').textContent = p.streak || u.streak || 0;
     document.getElementById('p-xp').textContent = p.totalXP || u.totalXP || 0;
     document.getElementById('p-level').textContent = p.currentLevel || u.currentLevel || 1;
-    
+
     // Render the user's goals as chips (if any)
-const goalsHost = document.getElementById('profile-goals');
-if (goalsHost) {
-    const goals = u.goals || [];
-    if (goals.length) {
+    const goalsHost = document.getElementById('profile-goals');
+    if (goalsHost) {
+      const goals = u.goals || [];
+      if (goals.length) {
         const labels = {
-            talk_family: 'Talk with family',
-            understand: 'Understand conversations',
-            speak: 'Speak confidently',
-            pronunciation: 'Pronunciation',
-            culture: 'Culture',
-            read_write: 'Read & write',
-            teach_child: 'Teach my child',
-            visit_nigeria: 'Visit Nigeria'
+          talk_family: 'Talk with family',
+          understand: 'Understand conversations',
+          speak: 'Speak confidently',
+          pronunciation: 'Pronunciation',
+          culture: 'Culture',
+          read_write: 'Read & write',
+          teach_child: 'Teach my child',
+          visit_nigeria: 'Visit Nigeria'
         };
         goalsHost.innerHTML = goals.map(g =>
-            `<span style="display: inline-block; padding: 6px 12px; margin: 4px 4px 0 0; border-radius: 999px; background: rgba(255,255,255,0.15); font-size: 12px; font-weight: 600;">${esc(labels[g] || g)}</span>`
+          `<span style="display: inline-block; padding: 6px 12px; margin: 4px 4px 0 0; border-radius: 999px; background: rgba(255,255,255,0.15); font-size: 12px; font-weight: 600;">${esc(labels[g] || g)}</span>`
         ).join('');
-    } else {
+      } else {
         goalsHost.innerHTML = '';
+      }
     }
-}
 
     const langValue = document.getElementById('set-lang-value');
     if (langValue && langCfg) langValue.textContent = langCfg.emoji + ' ' + langCfg.name;
@@ -858,186 +915,179 @@ if (goalsHost) {
   async openUpgrade() {
     Header._modal('Choose your plan', '<div class="modal-loading">Loading plans…</div>');
     try {
-        const res = await Backend.getPlans();
-        // Backend returns { free: {...}, premium: {...}, immersive: {...} }
-        const raw = res.plans || res;
-        this.plans = raw;
-        this.renderPlans(raw);
+      const res = await Backend.getPlans();
+      const raw = res.plans || res;
+      this.plans = raw;
+      this.renderPlans(raw);
     } catch (e) {
-        console.warn('Plans load failed:', e);
-        const body = document.querySelector('#cw-generic-modal .cw-modal-body');
-        if (body) {
-            body.innerHTML = `
-                <div class="empty-note">
-                    <strong>Couldn't load plans.</strong>
-                    <button class="btn btn-sm" style="margin-top: 12px;" onclick="Prof.openUpgrade()">Retry</button>
-                </div>`;
-        }
+      console.warn('Plans load failed:', e);
+      const body = document.querySelector('#cw-generic-modal .cw-modal-body');
+      if (body) {
+        body.innerHTML = `
+          <div class="empty-note">
+            <strong>Couldn't load plans.</strong>
+            <button class="btn btn-sm" style="margin-top: 12px;" onclick="Prof.openUpgrade()">Retry</button>
+          </div>`;
+      }
     }
-},
+  },
 
-renderPlans(plansObj) {
+  renderPlans(plansObj) {
     const body = document.querySelector('#cw-generic-modal .cw-modal-body');
     if (!body) return;
 
-    // Convert the tier-keyed object into an ordered array
     const order = ['free', 'premium', 'immersive'];
     const plans = order
-        .filter(k => plansObj[k])
-        .map(k => ({ id: k, tier: k, ...plansObj[k] }));
+      .filter(k => plansObj[k])
+      .map(k => ({ id: k, tier: k, ...plansObj[k] }));
 
     const currentTier = (this.user?.subscriptionTier || 'free').toLowerCase();
 
-    // Human-readable feature descriptions per tier.
-    // Add or edit these strings freely — they're the only place the
-    // marketing copy lives.
     const FEATURES = {
-        free: [
-            '50 lessons per language',
-            'Unlimited AI chat with Timmy (text)',
-            '5 custom AI lessons per day',
-            'Join up to 3 study pods',
-            '1 language exchange partner',
-            'Text chat with your pod + partner',
-            'Progress cards + external sharing'
-        ],
-        premium: [
-            'Unlimited lessons per language',
-            'Unlimited AI chat with Timmy (text)',
-            'Unlimited custom AI lessons',
-            'Join up to 3 pods — or create your own',
-            'Up to 5 language exchange partners',
-            'Voice calls with your exchange partner',
-            'Family / shared account',
-            'Everything in Free'
-        ],
-        immersive: [
-            'Everything in Premium',
-            'Video calls with your exchange partner',
-            'Unlimited language exchange partners',
-            'Custom learning paths built around your goals',
-            'Priority matching',
-            'Highest tier — for serious learners'
-        ]
+      free: [
+        '50 lessons per language',
+        'Unlimited AI chat with Timmy (text)',
+        '5 custom AI lessons per day',
+        'Join up to 3 study pods',
+        '1 language exchange partner',
+        'Text chat with your pod + partner',
+        'Progress cards + external sharing'
+      ],
+      premium: [
+        'Unlimited lessons per language',
+        'Unlimited AI chat with Timmy (text)',
+        'Unlimited custom AI lessons',
+        'Join up to 3 pods — or create your own',
+        'Up to 5 language exchange partners',
+        'Voice calls with your exchange partner',
+        'Family / shared account',
+        'Everything in Free'
+      ],
+      immersive: [
+        'Everything in Premium',
+        'Video calls with your exchange partner',
+        'Unlimited language exchange partners',
+        'Custom learning paths built around your goals',
+        'Priority matching',
+        'Highest tier — for serious learners'
+      ]
     };
 
     const fmtPrice = (prices, cycle) => {
-        if (!prices) return null;
-        const ngn = prices.NGN?.[cycle];
-        const usd = prices.USD?.[cycle];
-        const parts = [];
-        if (ngn) parts.push(`₦${(ngn).toLocaleString()}`);
-        if (usd) parts.push(`$${(usd).toFixed(2)}`);
-        return parts.join(' · ') || null;
+      if (!prices) return null;
+      const ngn = prices.NGN?.[cycle];
+      const usd = prices.USD?.[cycle];
+      const parts = [];
+      if (ngn) parts.push(`₦${(ngn).toLocaleString()}`);
+      if (usd) parts.push(`$${(usd).toFixed(2)}`);
+      return parts.join(' · ') || null;
     };
 
     const html = plans.map((plan, i) => {
-        const id = plan.id;
-        const isCurrent = id === currentTier;
-        const isRecommended = id === 'premium';
-        const features = FEATURES[id] || [];
+      const id = plan.id;
+      const isCurrent = id === currentTier;
+      const isRecommended = id === 'premium';
+      const features = FEATURES[id] || [];
 
-        const monthly = fmtPrice(plan.prices, 'monthly');
-        const yearly = fmtPrice(plan.prices, 'yearly');
+      const monthly = fmtPrice(plan.prices, 'monthly');
+      const yearly = fmtPrice(plan.prices, 'yearly');
 
-        let priceLine = '';
-        if (id === 'free') {
-            priceLine = `<div class="plan-price">₦0 <small>/ forever</small></div>`;
-        } else {
-            const monthlyLine = monthly ? `${monthly} <small>/ month</small>` : 'Contact us';
-            const yearlyLine = yearly ? `${yearly} <small>/ year</small>` : '';
-            priceLine = `
-                <div class="plan-price">${monthlyLine}</div>
-                ${yearlyLine ? `<div style="font-size: 12.5px; color: var(--text-3); margin-top: 4px;">or ${yearlyLine}</div>` : ''}
-            `;
-        }
+      let priceLine = '';
+      if (id === 'free') {
+        priceLine = `<div class="plan-price">₦0 <small>/ forever</small></div>`;
+      } else {
+        const monthlyLine = monthly ? `${monthly} <small>/ month</small>` : 'Contact us';
+        const yearlyLine = yearly ? `${yearly} <small>/ year</small>` : '';
+        priceLine = `
+          <div class="plan-price">${monthlyLine}</div>
+          ${yearlyLine ? `<div style="font-size: 12.5px; color: var(--text-3); margin-top: 4px;">or ${yearlyLine}</div>` : ''}
+        `;
+      }
 
-        return `
-            <button type="button"
-                    class="plan-card ${isRecommended ? 'recommended' : ''} ${isCurrent ? 'selected' : ''}"
-                    data-plan-id="${id}"
-                    ${isCurrent ? 'disabled' : ''}
-                    onclick="Prof.selectPlan('${id}', this)">
-                <div class="plan-radio"></div>
-                <div class="plan-body">
-                    <div class="plan-name">
-                        ${id.charAt(0).toUpperCase() + id.slice(1)}
-                        ${isRecommended && !isCurrent ? '<span class="plan-badge">Popular</span>' : ''}
-                        ${isCurrent ? '<span class="plan-badge" style="background: rgba(46,139,87,0.2); color: var(--brand);">Current</span>' : ''}
-                    </div>
-                    ${priceLine}
-                    ${features.length ? `
-                        <ul class="plan-features">
-                            ${features.map(f => `<li>${esc(f)}</li>`).join('')}
-                        </ul>
-                    ` : ''}
-                </div>
-            </button>`;
+      return `
+        <button type="button"
+                class="plan-card ${isRecommended ? 'recommended' : ''} ${isCurrent ? 'selected' : ''}"
+                data-plan-id="${id}"
+                ${isCurrent ? 'disabled' : ''}
+                onclick="Prof.selectPlan('${id}', this)">
+          <div class="plan-radio"></div>
+          <div class="plan-body">
+            <div class="plan-name">
+              ${id.charAt(0).toUpperCase() + id.slice(1)}
+              ${isRecommended && !isCurrent ? '<span class="plan-badge">Popular</span>' : ''}
+              ${isCurrent ? '<span class="plan-badge" style="background: rgba(46,139,87,0.2); color: var(--brand);">Current</span>' : ''}
+            </div>
+            ${priceLine}
+            ${features.length ? `
+              <ul class="plan-features">
+                ${features.map(f => `<li>${esc(f)}</li>`).join('')}
+              </ul>
+            ` : ''}
+          </div>
+        </button>`;
     }).join('');
 
     body.innerHTML = html + `
-        <button class="btn btn-block" id="plan-checkout-btn" disabled onclick="Prof.startCheckout()" style="margin-top: 6px;">
-            Choose a plan to continue
-        </button>
-        <p style="font-size: 12px; color: var(--text-3); text-align: center; margin-top: 12px; line-height: 1.5;">
-            Payments are handled securely by Paystack.<br>
-            You can cancel any time from your account settings.
-        </p>`;
+      <button class="btn btn-block" id="plan-checkout-btn" disabled onclick="Prof.startCheckout()" style="margin-top: 6px;">
+        Choose a plan to continue
+      </button>
+      <p style="font-size: 12px; color: var(--text-3); text-align: center; margin-top: 12px; line-height: 1.5;">
+        Payments are handled securely by Paystack.<br>
+        You can cancel any time from your account settings.
+      </p>`;
 
-    // If the user is on free, pre-select premium as the suggested upgrade
     if (currentTier === 'free') {
-        setTimeout(() => {
-            const btn = document.querySelector('.plan-card[data-plan-id="premium"]');
-            if (btn) this.selectPlan('premium', btn);
-        }, 50);
+      setTimeout(() => {
+        const btn = document.querySelector('.plan-card[data-plan-id="premium"]');
+        if (btn) this.selectPlan('premium', btn);
+      }, 50);
     }
-},
+  },
 
-selectedPlanId: null,
-selectedBillingCycle: 'monthly',
+  selectedPlanId: null,
+  selectedBillingCycle: 'monthly',
 
-selectPlan(planId, btnEl) {
-    if (planId === 'free') return;   // can't "buy" free
-    if (planId === this.user?.subscriptionTier) return;   // already on this plan
+  selectPlan(planId, btnEl) {
+    if (planId === 'free') return;
+    if (planId === this.user?.subscriptionTier) return;
 
     this.selectedPlanId = planId;
 
     document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
     if (btnEl) btnEl.classList.add('selected');
 
-    // Add a billing-cycle toggle if we haven't already
     const body = document.querySelector('#cw-generic-modal .cw-modal-body');
     if (body && !document.getElementById('plan-cycle-toggle')) {
-        const toggle = document.createElement('div');
-        toggle.id = 'plan-cycle-toggle';
-        toggle.style.cssText = 'display:flex; gap:8px; justify-content:center; margin: 14px 0 8px;';
-        toggle.innerHTML = `
-            <button type="button" class="chip active" data-cycle="monthly"
-                    onclick="Prof.pickBillingCycle('monthly', this)">Monthly</button>
-            <button type="button" class="chip" data-cycle="yearly"
-                    onclick="Prof.pickBillingCycle('yearly', this)">Yearly · 2 months free</button>
-        `;
-        const checkoutBtn = document.getElementById('plan-checkout-btn');
-        if (checkoutBtn) body.insertBefore(toggle, checkoutBtn);
+      const toggle = document.createElement('div');
+      toggle.id = 'plan-cycle-toggle';
+      toggle.style.cssText = 'display:flex; gap:8px; justify-content:center; margin: 14px 0 8px;';
+      toggle.innerHTML = `
+        <button type="button" class="chip active" data-cycle="monthly"
+                onclick="Prof.pickBillingCycle('monthly', this)">Monthly</button>
+        <button type="button" class="chip" data-cycle="yearly"
+                onclick="Prof.pickBillingCycle('yearly', this)">Yearly · 2 months free</button>
+      `;
+      const checkoutBtn = document.getElementById('plan-checkout-btn');
+      if (checkoutBtn) body.insertBefore(toggle, checkoutBtn);
     }
 
     const checkout = document.getElementById('plan-checkout-btn');
     if (checkout) {
-        checkout.disabled = false;
-        checkout.textContent = `Upgrade to ${planId.charAt(0).toUpperCase() + planId.slice(1)} →`;
+      checkout.disabled = false;
+      checkout.textContent = `Upgrade to ${planId.charAt(0).toUpperCase() + planId.slice(1)} →`;
     }
-},
+  },
 
-pickBillingCycle(cycle, btnEl) {
+  pickBillingCycle(cycle, btnEl) {
     this.selectedBillingCycle = cycle;
     document.querySelectorAll('#plan-cycle-toggle .chip').forEach(c => c.classList.remove('active'));
     if (btnEl) btnEl.classList.add('active');
-},
+  },
 
-/* ============================================================
-   PAYSTACK CHECKOUT
-   ============================================================ */
-async startCheckout() {
+  /* ============================================================
+     PAYSTACK CHECKOUT
+     ============================================================ */
+  async startCheckout() {
     if (!this.selectedPlanId) return;
 
     const btn = document.getElementById('plan-checkout-btn');
@@ -1045,78 +1095,75 @@ async startCheckout() {
     if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-inline"></span> Preparing payment…'; }
 
     try {
-        const init = await Backend.initPayment(
-            this.selectedPlanId,
-            this.selectedBillingCycle,
-            'NGN'
-        );
+      const init = await Backend.initPayment(
+        this.selectedPlanId,
+        this.selectedBillingCycle,
+        'NGN'
+      );
 
-        // Contract: { reference, amount, currency, publicKey, email, metadata }
-        const { reference, amount, currency, publicKey, email } = init;
+      const { reference, amount, currency, publicKey, email } = init;
 
-        if (!reference || !publicKey) {
-            throw new Error('Payment initialization failed — missing reference or key');
+      if (!reference || !publicKey) {
+        throw new Error('Payment initialization failed — missing reference or key');
+      }
+
+      closeModal('cw-generic-modal');
+
+      await this.loadPaystackScript();
+
+      const userEmail = email || (this.user && this.user.email);
+      if (!userEmail) throw new Error('Missing email for checkout');
+
+      const handler = window.PaystackPop.setup({
+        key: publicKey,
+        email: userEmail,
+        amount,
+        currency: currency || 'NGN',
+        ref: reference,
+        onClose: () => {
+          showToast('Payment cancelled.', 'info');
+        },
+        callback: (response) => {
+          this.verifyPayment(response.reference || reference);
         }
-
-        closeModal('cw-generic-modal');
-
-        // Lazy-load Paystack only when needed
-        await this.loadPaystackScript();
-
-        const userEmail = email || (this.user && this.user.email);
-        if (!userEmail) throw new Error('Missing email for checkout');
-
-        const handler = window.PaystackPop.setup({
-            key: publicKey,
-            email: userEmail,
-            amount,
-            currency: currency || 'NGN',
-            ref: reference,
-            onClose: () => {
-                showToast('Payment cancelled.', 'info');
-            },
-            callback: (response) => {
-                this.verifyPayment(response.reference || reference);
-            }
-        });
-        handler.openIframe();
+      });
+      handler.openIframe();
     } catch (e) {
-        console.warn('Checkout error:', e);
-        showToast(e.message || 'Could not start payment.', 'error');
-        if (btn) { btn.disabled = false; btn.textContent = originalLabel; }
+      console.warn('Checkout error:', e);
+      showToast(e.message || 'Could not start payment.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = originalLabel; }
     }
-},
+  },
 
-loadPaystackScript() {
+  loadPaystackScript() {
     return new Promise((resolve, reject) => {
-        if (window.PaystackPop) return resolve();
-        const s = document.createElement('script');
-        s.src = 'https://js.paystack.co/v1/inline.js';
-        s.onload = resolve;
-        s.onerror = () => reject(new Error('Could not load Paystack'));
-        document.head.appendChild(s);
+      if (window.PaystackPop) return resolve();
+      const s = document.createElement('script');
+      s.src = 'https://js.paystack.co/v1/inline.js';
+      s.onload = resolve;
+      s.onerror = () => reject(new Error('Could not load Paystack'));
+      document.head.appendChild(s);
     });
-},
+  },
 
-async verifyPayment(reference) {
+  async verifyPayment(reference) {
     showToast('Verifying payment…', 'info');
     try {
-        await Backend.verifyPayment(reference);
-        showToast('Subscription activated! 🎉', 'success');
-        await this.loadSubscription();
+      await Backend.verifyPayment(reference);
+      showToast('Subscription activated! 🎉', 'success');
+      await this.loadSubscription();
 
-        // Refresh user
-        const me = await Backend.me();
-        State.user = me.user || me;
-        Auth.setUser(State.user);
-        this.user = State.user;
-        this.renderBanner();
-        Header.render('profile');
+      const me = await Backend.me();
+      State.user = me.user || me;
+      Auth.setUser(State.user);
+      this.user = State.user;
+      this.renderBanner();
+      Header.render('profile');
     } catch (e) {
-        console.warn('Verify failed:', e);
-        showToast('Could not verify payment. Contact support if charged.', 'error');
+      console.warn('Verify failed:', e);
+      showToast('Could not verify payment. Contact support if charged.', 'error');
     }
-},
+  },
 
   /* ============================================================
      REFERRALS
@@ -1133,8 +1180,7 @@ async verifyPayment(reference) {
     }
   },
 
- renderReferrals(r) {
-    // Backend returns { referralCode, shareUrl, stats: { pending, qualified, rewarded, ... }, recentReferrals }
+  renderReferrals(r) {
     const code = r.referralCode || r.code || (r.user && r.user.referralCode) || '—';
     const stats = r.stats || {};
 
@@ -1150,20 +1196,20 @@ async verifyPayment(reference) {
 
     const progressHost = document.getElementById('ref-progress');
     if (progressHost) {
-        progressHost.innerHTML = `
-            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); margin-bottom: 6px;">
-                <span>${qualified} of ${target} for 30 free days of Premium</span>
-                <span style="font-weight: 700;">${pct}%</span>
-            </div>
-            <div style="height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;">
-                <div style="height: 100%; width: ${pct}%; background: linear-gradient(90deg, var(--brand), var(--gold)); border-radius: 3px;"></div>
-            </div>
-            ${remaining > 0
-                ? `<div style="font-size: 12px; color: var(--text-3); margin-top: 8px;">${remaining} more friend${remaining === 1 ? '' : 's'} to unlock your reward.</div>`
-                : `<div style="font-size: 12px; color: var(--brand); margin-top: 8px; font-weight: 700;">🎉 Reward unlocked — claim it in the app or check your email.</div>`
-            }`;
+      progressHost.innerHTML = `
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); margin-bottom: 6px;">
+          <span>${qualified} of ${target} for 30 free days of Premium</span>
+          <span style="font-weight: 700;">${pct}%</span>
+        </div>
+        <div style="height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;">
+          <div style="height: 100%; width: ${pct}%; background: linear-gradient(90deg, var(--brand), var(--gold)); border-radius: 3px;"></div>
+        </div>
+        ${remaining > 0
+          ? `<div style="font-size: 12px; color: var(--text-3); margin-top: 8px;">${remaining} more friend${remaining === 1 ? '' : 's'} to unlock your reward.</div>`
+          : `<div style="font-size: 12px; color: var(--brand); margin-top: 8px; font-weight: 700;">🎉 Reward unlocked — claim it in the app or check your email.</div>`
+        }`;
     }
-},
+  },
 
   copyReferral() {
     const code = document.getElementById('ref-code-val').textContent;
@@ -1250,9 +1296,6 @@ async verifyPayment(reference) {
      ACHIEVEMENTS
      ============================================================ */
   async loadAchievements() {
-    // The backend doesn't have an explicit achievements endpoint, so we
-    // derive a small set from progress. This keeps the section meaningful
-    // without inventing a fake endpoint.
     const grid = document.getElementById('ach-grid');
     if (!grid) return;
 
@@ -1363,7 +1406,6 @@ async verifyPayment(reference) {
 
     try {
       await Backend.updateProfile({ fullName, username, bio, location });
-      // Refresh from server
       const me = await Backend.me();
       State.user = me.user || me;
       Auth.setUser(State.user);
@@ -1422,7 +1464,6 @@ async verifyPayment(reference) {
 
     try {
       const res = await Backend.changePassword(current, newPw);
-      // If backend returns a fresh token, swap it in — the old one is now invalid.
       if (res && res.token) Auth.setToken(res.token);
       closeModal('cw-generic-modal');
       showToast('Password updated.', 'success');
@@ -1465,7 +1506,6 @@ async verifyPayment(reference) {
     const currentlyOn = el.classList.contains('on');
 
     if (currentlyOn) {
-      // Best-effort disable on backend
       try { await Backend.updateProfile({ notificationsEnabled: false }); } catch {}
       if (State.user) State.user.notificationsEnabled = false;
       el.classList.remove('on');
@@ -1602,9 +1642,6 @@ async verifyPayment(reference) {
      SETTINGS SHEET (gear icon in banner)
      ============================================================ */
   openSettings() {
-    // The gear opens the same set of settings that are already on the page,
-    // but as a quick-access sheet. Simple pass-through to keep the surface
-    // discoverable.
     document.querySelector('.set-group').scrollIntoView({ behavior: 'smooth' });
   },
 
