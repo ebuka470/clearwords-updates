@@ -927,14 +927,20 @@ const Learn = {
       </button>`;
   },
 
-  async playCurrentWord() {
+ async playCurrentWord() {
     const w = this.activeLesson.vocabulary[this.wordIndex];
     if (!w) return;
     const btn = document.getElementById('word-audio-btn');
     if (btn) { btn.classList.add('playing'); btn.textContent = '🔊 Playing…'; }
-    await AudioMgr.play(w.word, State.currentLanguage);
+    try {
+        await AudioMgr.play(w.word, State.currentLanguage);
+    } catch (e) {
+        if (!Paywall.fromError(e)) {
+            showToast('Audio unavailable right now.', 'error');
+        }
+    }
     if (btn) { btn.classList.remove('playing'); btn.textContent = '🔊 Listen'; }
-  },
+},
 
   wordNext() {
     const vocab = this.activeLesson.vocabulary || [];
@@ -1037,14 +1043,20 @@ const Learn = {
       <button class="btn" onclick="Learn.nextStep()" style="flex: 1;">Continue →</button>`;
   },
 
-  async playDialogueLine(i) {
+ async playDialogueLine(i) {
     const line = this.activeLesson.dialogue[i];
     if (!line) return;
     const btn = document.getElementById('dlg-play-' + i);
     if (btn) { btn.classList.add('playing'); btn.textContent = '🔊'; }
-    await AudioMgr.play(line.text, State.currentLanguage);
+    try {
+        await AudioMgr.play(line.text, State.currentLanguage);
+    } catch (e) {
+        if (!Paywall.fromError(e)) {
+            showToast('Audio unavailable right now.', 'error');
+        }
+    }
     if (btn) btn.classList.remove('playing');
-  },
+},
 
   async playAllDialogue() {
     const lines = this.activeLesson.dialogue || [];
@@ -1312,13 +1324,21 @@ const Learn = {
       this._lessonStart = Date.now();
       showToast('Lesson ready! 🎉', 'success');
     } catch (e) {
-      console.error('Custom lesson failed:', e);
-      if (prog) prog.innerHTML = `
+    console.error('Custom lesson failed:', e);
+
+    // Paywall for custom lesson limit
+    if (Paywall.fromError(e)) {
+        closeModal('cw-generic-modal');
+        if (btn) btn.disabled = false;
+        return;
+    }
+
+    if (prog) prog.innerHTML = `
         <div style="padding: 14px; border-radius: 12px; background: rgba(229,72,77,0.08); border: 1px solid rgba(229,72,77,0.3); color: var(--danger); font-size: 13.5px; text-align: center;">
-          ${esc(e.message || 'Something went wrong. Try again.')}
+            ${esc(e.message || 'Something went wrong. Try again.')}
         </div>
         <button class="btn btn-ghost btn-block" onclick="Learn.createCustomLesson()" style="margin-top: 12px;">Retry</button>`;
-    } finally {
+} finally {
       if (btn) btn.disabled = false;
     }
   },
