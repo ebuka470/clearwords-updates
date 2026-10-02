@@ -935,17 +935,18 @@ const Comm = {
         </button>
       </div>
       ${members.map(m => {
-        const name = m.fullName || m.name || 'Learner';
-        const initials = initialsOf(name);
-        return `
-          <div class="member-row">
+    const name = m.fullName || m.username || 'Learner';
+    const initials = initialsOf(name);
+    const isLeader = m.role === 'leader';
+    return `
+        <div class="member-row">
             <div class="member-avatar">${initials}</div>
             <div class="member-body">
-              <div class="member-name">${esc(name)}${m.isLeader ? ' 👑' : ''}</div>
-              <div class="member-sub">Level ${m.currentLevel || 1} · ${m.weeklyXP || 0} XP this week</div>
+                <div class="member-name">${esc(name)}${isLeader ? ' 👑' : ''}</div>
+                <div class="member-sub">Level ${m.currentLevel || 1} · ${m.weeklyXP || 0} XP this week</div>
             </div>
-          </div>`;
-      }).join('')}
+        </div>`;
+}).join('')}
     `;
   },
 
