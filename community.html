@@ -1106,6 +1106,11 @@ const Comm = {
             ` : `
               <button class="chip-btn" onclick="Comm.endPair('${pair._id || pair.id}')">Cancel</button>
             `}
+            // Add inside the returned HTML for active pairs, in .pair-actions
+${d.voiceEnabled
+    ? `<button class="chip-btn" onclick="Comm.startVoiceCall('${pair._id || pair.id}')">📞 Call</button>`
+    : `<button class="chip-btn warn" onclick="Paywall.show({ title: 'Voice calls are Premium', message: 'Upgrade to Premium to call your language partner.', feature: 'voice_call', ctaLabel: 'See Premium' })">🔒 Voice</button>`
+}
           </div>
         </div>`;
     }
