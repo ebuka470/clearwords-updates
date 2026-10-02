@@ -848,55 +848,68 @@ const Comm = {
 
   async loadPodMessages() {
     if (!this.activePod) return;
+
     const content = document.getElementById('pod-content');
     if (!content) return;
     content.innerHTML = '<div class="modal-loading">Loading messages…</div>';
-    const podId = this.activePod._id || this.activePod.id;
+
+    const chatId = this.activePod._id || this.activePod.id;
+    const isPair = !!this.activePod.isPair;
 
     try {
-      const res = await Backend.getPodMessages(podId, { limit: 50 });
-      const items = res.messages || res.items || res || [];
-      this.activePodMessages = items;
-      if (!items.length) {
-        content.innerHTML = `
-          <div class="empty-note">
-            <strong>No messages yet</strong>
-            Say hi, or check in for this week's goal.
-          </div>`;
-        return;
-      }
-      const myId = (State.user && (State.user._id || State.user.id)) || '';
-      content.innerHTML = items.map(m => this.renderPodMessage(m, myId)).join('');
-      content.scrollTop = content.scrollHeight;
-    } catch (e) {
-      console.warn('Pod messages load failed:', e);
-      content.innerHTML = `
-        <div class="empty-note">
-          <strong>Couldn't load messages.</strong>
-          <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPodMessages()">Retry</button>
-        </div>`;
-    }
-  },
+        // Route to the correct endpoint based on chat type
+        const res = isPair
+            ? await Backend.getPairMessages(chatId, { limit: 50 })
+            : await Backend.getPodMessages(chatId, { limit: 50 });
 
-  renderPodMessage(m, myId) {
+        const items = res.data || res.items || res.messages || (Array.isArray(res) ? res : []) || [];
+        this.activePodMessages = items;
+
+        if (!items.length) {
+            content.innerHTML = `
+                <div class="empty-note">
+                    <strong>${isPair ? 'Say hello' : 'No messages yet'}</strong>
+                    ${isPair ? 'Start your first conversation.' : 'Say hi, or check in for this week\'s goal.'}
+                </div>`;
+            return;
+        }
+
+        const myId = (State.user && (State.user._id || State.user.id)) || '';
+        content.innerHTML = items.map(m => this.renderPodMessage(m, myId)).join('');
+        content.scrollTop = content.scrollHeight;
+    } catch (e) {
+        console.warn(`${isPair ? 'Pair' : 'Pod'} messages load failed:`, e);
+        content.innerHTML = `
+            <div class="empty-note">
+                <strong>Couldn't load messages.</strong>
+                <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPodMessages()">Retry</button>
+            </div>`;
+    }
+},
+
+ renderPodMessage(m, myId) {
     const d = m.data || m;
+
     // System / check-in messages
     if (d.type === 'checkin' || d.type === 'system') {
-      return `<div class="pod-msg-system">${esc(d.authorName || 'Someone')} checked in${d.note ? ': ' + esc(d.note) : ''}</div>`;
+        return `<div class="pod-msg-system">${esc(d.authorName || 'Someone')} checked in${d.note ? ': ' + esc(d.note) : ''}</div>`;
     }
-    const authorId = d.authorId || d.userId || '';
-    const isSelf = authorId === myId;
-    const initials = initialsOf(d.authorName || 'Learner');
+
+    // Prefer the backend's isMine flag; fall back to string comparison
+    const senderId = d.senderId || d.authorId || '';
+    const isSelf = d.isMine === true || String(senderId) === String(myId);
+
     return `
-      <div class="pod-msg ${isSelf ? 'self' : ''}">
-        ${!isSelf ? `<div class="pod-msg-author">${esc(d.authorName || 'Learner')}</div>` : ''}
-        <div class="pod-msg-bubble">${esc(d.content || d.message || '')}</div>
-        <div class="pod-msg-time">${fmtTimeAgo(d.createdAt || m._createdAt)}</div>
-      </div>`;
-  },
+        <div class="pod-msg ${isSelf ? 'self' : ''}">
+            ${!isSelf ? `<div class="pod-msg-author">${esc(d.authorName || 'Learner')}</div>` : ''}
+            <div class="pod-msg-bubble">${esc(d.text || d.content || d.message || '')}</div>
+            <div class="pod-msg-time">${fmtTimeAgo(d.createdAt || m._createdAt)}</div>
+        </div>`;
+},
 
   async sendPodMessage() {
     if (!this.activePod) return;
+
     const input = document.getElementById('pod-input');
     const sendBtn = document.getElementById('pod-send');
     const text = (input?.value || '').trim();
@@ -906,31 +919,41 @@ const Comm = {
     input.style.height = 'auto';
     if (sendBtn) sendBtn.disabled = true;
 
-    // Optimistic append
     const myId = (State.user && (State.user._id || State.user.id)) || '';
+
+    // Optimistic append
     const optimistic = {
-      data: {
-        authorId: myId,
-        authorName: State.user?.fullName || 'You',
-        content: text,
-        createdAt: new Date().toISOString()
-      }
+        data: {
+            senderId: myId,
+            authorId: myId,
+            authorName: State.user?.fullName || 'You',
+            text,
+            content: text,
+            isMine: true,
+            createdAt: new Date().toISOString()
+        }
     };
+
     const content = document.getElementById('pod-content');
     if (content.querySelector('.empty-note')) content.innerHTML = '';
     content.insertAdjacentHTML('beforeend', this.renderPodMessage(optimistic, myId));
     content.scrollTop = content.scrollHeight;
 
-    const podId = this.activePod._id || this.activePod.id;
+    const chatId = this.activePod._id || this.activePod.id;
+
     try {
-      await Backend.sendPodMessage(podId, text);
+        if (this.activePod.isPair) {
+            await Backend.sendPairMessage(chatId, text);
+        } else {
+            await Backend.sendPodMessage(chatId, text);
+        }
     } catch (e) {
-      console.warn('Send pod message failed:', e);
-      showToast('Could not send — check your connection.', 'error');
+        console.warn('Send message failed:', e);
+        showToast('Could not send — check your connection.', 'error');
     } finally {
-      if (sendBtn) sendBtn.disabled = false;
+        if (sendBtn) sendBtn.disabled = false;
     }
-  },
+},
 
   async renderPodMembers() {
     if (!this.activePod) return;
@@ -1207,29 +1230,53 @@ const Comm = {
     }
   },
 
-  async openPairChat(pairId) {
-    // Reuse the pod chat UI for pairs — simplest approach that works with the
-    // existing endpoints. Backend uses the same message model.
+ async openPairChat(pairId) {
     const pair = this.pairs.find(p => (p._id || p.id) === pairId);
-    if (!pair) return;
+    if (!pair) {
+        showToast('Pair not found.', 'error');
+        return;
+    }
+
+    // Resolve the partner — trust the backend's `partner` field if
+    // present, otherwise compute it from userA / userB.
     const d = pair.data || pair;
-    const partner = d.partner || d.other || {};
+    let partner = d.partner;
+    if (!partner) {
+        const myId = (State.user && (State.user._id || State.user.id)) || '';
+        const userAId = d.userA && (d.userA._id || d.userA);
+        const userBId = d.userB && (d.userB._id || d.userB);
+        if (String(userAId) === String(myId)) partner = d.userB;
+        else if (String(userBId) === String(myId)) partner = d.userA;
+        else partner = d.userA;
+    }
+    partner = partner || {};
+
     const name = partner.fullName || partner.name || 'Your partner';
-    const initials = initialsOf(name);
 
     document.getElementById('pod-avatar').textContent = '💬';
-    document.getElementById('pod-name').childNodes[0].nodeValue = name + ' ';
-    document.getElementById('pod-sub').textContent = 'Language exchange partner';
+    const nameNode = document.getElementById('pod-name');
+    const nameChildSmall = nameNode.querySelector('small');
+    nameNode.childNodes[0].nodeValue = name + ' ';
+    if (nameChildSmall) nameChildSmall.textContent = 'Language exchange partner';
+
     document.getElementById('pod-view').classList.add('active');
     document.body.style.overflow = 'hidden';
-    this.activePod = { _id: pairId, isPair: true, data: { name, members: [] } };
-    // Hide members/leaderboard tabs for pairs — just chat
+
+    // Mark this as a pair chat so loadPodMessages routes to the right endpoint
+    this.activePod = {
+        _id: pairId,
+        isPair: true,
+        data: { name, members: [] }
+    };
+
+    // Hide pod-only tabs for pair chats
     document.querySelectorAll('.pod-tab').forEach(t => {
-      t.style.display = t.dataset.tab === 'chat' ? '' : 'none';
+        t.style.display = t.dataset.tab === 'chat' ? '' : 'none';
     });
+
     this.setPodTab('chat');
-    this.loadPairMessages();
-  },
+    this.loadPodMessages();
+},
 
   async loadPairMessages() {
     const content = document.getElementById('pod-content');
