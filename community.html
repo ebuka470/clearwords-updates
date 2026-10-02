@@ -1083,7 +1083,7 @@ const Comm = {
     ].join('');
   },
 
-  renderPairCard(pair, myId, isPending) {
+   renderPairCard(pair, myId, isPending) {
     const d = pair.data || pair;
     const partner = d.partner || d.other || {};
     const name = partner.fullName || partner.name || 'Your partner';
@@ -1106,14 +1106,21 @@ const Comm = {
             ` : `
               <button class="chip-btn" onclick="Comm.endPair('${pair._id || pair.id}')">Cancel</button>
             `}
-            // Add inside the returned HTML for active pairs, in .pair-actions
-${d.voiceEnabled
-    ? `<button class="chip-btn" onclick="Comm.startVoiceCall('${pair._id || pair.id}')">📞 Call</button>`
-    : `<button class="chip-btn warn" onclick="Paywall.show({ title: 'Voice calls are Premium', message: 'Upgrade to Premium to call your language partner.', feature: 'voice_call', ctaLabel: 'See Premium' })">🔒 Voice</button>`
-}
           </div>
         </div>`;
     }
+
+    // Active pair — voice/video buttons depend on this pair's flags
+    const canVoice = d.voiceEnabled === true;
+    const canVideo = d.videoEnabled === true;
+
+    const voiceButton = canVoice
+      ? `<button class="chip-btn" onclick="Comm.startCall('${pair._id || pair.id}', 'voice')">📞 Voice</button>`
+      : `<button class="chip-btn warn" onclick="Comm.showVoicePaywall()">🔒 Voice</button>`;
+
+    const videoButton = canVideo
+      ? `<button class="chip-btn" onclick="Comm.startCall('${pair._id || pair.id}', 'video')">🎥 Video</button>`
+      : `<button class="chip-btn warn" onclick="Comm.showVideoPaywall()">🔒 Video</button>`;
 
     return `
       <div class="pair-card" style="flex-direction: column; align-items: stretch;">
@@ -1126,10 +1133,47 @@ ${d.voiceEnabled
         </div>
         <div class="pair-actions">
           <button class="chip-btn primary" onclick="Comm.openPairChat('${pair._id || pair.id}')">💬 Chat</button>
+          ${voiceButton}
+          ${videoButton}
           <button class="chip-btn" onclick="Comm.reportPair('${pair._id || pair.id}')">Report</button>
           <button class="chip-btn danger" onclick="Comm.endPair('${pair._id || pair.id}')">End pair</button>
         </div>
       </div>`;
+  },
+
+  async startCall(pairId, type) {
+    try {
+      const res = await Backend.startPairCall(pairId, type);
+      if (res && res.canStart) {
+        showToast(`${type === 'voice' ? 'Voice' : 'Video'} call ready (WebRTC to be wired)`, 'info');
+        // Wire this to your WebRTC signaling when ready
+      }
+    } catch (e) {
+      console.warn('Call start failed:', e);
+      if (!Paywall.fromError(e)) {
+        showToast(e.message || 'Could not start call.', 'error');
+      }
+    }
+  },
+
+  showVoicePaywall() {
+    Paywall.show({
+      title: 'Voice calls are Premium',
+      message: 'Talk to your language partner with voice — it\'s where fluency actually happens.',
+      benefit: 'Voice calls with up to 5 partners, unlimited lessons, unlimited Timmy chat.',
+      feature: 'voice_call',
+      ctaLabel: 'See Premium'
+    });
+  },
+
+  showVideoPaywall() {
+    Paywall.show({
+      title: 'Video calls are Immersive',
+      message: 'Face-to-face practice with your partner — the closest thing to being there.',
+      benefit: 'Video calls with unlimited partners, custom learning paths, everything in Premium.',
+      feature: 'video_call',
+      ctaLabel: 'See Immersive'
+    });
   },
 
   openPairMenu() {
