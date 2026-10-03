@@ -1,7 +1,5 @@
 /* ============================================================
    ClearWords — Shared Runtime
-   Loaded by learn.html, practice.html, community.html, profile.html,
-   and onboarding.html.
    ============================================================ */
 
 /* ============================================================
@@ -208,7 +206,7 @@ const Backend = {
       languageA: languageA || State.currentLanguage,
       languageB: languageB || 'english'
     }),
-  matchPair: () => api.post('/api/pairs/match'),
+  matchPair: (payload) => api.post('/api/pairs/match', payload || {}),
   acceptPair: (pairId) => api.post('/api/pairs/' + pairId + '/accept'),
   endPair: (pairId) => api.delete('/api/pairs/' + pairId),
   getPairMessages: (pairId, params) => api.get('/api/pairs/' + pairId + '/messages', { params }),
@@ -251,7 +249,12 @@ const Backend = {
     timeout: 25000
   }),
   ttsUsage: () => api.get('/api/tts/usage'),
-  ttsCredits: () => api.get('/api/tts/credits', { auth: false })
+  ttsCredits: () => api.get('/api/tts/credits', { auth: false }),
+
+  // ---- MESSAGES / UNREAD ----
+  getUnreadCounts: () => api.get('/api/messages/unread'),
+  markPodRead: (podId) => api.post('/api/pods/' + podId + '/read'),
+  markPairRead: (pairId) => api.post('/api/pairs/' + pairId + '/read')
 };
 
 /* ============================================================
@@ -800,9 +803,6 @@ const Curriculum = {
 
 /* ============================================================
    7. AUDIO MANAGER
-   Priority: Supabase cache → backend /api/tts → browser fallback.
-   Paywall-relevant errors (429/403) are re-thrown so callers can
-   show the upgrade prompt.
    ============================================================ */
 const AudioMgr = {
   current: null,
@@ -854,7 +854,6 @@ const AudioMgr = {
       const url = URL.createObjectURL(blob);
       return this._playUrl(url, true);
     } catch (e) {
-      // Paywall-relevant errors must bubble up so the caller can prompt
       if (e.status === 429 || e.status === 403) throw e;
       console.warn('Backend TTS failed, falling back to browser:', e.message);
     }
@@ -1119,6 +1118,104 @@ const Header = {
 };
 
 /* ============================================================
+   10b. BADGES — unread counts on tabs, pods, and pairs
+   ============================================================ */
+const Badges = {
+  _unread: { pods: {}, pairs: {}, total: 0 },
+  _pollTimer: null,
+  _POLL_MS: 20000,
+
+  async start() {
+    if (!Auth.isLoggedIn()) return;
+    await this.refresh();
+
+    this._pollTimer = setInterval(() => {
+      if (document.visibilityState === 'visible') this.refresh();
+    }, this._POLL_MS);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') this.refresh();
+    });
+  },
+
+  stop() {
+    if (this._pollTimer) clearInterval(this._pollTimer);
+    this._pollTimer = null;
+  },
+
+  async refresh() {
+    if (!Auth.isLoggedIn()) return;
+    try {
+      const data = await Backend.getUnreadCounts();
+      this._unread = data || { pods: {}, pairs: {}, total: 0 };
+      this.renderAll();
+      State.emit('unread:changed', this._unread);
+    } catch (e) {
+      // Silent — badges are nice-to-have
+    }
+  },
+
+  renderAll() {
+    this.renderNavBadge();
+    this.renderPodBadges();
+    this.renderPairBadges();
+  },
+
+  renderNavBadge() {
+    const tabs = document.querySelectorAll('#cw-bottom-nav .tab');
+    const communityTab = Array.from(tabs).find(t =>
+      (t.getAttribute('onclick') || '').includes("'community'")
+    );
+    if (!communityTab) return;
+
+    const existing = communityTab.querySelector('.tab-badge');
+    if (existing) existing.remove();
+
+    const total = this._unread.total || 0;
+    if (total > 0) {
+      const badge = document.createElement('span');
+      badge.className = 'tab-badge';
+      badge.textContent = total > 99 ? '99+' : String(total);
+      communityTab.appendChild(badge);
+    }
+  },
+
+  renderPodBadges() {
+    const pods = this._unread.pods || {};
+    document.querySelectorAll('[data-pod-id]').forEach(card => {
+      const podId = card.getAttribute('data-pod-id');
+      const existing = card.querySelector('.pod-badge');
+      if (existing) existing.remove();
+
+      const count = pods[podId] || 0;
+      if (count > 0) {
+        const badge = document.createElement('span');
+        badge.className = 'pod-badge';
+        badge.textContent = count > 99 ? '99+' : String(count);
+        card.appendChild(badge);
+      }
+    });
+  },
+
+  renderPairBadges() {
+    const pairs = this._unread.pairs || {};
+    document.querySelectorAll('[data-pair-id]').forEach(card => {
+      const pairId = card.getAttribute('data-pair-id');
+      const existing = card.querySelector('.pair-badge');
+      if (existing) existing.remove();
+
+      const count = pairs[pairId] || 0;
+      if (count > 0) {
+        const badge = document.createElement('span');
+        badge.className = 'pair-badge';
+        badge.textContent = count > 99 ? '99+' : String(count);
+        card.appendChild(badge);
+      }
+    });
+  }
+};
+
+/* ============================================================
    11. AUTH FLOW HELPERS
    ============================================================ */
 async function cwSignup(payload) {
@@ -1148,6 +1245,7 @@ async function cwLogin(email, password) {
 }
 
 function cwLogout() {
+  Badges.stop();
   Auth.clear();
   localStorage.removeItem(CW_CONFIG.LANG_KEY);
   localStorage.removeItem('cw_onboarding_partial');
@@ -1183,6 +1281,9 @@ async function cwBoot() {
     location.href = 'onboarding.html';
   });
 
+  // Start polling for unread message badges
+  Badges.start();
+
   return true;
 }
 
@@ -1201,6 +1302,7 @@ window.Curriculum = Curriculum;
 window.AudioMgr = AudioMgr;
 window.Nav = Nav;
 window.Header = Header;
+window.Badges = Badges;
 window.showToast = showToast;
 window.showModal = showModal;
 window.closeModal = closeModal;
