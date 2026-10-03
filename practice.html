@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#2E8B57">
 <title>ClearWords — Practice</title>
 <style>
-/* ============ DESIGN TOKENS (must match learn.html) ============ */
+/* ============ DESIGN TOKENS ============ */
 :root {
   --brand: #2E8B57;
   --brand-rgb: 46,139,87;
@@ -108,6 +108,7 @@ img, svg { display: block; max-width: 100%; }
 
 /* ============ PRACTICE METHOD CARDS ============ */
 .method-card {
+  position: relative;
   display: flex; align-items: center; gap: 14px;
   padding: 16px; border-radius: var(--radius);
   background: var(--card); border: 1.5px solid var(--border);
@@ -127,6 +128,24 @@ img, svg { display: block; max-width: 100%; }
 .method-title { font-weight: 800; font-size: 15px; }
 .method-desc { font-size: 12.5px; color: var(--text-2); margin-top: 3px; line-height: 1.4; }
 .method-chev { color: var(--text-3); font-size: 20px; }
+
+.method-badge {
+  position: absolute;
+  top: 12px;
+  right: 46px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--card);
+  pointer-events: none;
+}
 
 /* ============ USAGE BADGE ============ */
 .usage-bar {
@@ -162,7 +181,6 @@ img, svg { display: block; max-width: 100%; }
 .tab svg { width: 22px; height: 22px; }
 .tab:active { transform: scale(.94); }
 
-/* ---- Unread badge on the Community tab ---- */
 .tab-badge {
   position: absolute;
   top: 2px;
@@ -181,7 +199,6 @@ img, svg { display: block; max-width: 100%; }
   pointer-events: none;
   animation: badgePop 0.25s ease;
 }
-
 @keyframes badgePop {
   0% { transform: scale(0.4); }
   60% { transform: scale(1.15); }
@@ -241,10 +258,12 @@ img, svg { display: block; max-width: 100%; }
 .cw-toast-error { background: var(--danger); color: #fff; }
 .cw-toast-success { background: var(--brand); color: #fff; }
 
-/* ============ TIMMY CHAT ============ */
+/* ============================================================
+   TIMMY CHAT VIEW — full screen messaging app
+   ============================================================ */
 #timmy-view {
   position: fixed;
-  top: 0; right: 0; bottom: 0; left: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   width: 100vw;
   height: 100vh;
   height: 100dvh;
@@ -258,70 +277,225 @@ img, svg { display: block; max-width: 100%; }
 #timmy-view.active {
   display: flex;
 }
-#timmy-view > * {
+
+/* ---- Top bar ---- */
+.chat-topbar {
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 10px;
+  padding: calc(10px + var(--safe-top)) 14px 10px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--indigo) 100%);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  position: relative;
+  z-index: 2;
+}
+.chat-back {
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: #fff;
+  border-radius: 50%;
   flex-shrink: 0;
 }
-#timmy-view .chat-scroll {
-  flex: 1 1 auto;
-  flex-shrink: 1;
-  min-height: 0;
+.chat-back:active { background: rgba(255,255,255,0.15); }
+.chat-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+  border: 2px solid rgba(255,255,255,0.45);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
 }
-.chat-topbar {
-  display: flex; align-items: center; gap: 12px;
-  padding: calc(12px + var(--safe-top)) 16px 12px;
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
+.chat-name {
+  flex: 1; min-width: 0;
+  font-weight: 800; font-size: 15.5px; color: #fff;
+  line-height: 1.2;
 }
-.chat-back { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--text-2); }
-.chat-avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(var(--brand-rgb), 0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.chat-name { flex: 1; font-weight: 800; font-size: 15px; }
-.chat-name small { display: block; font-weight: 500; font-size: 11.5px; color: var(--text-2); }
-.chat-menu-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-2); position: relative; }
+.chat-name small {
+  display: block;
+  font-weight: 500; font-size: 11.5px;
+  color: rgba(255,255,255,0.85);
+  margin-top: 1px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.chat-menu-btn {
+  width: 38px; height: 38px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: #fff;
+  position: relative;
+  border-radius: 50%;
+}
+.chat-menu-btn:active { background: rgba(255,255,255,0.15); }
 .chat-menu {
   position: absolute; top: 44px; right: 0;
   background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 6px; min-width: 170px;
+  border-radius: 12px; padding: 6px; min-width: 180px;
   box-shadow: var(--shadow-lg);
   display: none; z-index: 10;
+  color: var(--text);
 }
 .chat-menu.show { display: block; }
 .chat-menu button {
   display: block; width: 100%; padding: 10px 14px; text-align: left;
-  font-size: 13.5px; border-radius: 8px;
+  font-size: 13.5px; border-radius: 8px; color: var(--text);
 }
 .chat-menu button:hover { background: rgba(var(--brand-rgb), 0.08); }
 .chat-menu button.danger { color: var(--danger); }
 
+/* ---- Message scroll area ---- */
 .chat-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
-  padding: 16px;
+  overflow-x: hidden;
+  padding: 16px 14px 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
   -webkit-overflow-scrolling: touch;
+  background: var(--bg);
 }
 
-.msg { max-width: 84%; padding: 12px 15px; border-radius: 16px; font-size: 14.5px; line-height: 1.55; word-wrap: break-word; }
-.msg.user { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 4px; white-space: pre-wrap; }
-.msg.bot { align-self: flex-start; background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
-.msg.bot strong { color: var(--brand); font-weight: 700; }
-.msg.bot p { margin: 0 0 8px 0; }
-.msg.bot p:last-child { margin-bottom: 0; }
-.msg.bot ul, .msg.bot ol { margin: 8px 0; padding-left: 22px; }
-.msg.bot li { margin-bottom: 4px; }
-.msg.bot code { background: rgba(var(--brand-rgb), 0.10); padding: 1px 5px; border-radius: 4px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
-.msg.typing { display: flex; gap: 4px; padding: 14px 18px; }
-.msg.typing span {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--text-3);
+/* Day / date separator */
+.chat-daysep {
+  align-self: center;
+  margin: 12px 0;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.06);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+[data-theme="dark"] .chat-daysep { background: rgba(255,255,255,0.08); }
+
+/* Message row wrapper — holds bubble + meta */
+.msg-row {
+  display: flex;
+  flex-direction: column;
+  max-width: 82%;
+  gap: 3px;
+  animation: msgIn .18s ease;
+}
+.msg-row.user { align-self: flex-end; align-items: flex-end; }
+.msg-row.bot  { align-self: flex-start; align-items: flex-start; }
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* The bubble itself */
+.bubble {
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.msg-row.bot  .bubble {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-bottom-left-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.msg-row.user .bubble {
+  background: var(--brand);
+  color: #fff;
+  border-bottom-right-radius: 6px;
+  white-space: pre-wrap;
+}
+.msg-row.bot .bubble.is-error {
+  background: rgba(229,72,77,0.08);
+  border-color: rgba(229,72,77,0.35);
+  color: var(--danger);
+}
+
+/* Rich text inside bot bubbles */
+.bubble p { margin: 0 0 8px 0; }
+.bubble p:last-child { margin-bottom: 0; }
+.bubble strong { color: inherit; font-weight: 700; }
+.msg-row.bot .bubble strong { color: var(--brand); }
+.bubble ul, .bubble ol { margin: 6px 0 8px; padding-left: 20px; }
+.bubble li { margin-bottom: 3px; }
+.bubble code {
+  background: rgba(0,0,0,0.06);
+  padding: 1px 5px; border-radius: 4px;
+  font-family: ui-monospace, Menlo, monospace; font-size: 13px;
+}
+.msg-row.user .bubble code { background: rgba(255,255,255,0.22); }
+
+/* Meta row: timestamp + read status */
+.msg-meta {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 10.5px;
+  color: var(--text-3);
+  padding: 0 4px;
+}
+.msg-meta .read-mark {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+.msg-row.user .msg-meta .read-mark.read { color: #4FC3F7; }
+
+/* Typing indicator */
+.msg-row.typing .bubble {
+  display: flex; gap: 4px; padding: 14px 18px;
+}
+.msg-row.typing .bubble span {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--text-3);
   animation: typingBounce 1.2s infinite;
 }
-.msg.typing span:nth-child(2) { animation-delay: .15s; }
-.msg.typing span:nth-child(3) { animation-delay: .3s; }
-@keyframes typingBounce { 0%,60%,100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-5px); opacity: 1; } }
+.msg-row.typing .bubble span:nth-child(2) { animation-delay: .15s; }
+.msg-row.typing .bubble span:nth-child(3) { animation-delay: .3s; }
+@keyframes typingBounce {
+  0%,60%,100% { transform: translateY(0); opacity: .5; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
 
+/* Empty state */
+.chat-empty {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--text-2);
+  gap: 10px;
+}
+.chat-empty-emoji { font-size: 56px; }
+.chat-empty-title { font-size: 18px; font-weight: 800; color: var(--text); }
+.chat-empty-sub { font-size: 14px; max-width: 280px; line-height: 1.55; }
+
+/* Scaffold / suggestion chips */
+.scaffold-row {
+  flex-shrink: 0;
+  display: flex; gap: 8px;
+  padding: 8px 14px;
+  overflow-x: auto;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  scrollbar-width: none;
+}
+.scaffold-row::-webkit-scrollbar { display: none; }
+.scaffold-chip {
+  padding: 8px 14px; border-radius: 999px;
+  background: var(--card); border: 1.5px solid var(--brand);
+  color: var(--brand); font-size: 13px; font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.scaffold-chip:active { background: rgba(var(--brand-rgb), 0.08); }
+
+/* ---- Input bar ---- */
 .chat-foot {
+  flex-shrink: 0;
   display: flex; gap: 8px; align-items: flex-end;
-  padding: 12px 16px calc(14px + var(--safe-bot));
+  padding: 10px 12px calc(10px + var(--safe-bot));
   background: var(--card);
   border-top: 1px solid var(--border);
 }
@@ -331,24 +505,17 @@ img, svg { display: block; max-width: 100%; }
   border: 1.5px solid var(--border); color: var(--text);
   font-family: inherit; resize: none; max-height: 120px;
   line-height: 1.4;
+  outline: none;
 }
-.chat-input:focus { outline: none; border-color: var(--brand); }
+.chat-input:focus { border-color: var(--brand); }
 .chat-send {
   width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
   background: var(--brand); color: #fff; display: flex;
   align-items: center; justify-content: center; font-size: 18px;
+  transition: transform .08s, opacity .15s;
 }
+.chat-send:active { transform: scale(.94); }
 .chat-send:disabled { opacity: .4; }
-
-/* Scaffold chips (suggested replies) */
-.scaffold-row { display: flex; gap: 8px; padding: 10px 16px; overflow-x: auto; background: var(--bg); border-top: 1px solid var(--border); }
-.scaffold-chip {
-  padding: 9px 14px; border-radius: 18px;
-  background: var(--card); border: 1.5px solid var(--brand);
-  color: var(--brand); font-size: 13.5px; font-weight: 700;
-  white-space: nowrap;
-}
-.scaffold-chip:active { background: rgba(var(--brand-rgb), 0.08); }
 
 /* ============ REVIEW (Saved Words) ============ */
 .word-row {
@@ -459,7 +626,8 @@ img, svg { display: block; max-width: 100%; }
 
   <!-- Primary: Timmy AI chat -->
   <div class="section-h">Talk with Timmy</div>
-  <button class="method-card" onclick="Practice.openTimmy('practice')">
+
+  <button class="method-card" id="timmy-card-practice" onclick="Practice.openTimmy('practice')">
     <div class="method-icon">🤓</div>
     <div class="method-body">
       <div class="method-title">Practice with Timmy</div>
@@ -467,6 +635,7 @@ img, svg { display: block; max-width: 100%; }
     </div>
     <div class="method-chev">›</div>
   </button>
+
   <button class="method-card tint-indigo" onclick="Practice.openTimmy('cultural')">
     <div class="method-icon">🎭</div>
     <div class="method-body">
@@ -475,6 +644,7 @@ img, svg { display: block; max-width: 100%; }
     </div>
     <div class="method-chev">›</div>
   </button>
+
   <button class="method-card tint-gold" onclick="Practice.openTimmy('quick')">
     <div class="method-icon">⚡</div>
     <div class="method-body">
@@ -555,13 +725,13 @@ img, svg { display: block; max-width: 100%; }
 <!-- TIMMY CHAT VIEW -->
 <div id="timmy-view">
   <div class="chat-topbar">
-    <button class="chat-back" onclick="Practice.closeTimmy()">←</button>
+    <button class="chat-back" onclick="Practice.closeTimmy()" aria-label="Back">←</button>
     <div class="chat-avatar" id="timmy-avatar">🤓</div>
     <div class="chat-name" id="timmy-name">
-      Timmy
-      <small id="timmy-sub">Your Nigerian language tutor</small>
+      <span id="timmy-title">Timmy</span>
+      <small id="timmy-sub">Timmy AI · Yorùbá</small>
     </div>
-    <button class="chat-menu-btn" onclick="Practice.toggleMenu(event)">⋮
+    <button class="chat-menu-btn" onclick="Practice.toggleMenu(event)" aria-label="Menu">⋮
       <div class="chat-menu" id="timmy-menu">
         <button onclick="Practice.exportChat()">📤 Export chat</button>
         <button class="danger" onclick="Practice.clearChat()">🗑️ Clear this chat</button>
@@ -574,21 +744,22 @@ img, svg { display: block; max-width: 100%; }
   <div class="scaffold-row" id="scaffold-row" style="display:none;"></div>
 
   <div class="chat-foot">
-    <textarea class="chat-input" id="timmy-input" rows="1" placeholder="Type a message…"></textarea>
-    <button class="chat-send" id="timmy-send" onclick="Practice.sendMessage()">➤</button>
+    <textarea class="chat-input" id="timmy-input" rows="1" placeholder="Message Timmy…" autocomplete="off"></textarea>
+    <button class="chat-send" id="timmy-send" onclick="Practice.sendMessage()" aria-label="Send">➤</button>
   </div>
 </div>
 
 <script src="shared.js"></script>
 <script>
 /* ============================================================
-   PRACTICE TAB
+   PRACTICE TAB — persistent Timmy chat
    ============================================================ */
 const Practice = {
   user: null,
-  messages: [],
-  mode: 'practice',       // practice | cultural | quick
+  messages: [],           // in-memory thread
   sending: false,
+  pendingSeed: null,
+  mode: 'practice',
 
   /* ---------- Boot ---------- */
   async init() {
@@ -597,22 +768,33 @@ const Practice = {
     Header.render('practice');
     this.user = State.user;
 
-    // Fill in language name in the method description
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
-    const slot = document.querySelector('[data-lang-slot="practice"]');
-    if (slot) slot.textContent = `Chat in ${langCfg.name} about your latest lesson`;
-    document.title = 'ClearWords — Practice (' + langCfg.name + ')';
+    this.setupLangSlots();
+    document.title = 'ClearWords — Practice';
 
     this.renderSituations();
     this.renderSavedCount();
     this.loadUsage();
+    this.renderUnreadBadge();
 
-    // Refresh when user state changes
-    State.on('hydrated', () => { this.user = State.user; this.renderSavedCount(); });
-    State.on('language:changed', () => {
-      const cfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
-      if (slot) slot.textContent = `Chat in ${cfg.name} about your latest lesson`;
+    State.on('hydrated', () => {
+      this.user = State.user;
+      this.renderSavedCount();
     });
+    State.on('language:changed', () => {
+      this.setupLangSlots();
+      this.renderSituations();
+      this.renderUnreadBadge();
+    });
+
+    // Retry any queued offline messages
+    this.flushOfflineQueue();
+  },
+
+  setupLangSlots() {
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    const slot = document.querySelector('[data-lang-slot="practice"]');
+    if (slot) slot.textContent = `Chat in ${langCfg.name} about your latest lesson`;
+    document.title = `ClearWords — Practice (${langCfg.name})`;
   },
 
   /* ---------- Usage bar ---------- */
@@ -624,7 +806,6 @@ const Practice = {
       const label = bar?.querySelector('.label');
       if (!bar || !count) return;
 
-      // Backend returns: { chat: { used, limit, remaining } | { unlimited, used }, customLessons: {...} }
       const chat = u?.chat || {};
       const unlimited = chat.unlimited === true;
       const used = chat.used ?? 0;
@@ -651,7 +832,6 @@ const Practice = {
           : 'Timmy messages remaining today';
       }
     } catch (e) {
-      // Usage endpoint may not exist for some tiers — silently hide
       const bar = document.getElementById('usage-bar');
       if (bar) bar.style.display = 'none';
     }
@@ -697,15 +877,205 @@ const Practice = {
   },
 
   /* ============================================================
-     TIMMY CHAT
+     STORAGE — server + local cache
+     ============================================================ */
+
+  localCacheKey(lang) {
+    return 'cw_timmy_cache_' + (lang || State.currentLanguage);
+  },
+  migrationFlagKey(lang) {
+    return 'cw_timmy_migrated_' + (lang || State.currentLanguage);
+  },
+  lastReadKey(lang) {
+    return 'cw_timmy_lastread_' + (lang || State.currentLanguage);
+  },
+  offlineQueueKey() {
+    return 'cw_timmy_offline_queue';
+  },
+
+  loadThreadSync(lang) {
+    // Synchronous local-cache read so first paint is instant
+    const key = lang || State.currentLanguage;
+    try {
+      const raw = localStorage.getItem(this.localCacheKey(key));
+      if (raw) {
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr)) return arr;
+      }
+      // Legacy key migration
+      const legacy = localStorage.getItem('cw_timmy_chat_' + key);
+      if (legacy) {
+        const arr = JSON.parse(legacy);
+        if (Array.isArray(arr)) return arr;
+      }
+    } catch {}
+    return [];
+  },
+
+  writeLocalCache(lang, messages) {
+    try {
+      localStorage.setItem(
+        this.localCacheKey(lang),
+        JSON.stringify((messages || []).slice(-80))
+      );
+    } catch {}
+  },
+
+  async refreshThreadFromServer(lang) {
+    const key = lang || State.currentLanguage;
+    try {
+      const res = await Backend.getTimmyThread(key);
+      const serverMsgs = res.messages || [];
+
+      // One-time migration: if server has nothing but we have local history
+      const alreadyMigrated = localStorage.getItem(this.migrationFlagKey(key));
+      if (!serverMsgs.length && !alreadyMigrated) {
+        let localOnly = [];
+        try {
+          const raw = localStorage.getItem(this.localCacheKey(key))
+            || localStorage.getItem('cw_timmy_chat_' + key);
+          if (raw) localOnly = JSON.parse(raw) || [];
+        } catch {}
+
+        if (localOnly.length) {
+          try {
+            await Backend.importTimmyThread(key, localOnly, true);
+            localStorage.setItem(this.migrationFlagKey(key), '1');
+            const fresh = await Backend.getTimmyThread(key);
+            this.applyServerMessages(fresh.messages || []);
+            return;
+          } catch (e) {
+            console.warn('Timmy migration failed:', e.message);
+          }
+        } else {
+          localStorage.setItem(this.migrationFlagKey(key), '1');
+        }
+      }
+
+      this.applyServerMessages(serverMsgs);
+    } catch (e) {
+      console.warn('Timmy refresh failed:', e.message);
+    }
+  },
+
+  applyServerMessages(serverMsgs) {
+    const mapped = (serverMsgs || []).map(m => ({
+      id: m._id,
+      role: m.role,
+      content: m.content,
+      ts: new Date(m.ts).getTime(),
+      isError: !!m.isError
+    }));
+
+    // Only apply if server's list is >= in-memory length
+    // (protects freshly-sent-but-not-yet-synced messages)
+    if (mapped.length >= this.messages.length) {
+      this.messages = mapped;
+      this.writeLocalCache(State.currentLanguage, mapped);
+      this.renderChat();
+      this.scrollToBottom();
+    }
+  },
+
+  markThreadRead(lang) {
+    const key = lang || State.currentLanguage;
+    try {
+      localStorage.setItem(this.lastReadKey(key), String(Date.now()));
+    } catch {}
+    Backend.markTimmyRead(key).catch(() => {});
+    this.renderUnreadBadge();
+  },
+
+  /* ============================================================
+     OFFLINE QUEUE — persists messages when backend is unreachable
+     ============================================================ */
+
+  queueOffline(lang, role, content, isError) {
+    try {
+      const raw = localStorage.getItem(this.offlineQueueKey());
+      const queue = raw ? JSON.parse(raw) : [];
+      queue.push({
+        lang: lang || State.currentLanguage,
+        role, content, isError: !!isError,
+        ts: Date.now()
+      });
+      localStorage.setItem(this.offlineQueueKey(), JSON.stringify(queue.slice(-200)));
+    } catch {}
+  },
+
+  async flushOfflineQueue() {
+    let queue = [];
+    try {
+      const raw = localStorage.getItem(this.offlineQueueKey());
+      queue = raw ? JSON.parse(raw) : [];
+    } catch {}
+
+    if (!queue.length) return;
+
+    const remaining = [];
+    for (const item of queue) {
+      try {
+        await Backend.appendTimmyMessage(item.lang, item.role, item.content, item.isError);
+      } catch (e) {
+        // Still offline or rejected — keep it for next time
+        remaining.push(item);
+      }
+    }
+
+    try {
+      if (remaining.length) {
+        localStorage.setItem(this.offlineQueueKey(), JSON.stringify(remaining));
+      } else {
+        localStorage.removeItem(this.offlineQueueKey());
+      }
+    } catch {}
+  },
+
+  /* ============================================================
+     UNREAD BADGE
+     ============================================================ */
+  async renderUnreadBadge() {
+    const card = document.getElementById('timmy-card-practice');
+    if (!card) return;
+    card.querySelector('.method-badge')?.remove();
+
+    const thread = this.messages.length
+      ? this.messages
+      : this.loadThreadSync(State.currentLanguage);
+
+    const lastReadAt = parseInt(
+      localStorage.getItem(this.lastReadKey(State.currentLanguage)) || '0',
+      10
+    );
+    let unread = thread.filter(m => m.role === 'assistant' && (m.ts || 0) > lastReadAt).length;
+
+    // If zero locally, ask the server in case another device wrote
+    if (unread === 0) {
+      try {
+        const res = await Backend.getTimmyUnread();
+        unread = res.unread?.[State.currentLanguage] || 0;
+      } catch {}
+    }
+
+    if (unread > 0) {
+      const badge = document.createElement('span');
+      badge.className = 'method-badge';
+      badge.textContent = unread > 99 ? '99+' : String(unread);
+      card.appendChild(badge);
+    }
+  },
+
+  /* ============================================================
+     OPEN TIMMY CHAT
      ============================================================ */
   openTimmy(mode, seedPrompt) {
-    this.mode = mode;
+    this.mode = mode || 'practice';
+    this.pendingSeed = seedPrompt || null;
 
     const view = document.getElementById('timmy-view');
     view.classList.add('active');
 
-    // Lock background scroll — position:fixed is required on iOS/Android WebViews
+    // Lock background scroll
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
@@ -715,69 +1085,61 @@ const Practice = {
     document.body.style.width = '100%';
     document.body.style.height = '100%';
 
-    // Header state
-    const avatar = document.getElementById('timmy-avatar');
-    const name = document.getElementById('timmy-name');
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    this.updateHeaderForMode();
 
-    const modes = {
-      practice: { emoji: '🤓', title: 'Timmy', sub: 'Practice conversation in ' + langCfg.name },
-      cultural: { emoji: '🎭', title: 'Timmy · Culture', sub: 'Ask about Nigerian customs and context' },
-      quick:    { emoji: '⚡', title: 'Timmy · Quick', sub: 'Fast translations and explanations' }
-    };
-    const m = modes[mode] || modes.practice;
-    avatar.textContent = m.emoji;
-    // Keep the `<small>` child element intact
-    const nameChildSmall = name.querySelector('small');
-    name.childNodes[0].nodeValue = m.title + ' ';
-    if (nameChildSmall) nameChildSmall.textContent = m.sub;
-
-    this.messages = this.loadLocalChat(mode);
-
-    if (!this.messages.length) {
-      // Per-language greeting — no more hardcoded "Sannu" for Igbo
-      const greetings = {
-        yoruba:   'Ẹ káàbọ̀',
-        igbo:     'Ndeewo',
-        hausa:    'Sannu',
-        pidgin:   'How you dey',
-        urhobo:   'Mavọ',
-        itsekiri: 'Mavọ'
-      };
-      const greet = greetings[State.currentLanguage] || 'Hello';
-      const firstName = (this.user && this.user.fullName || 'friend').split(' ')[0];
-
-      const greetingText = {
-        practice: `${greet} ${firstName}! Ready to practice ${langCfg.name}? We can start with something simple, or you can type whatever you like.`,
-        cultural: `Let's talk about Nigerian culture — especially ${langCfg.name} traditions, food, family customs, or anything you're curious about.`,
-        quick:    `Give me a word or phrase and I'll translate it into ${langCfg.name} with pronunciation. Or type a ${langCfg.name} word you heard and I'll break it down.`
-      }[mode];
-
-      this.messages.push({ role: 'assistant', content: greetingText, ts: Date.now() });
-    }
-
+    // 1. Instant paint from local cache
+    this.messages = this.loadThreadSync(State.currentLanguage);
     this.renderChat();
-    this.renderScaffold();
+    this.scrollToBottom();
 
-    // Focus the input so the keyboard opens immediately
+    // 2. Background refresh from server
+    this.refreshThreadFromServer(State.currentLanguage).then(() => {
+      this.renderScaffold();
+    });
+
+    // 3. Seed prompt if provided AND thread is empty or very short
     setTimeout(() => {
-      const input = document.getElementById('timmy-input');
-      if (input) input.focus();
-    }, 300);
-
-    if (seedPrompt) {
-      setTimeout(() => {
+      if (this.pendingSeed && this.messages.length <= 1) {
+        const seed = this.pendingSeed;
+        this.pendingSeed = null;
         const inp = document.getElementById('timmy-input');
-        if (inp) inp.value = seedPrompt;
+        if (inp) inp.value = seed;
         this.sendMessage();
-      }, 400);
-    }
+      } else {
+        this.pendingSeed = null;
+      }
+      // Focus input for immediate typing
+      const inp = document.getElementById('timmy-input');
+      if (inp && !seedPrompt) inp.focus();
+    }, 250);
+
+    // 4. Mark read
+    this.markThreadRead(State.currentLanguage);
+    this.renderScaffold();
+  },
+
+  updateHeaderForMode() {
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    const modes = {
+      practice: { emoji: '🤓', title: 'Timmy', sub: `Timmy AI · ${langCfg.name}` },
+      cultural: { emoji: '🎭', title: 'Timmy · Culture', sub: `Nigerian culture · ${langCfg.name}` },
+      quick:    { emoji: '⚡', title: 'Timmy · Quick', sub: `Translations · ${langCfg.name}` }
+    };
+    const m = modes[this.mode] || modes.practice;
+    const avatar = document.getElementById('timmy-avatar');
+    const title = document.getElementById('timmy-title');
+    const sub = document.getElementById('timmy-sub');
+    if (avatar) avatar.textContent = m.emoji;
+    if (title) title.textContent = m.title;
+    if (sub) sub.textContent = m.sub;
+
+    const input = document.getElementById('timmy-input');
+    if (input) input.placeholder = `Message Timmy in ${langCfg.name}…`;
   },
 
   closeTimmy() {
     document.getElementById('timmy-view').classList.remove('active');
 
-    // Restore normal scrolling
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
     document.body.style.position = '';
@@ -787,7 +1149,8 @@ const Practice = {
     document.body.style.width = '';
     document.body.style.height = '';
 
-    this.saveLocalChat();
+    this.writeLocalCache(State.currentLanguage, this.messages);
+    this.markThreadRead(State.currentLanguage);
     this.loadUsage();
   },
 
@@ -799,7 +1162,7 @@ const Practice = {
 
   exportChat() {
     const lines = this.messages.map(m => `[${m.role.toUpperCase()}] ${m.content}`);
-    const text = `ClearWords chat export\nLanguage: ${State.currentLanguage}\nMode: ${this.mode}\nDate: ${new Date().toISOString()}\n\n${lines.join('\n\n')}`;
+    const text = `ClearWords chat export\nLanguage: ${State.currentLanguage}\nDate: ${new Date().toISOString()}\n\n${lines.join('\n\n')}`;
     const blob = new Blob([text], { type: 'text/plain' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -813,57 +1176,102 @@ const Practice = {
   clearChat() {
     if (!confirm('Clear this conversation?')) return;
     this.messages = [];
-    localStorage.removeItem(this.localKey());
+    try {
+      localStorage.removeItem(this.localCacheKey(State.currentLanguage));
+      localStorage.removeItem('cw_timmy_chat_' + State.currentLanguage);
+    } catch {}
+    Backend.clearTimmyThread(State.currentLanguage).catch(() => {});
     document.getElementById('timmy-menu')?.classList.remove('show');
     this.openTimmy(this.mode);
   },
 
-  localKey() { return 'cw_chat_' + this.mode + '_' + State.currentLanguage; },
-  loadLocalChat(mode) {
-    try { return JSON.parse(localStorage.getItem('cw_chat_' + mode + '_' + State.currentLanguage) || '[]'); }
-    catch { return []; }
-  },
-  saveLocalChat() {
-    try { localStorage.setItem(this.localKey(), JSON.stringify(this.messages.slice(-40))); }
-    catch {}
-  },
+  /* ============================================================
+     RENDERING
+     ============================================================ */
 
-  /* ---------- Rendering ---------- */
   renderChat() {
     const scroll = document.getElementById('timmy-scroll');
     if (!scroll) return;
-    scroll.innerHTML = this.messages.map(m => {
+
+    if (!this.messages.length) {
+      scroll.innerHTML = `
+        <div class="chat-empty">
+          <div class="chat-empty-emoji">🤓</div>
+          <div class="chat-empty-title">Hi, I'm Timmy</div>
+          <div class="chat-empty-sub">Type a message below, or tap a suggestion to start practicing ${CW_CONFIG.LANGUAGES[State.currentLanguage].name}.</div>
+        </div>`;
+      return;
+    }
+
+    let lastDayKey = '';
+    let lastUserMsgIndex = -1;
+
+    // Find the last user message index (to show "Read" under it)
+    for (let i = this.messages.length - 1; i >= 0; i--) {
+      if (this.messages[i].role === 'user') { lastUserMsgIndex = i; break; }
+    }
+
+    const html = this.messages.map((m, i) => {
+      const dayKey = new Date(m.ts || Date.now()).toDateString();
+      const showDaySep = dayKey !== lastDayKey;
+      lastDayKey = dayKey;
+
+      const daySep = showDaySep
+        ? `<div class="chat-daysep">${this.formatDayLabel(m.ts)}</div>`
+        : '';
+
       const cls = m.role === 'user' ? 'user' : 'bot';
-      const html = m.role === 'user' ? esc(m.content) : this.formatBotHTML(m.content);
-      return `<div class="msg ${cls}">${html}</div>`;
+      const body = m.role === 'user'
+        ? `<div class="bubble">${esc(m.content)}</div>`
+        : `<div class="bubble ${m.isError ? 'is-error' : ''}">${this.formatBotHTML(m.content)}</div>`;
+
+      const meta = m.role === 'user'
+        ? `<div class="msg-meta">
+             <span>${this.formatTime(m.ts)}</span>
+             ${i === lastUserMsgIndex ? `<span class="read-mark">· Read</span>` : ''}
+           </div>`
+        : `<div class="msg-meta"><span>${this.formatTime(m.ts)}</span></div>`;
+
+      return `${daySep}<div class="msg-row ${cls}">${body}${meta}</div>`;
     }).join('');
-    scroll.scrollTop = scroll.scrollHeight;
+
+    scroll.innerHTML = html;
   },
 
-  /**
-   * Render the bot reply HTML safely.
-   * - If the backend returns simple text, split on blank lines and wrap each
-   *   paragraph in <p> so the bubble gets proper spacing.
-   * - If the backend returns HTML tags (from Mistral), keep the allowed set
-   *   and strip anything dangerous (scripts, inline handlers).
-   */
+  formatDayLabel(ts) {
+    const d = new Date(ts || Date.now());
+    const today = new Date();
+    const yesterday = new Date(); yesterday.setDate(today.getDate() - 1);
+
+    if (d.toDateString() === today.toDateString()) return 'Today';
+    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  },
+
+  formatTime(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    let h = d.getHours();
+    const m = d.getMinutes();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if (h === 0) h = 12;
+    return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
+  },
+
   formatBotHTML(text) {
     if (text == null) return '';
     const str = String(text).trim();
     if (!str) return '';
 
-    // Does the response contain any HTML tags we care about?
     const hasTags = /<(p|br|strong|b|em|i|ul|ol|li|h[1-6]|code|pre|blockquote)\b/i.test(str);
 
     if (hasTags) {
-      // Strip dangerous bits
       let cleaned = str
         .replace(/<script[\s\S]*?<\/script>/gi, '')
         .replace(/<style[\s\S]*?<\/style>/gi, '')
         .replace(/\son\w+="[^"]*"/gi, '')
         .replace(/\son\w+='[^']*'/gi, '');
 
-      // If backend didn't wrap in <p>, wrap loose blocks so bubble spacing is right
       if (!/<p\b/i.test(cleaned)) {
         cleaned = cleaned
           .split(/\n{2,}/)
@@ -873,7 +1281,6 @@ const Practice = {
       return cleaned;
     }
 
-    // Plain text — split on blank lines, escape, convert single newlines to <br>
     return str
       .split(/\n{2,}/)
       .map(p => `<p>${esc(p).replace(/\n/g, '<br>')}</p>`)
@@ -881,13 +1288,13 @@ const Practice = {
   },
 
   renderScaffold() {
-    // Show a couple of suggested reply chips only in practice mode, right
-    // after the bot's first message — helps beginners start.
     const row = document.getElementById('scaffold-row');
     if (!row) return;
+
+    // Only show in practice mode, only if user hasn't sent anything yet
     if (this.mode !== 'practice') { row.style.display = 'none'; return; }
-    const userTurnCount = this.messages.filter(m => m.role === 'user').length;
-    if (userTurnCount > 1) { row.style.display = 'none'; return; }
+    const userTurns = this.messages.filter(m => m.role === 'user').length;
+    if (userTurns >= 1) { row.style.display = 'none'; return; }
 
     const samples = {
       yoruba:  ["Ẹ káàrọ̀", "Báwo ni?", "Mo wà dáadáa"],
@@ -909,7 +1316,18 @@ const Practice = {
     this.sendMessage();
   },
 
-  /* ---------- Sending ---------- */
+  scrollToBottom() {
+    const scroll = document.getElementById('timmy-scroll');
+    if (scroll) {
+      requestAnimationFrame(() => {
+        scroll.scrollTop = scroll.scrollHeight;
+      });
+    }
+  },
+
+  /* ============================================================
+     SENDING
+     ============================================================ */
   async sendMessage() {
     if (this.sending) return;
     const inp = document.getElementById('timmy-input');
@@ -919,26 +1337,39 @@ const Practice = {
 
     this.sending = true;
     inp.value = '';
+    inp.style.height = 'auto';
     document.getElementById('scaffold-row').style.display = 'none';
 
-    this.messages.push({ role: 'user', content: text, ts: Date.now() });
+    // 1. Optimistic push of user message
+    const userMsg = {
+      role: 'user',
+      content: text,
+      ts: Date.now(),
+      id: 'u_' + Date.now()
+    };
+    this.messages.push(userMsg);
     this.renderChat();
-    this.saveLocalChat();
+    this.scrollToBottom();
+    this.writeLocalCache(State.currentLanguage, this.messages);
+    this.markThreadRead(State.currentLanguage);
 
-    // Typing indicator
+    // 2. Persist to server (queue on failure)
+    Backend.appendTimmyMessage(State.currentLanguage, 'user', text)
+      .catch(() => this.queueOffline(State.currentLanguage, 'user', text, false));
+
+    // 3. Typing indicator
     const scroll = document.getElementById('timmy-scroll');
     const typing = document.createElement('div');
-    typing.className = 'msg bot typing';
+    typing.className = 'msg-row bot typing';
     typing.id = 'typing';
-    typing.innerHTML = '<span></span><span></span><span></span>';
+    typing.innerHTML = '<div class="bubble"><span></span><span></span><span></span></div>';
     scroll.appendChild(typing);
-    scroll.scrollTop = scroll.scrollHeight;
+    this.scrollToBottom();
 
     const sendBtn = document.getElementById('timmy-send');
     if (sendBtn) sendBtn.disabled = true;
 
     try {
-      // Build a context string describing what the user is learning
       const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
       const user = State.user || {};
       const context = [
@@ -951,18 +1382,24 @@ const Practice = {
       const res = await Backend.aiChat(text, context);
       const reply = res.data || res.reply || res.message || "Sorry — I didn't catch that.";
 
-      // Debug: uncomment to inspect the raw AI response shape
-      // console.log('RAW AI:', reply);
-
       document.getElementById('typing')?.remove();
-      this.messages.push({ role: 'assistant', content: reply, ts: Date.now() });
+      this.messages.push({
+        role: 'assistant',
+        content: reply,
+        ts: Date.now(),
+        id: 'a_' + Date.now()
+      });
       this.renderChat();
-      this.saveLocalChat();
+      this.scrollToBottom();
+      this.writeLocalCache(State.currentLanguage, this.messages);
       this.loadUsage();
+      this.markThreadRead(State.currentLanguage);
+
+      Backend.appendTimmyMessage(State.currentLanguage, 'assistant', reply)
+        .catch(() => this.queueOffline(State.currentLanguage, 'assistant', reply, false));
     } catch (e) {
       document.getElementById('typing')?.remove();
 
-      // Paywall for daily chat limit
       if (Paywall.fromError(e)) {
         this.sending = false;
         if (sendBtn) sendBtn.disabled = false;
@@ -975,8 +1412,17 @@ const Practice = {
       } else if (e.message) {
         msg = e.message;
       }
-      this.messages.push({ role: 'assistant', content: msg, ts: Date.now() });
+
+      this.messages.push({
+        role: 'assistant',
+        content: msg,
+        ts: Date.now(),
+        id: 'a_' + Date.now(),
+        isError: true
+      });
       this.renderChat();
+      this.scrollToBottom();
+      this.writeLocalCache(State.currentLanguage, this.messages);
     } finally {
       this.sending = false;
       if (sendBtn) sendBtn.disabled = false;
@@ -984,11 +1430,12 @@ const Practice = {
   },
 
   /* ============================================================
-     SPEAK MODE (Pronunciation practice)
+     SPEAK MODE
      ============================================================ */
   async openSpeak() {
     const saved = (State.user && State.user.savedWords) || [];
-    const curriculum = State.curriculumCache[State.currentLanguage] || await State.loadCurriculum(State.currentLanguage);
+    const curriculum = State.curriculumCache[State.currentLanguage]
+      || await State.loadCurriculum(State.currentLanguage);
     let pool = saved.slice();
     if (!pool.length && curriculum) {
       const lessons = Curriculum.allLessons(curriculum);
@@ -999,13 +1446,8 @@ const Practice = {
       return;
     }
 
-    const header = `Pronunciation practice`;
-    const body = this.speakBody(pool[0], 0, pool);
-    Header._modal(header, body);
-    this._speakPool = pool;
-    this._speakIndex = 0;
+    Header._modal('Pronunciation practice', this.speakBody(pool[0], 0, pool));
     this._speakList = pool;
-    this._bindSpeakNext();
   },
 
   speakBody(word, index, pool) {
@@ -1030,8 +1472,6 @@ const Practice = {
       </div>`;
   },
 
-  _bindSpeakNext() {},
-
   async playSpeakWord(index) {
     const w = this._speakList[index];
     if (!w) return;
@@ -1046,16 +1486,12 @@ const Practice = {
 
   speakPrev(index) {
     if (index <= 0) return;
-    this._speakIndex = index - 1;
     Header._modal('Pronunciation practice', this.speakBody(this._speakList[index - 1], index - 1, this._speakList));
-    this._bindSpeakNext();
   },
 
   speakNext(index, total) {
     if (index >= total - 1) return;
-    this._speakIndex = index + 1;
     Header._modal('Pronunciation practice', this.speakBody(this._speakList[index + 1], index + 1, this._speakList));
-    this._bindSpeakNext();
   },
 
   recordSpeak(index) {
@@ -1181,11 +1617,7 @@ const Practice = {
     const questions = saved.slice(0, Math.min(8, saved.length)).map(w => {
       const wrong = saved.filter(x => x.word !== w.word).sort(() => Math.random() - 0.5).slice(0, 3);
       const options = [w.translation, ...wrong.map(x => x.translation)].sort(() => Math.random() - 0.5);
-      return {
-        word: w.word,
-        correctIndex: options.indexOf(w.translation),
-        options
-      };
+      return { word: w.word, correctIndex: options.indexOf(w.translation), options };
     });
     this._quiz = questions;
     this._quizIndex = 0;
@@ -1268,7 +1700,6 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* Close chat menu when clicking elsewhere */
 document.addEventListener('click', (e) => {
   const menu = document.getElementById('timmy-menu');
   if (!menu || !menu.classList.contains('show')) return;
