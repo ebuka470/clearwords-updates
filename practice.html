@@ -156,15 +156,13 @@ img, svg { display: block; max-width: 100%; }
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
   padding: 6px 4px; border-radius: 10px;
   color: var(--text-3); font-size: 11px; font-weight: 600;
+  position: relative;
 }
 .tab.active { color: var(--brand); }
 .tab svg { width: 22px; height: 22px; }
 .tab:active { transform: scale(.94); }
-  /* ---- Unread badge on the Community tab ---- */
-#cw-bottom-nav .tab {
-  position: relative;
-}
 
+/* ---- Unread badge on the Community tab ---- */
 .tab-badge {
   position: absolute;
   top: 2px;
@@ -246,10 +244,7 @@ img, svg { display: block; max-width: 100%; }
 /* ============ TIMMY CHAT ============ */
 #timmy-view {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
   width: 100vw;
   height: 100vh;
   height: 100dvh;
@@ -258,9 +253,18 @@ img, svg { display: block; max-width: 100%; }
   display: none;
   flex-direction: column;
   overflow: hidden;
+  min-height: 0;
 }
 #timmy-view.active {
   display: flex;
+}
+#timmy-view > * {
+  flex-shrink: 0;
+}
+#timmy-view .chat-scroll {
+  flex: 1 1 auto;
+  flex-shrink: 1;
+  min-height: 0;
 }
 .chat-topbar {
   display: flex; align-items: center; gap: 12px;
@@ -287,22 +291,8 @@ img, svg { display: block; max-width: 100%; }
 }
 .chat-menu button:hover { background: rgba(var(--brand-rgb), 0.08); }
 .chat-menu button.danger { color: var(--danger); }
- .chat-foot {
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-  padding: 12px 16px calc(14px + var(--safe-bot));
-  background: var(--card);
-  border-top: 1px solid var(--border);
-  position: sticky;
-  bottom: 0;
-  flex-shrink: 0;
-  z-index: 2;
-}
 
 .chat-scroll {
-  flex: 1 1 auto;      /* allow it to grow AND shrink */
-  min-height: 0;       /* critical — without this, flex children can't shrink */
   overflow-y: auto;
   padding: 16px;
   display: flex;
@@ -310,12 +300,16 @@ img, svg { display: block; max-width: 100%; }
   gap: 12px;
   -webkit-overflow-scrolling: touch;
 }
+
 .msg { max-width: 84%; padding: 12px 15px; border-radius: 16px; font-size: 14.5px; line-height: 1.55; word-wrap: break-word; }
-.msg.user { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 4px; }
+.msg.user { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 4px; white-space: pre-wrap; }
 .msg.bot { align-self: flex-start; background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
 .msg.bot strong { color: var(--brand); font-weight: 700; }
 .msg.bot p { margin: 0 0 8px 0; }
 .msg.bot p:last-child { margin-bottom: 0; }
+.msg.bot ul, .msg.bot ol { margin: 8px 0; padding-left: 22px; }
+.msg.bot li { margin-bottom: 4px; }
+.msg.bot code { background: rgba(var(--brand-rgb), 0.10); padding: 1px 5px; border-radius: 4px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
 .msg.typing { display: flex; gap: 4px; padding: 14px 18px; }
 .msg.typing span {
   width: 7px; height: 7px; border-radius: 50%; background: var(--text-3);
@@ -355,19 +349,6 @@ img, svg { display: block; max-width: 100%; }
   white-space: nowrap;
 }
 .scaffold-chip:active { background: rgba(var(--brand-rgb), 0.08); }
-
-/* ============ PRACTICE MODES ============ */
-.mode-option {
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px; border-radius: 12px;
-  background: var(--bg-elev); border: 1.5px solid var(--border);
-  margin-bottom: 10px; width: 100%; text-align: left;
-}
-.mode-option:active { background: rgba(var(--brand-rgb), 0.05); border-color: var(--brand); }
-.mode-emoji { font-size: 26px; flex-shrink: 0; }
-.mode-body { flex: 1; }
-.mode-title { font-weight: 800; font-size: 14.5px; }
-.mode-desc { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
 
 /* ============ REVIEW (Saved Words) ============ */
 .word-row {
@@ -482,7 +463,7 @@ img, svg { display: block; max-width: 100%; }
     <div class="method-icon">🤓</div>
     <div class="method-body">
       <div class="method-title">Practice with Timmy</div>
-      <div class="method-desc">Chat in ${LANGNAME} about your latest lesson</div>
+      <div class="method-desc" data-lang-slot="practice">Chat about your latest lesson</div>
     </div>
     <div class="method-chev">›</div>
   </button>
@@ -618,9 +599,8 @@ const Practice = {
 
     // Fill in language name in the method description
     const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
-    document.querySelectorAll('.method-desc').forEach(el => {
-      el.innerHTML = el.innerHTML.replace('${LANGNAME}', esc(langCfg.name));
-    });
+    const slot = document.querySelector('[data-lang-slot="practice"]');
+    if (slot) slot.textContent = `Chat in ${langCfg.name} about your latest lesson`;
     document.title = 'ClearWords — Practice (' + langCfg.name + ')';
 
     this.renderSituations();
@@ -629,28 +609,42 @@ const Practice = {
 
     // Refresh when user state changes
     State.on('hydrated', () => { this.user = State.user; this.renderSavedCount(); });
+    State.on('language:changed', () => {
+      const cfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+      if (slot) slot.textContent = `Chat in ${cfg.name} about your latest lesson`;
+    });
   },
 
   /* ---------- Usage bar ---------- */
   async loadUsage() {
     try {
       const u = await Backend.getAIUsage();
-      // Try several possible shapes
-      const chat = u?.chat || u?.ai_chat_message || u?.chatMessages || 0;
-      const limit = u?.chatLimit || u?.limits?.chat || 200;
-      const remaining = Math.max(0, limit - chat);
       const bar = document.getElementById('usage-bar');
       const count = document.getElementById('usage-count');
+      const label = bar?.querySelector('.label');
       if (!bar || !count) return;
 
+      // Backend returns: { chat: { used, limit, remaining } | { unlimited, used }, customLessons: {...} }
+      const chat = u?.chat || {};
+      const unlimited = chat.unlimited === true;
+      const used = chat.used ?? 0;
+      const limit = chat.limit ?? 200;
+      const remaining = unlimited ? Infinity : (chat.remaining ?? Math.max(0, limit - used));
+
       bar.style.display = 'flex';
+      bar.classList.remove('warning', 'limit');
+
+      if (unlimited) {
+        count.textContent = '∞';
+        if (label) label.textContent = 'Unlimited Timmy messages';
+        return;
+      }
+
       count.textContent = remaining + ' / ' + limit;
 
-      bar.classList.remove('warning', 'limit');
       if (remaining === 0) bar.classList.add('limit');
       else if (remaining <= limit * 0.15) bar.classList.add('warning');
 
-      const label = bar.querySelector('.label');
       if (label) {
         label.textContent = remaining === 0
           ? 'Daily limit reached — resets at midnight'
@@ -705,15 +699,13 @@ const Practice = {
   /* ============================================================
      TIMMY CHAT
      ============================================================ */
- openTimmy(mode, seedPrompt) {
+  openTimmy(mode, seedPrompt) {
     this.mode = mode;
 
     const view = document.getElementById('timmy-view');
     view.classList.add('active');
 
-    // Lock the page completely on mobile.
-    // overflow alone isn't enough in some Android WebViews;
-    // position: fixed on body prevents background scroll.
+    // Lock background scroll — position:fixed is required on iOS/Android WebViews
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
@@ -721,17 +713,17 @@ const Practice = {
     document.body.style.left = '0';
     document.body.style.right = '0';
     document.body.style.width = '100%';
+    document.body.style.height = '100%';
 
     // Header state
     const avatar = document.getElementById('timmy-avatar');
     const name = document.getElementById('timmy-name');
-    const sub = document.getElementById('timmy-sub');
     const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
 
     const modes = {
-        practice: { emoji: '🤓', title: 'Timmy', sub: 'Practice conversation in ' + langCfg.name },
-        cultural: { emoji: '🎭', title: 'Timmy · Culture', sub: 'Ask about Nigerian customs and context' },
-        quick:    { emoji: '⚡', title: 'Timmy · Quick', sub: 'Fast translations and explanations' }
+      practice: { emoji: '🤓', title: 'Timmy', sub: 'Practice conversation in ' + langCfg.name },
+      cultural: { emoji: '🎭', title: 'Timmy · Culture', sub: 'Ask about Nigerian customs and context' },
+      quick:    { emoji: '⚡', title: 'Timmy · Quick', sub: 'Fast translations and explanations' }
     };
     const m = modes[mode] || modes.practice;
     avatar.textContent = m.emoji;
@@ -743,13 +735,25 @@ const Practice = {
     this.messages = this.loadLocalChat(mode);
 
     if (!this.messages.length) {
-        const greeting = {
-            practice: `Sannu ${esc((this.user && this.user.fullName || 'friend').split(' ')[0])}! Ready to practice ${langCfg.name}? We can start with something simple, or you can type whatever you like.`,
-            cultural: `Let's talk about Nigerian culture — especially ${langCfg.name} traditions, food, family customs, or anything you're curious about.`,
-            quick:    `Give me a word or phrase and I'll translate it into ${langCfg.name} with pronunciation. Or type a ${langCfg.name} word you heard and I'll break it down.`
-        }[mode];
+      // Per-language greeting — no more hardcoded "Sannu" for Igbo
+      const greetings = {
+        yoruba:   'Ẹ káàbọ̀',
+        igbo:     'Ndeewo',
+        hausa:    'Sannu',
+        pidgin:   'How you dey',
+        urhobo:   'Mavọ',
+        itsekiri: 'Mavọ'
+      };
+      const greet = greetings[State.currentLanguage] || 'Hello';
+      const firstName = (this.user && this.user.fullName || 'friend').split(' ')[0];
 
-        this.messages.push({ role: 'assistant', content: greeting, ts: Date.now() });
+      const greetingText = {
+        practice: `${greet} ${firstName}! Ready to practice ${langCfg.name}? We can start with something simple, or you can type whatever you like.`,
+        cultural: `Let's talk about Nigerian culture — especially ${langCfg.name} traditions, food, family customs, or anything you're curious about.`,
+        quick:    `Give me a word or phrase and I'll translate it into ${langCfg.name} with pronunciation. Or type a ${langCfg.name} word you heard and I'll break it down.`
+      }[mode];
+
+      this.messages.push({ role: 'assistant', content: greetingText, ts: Date.now() });
     }
 
     this.renderChat();
@@ -757,20 +761,20 @@ const Practice = {
 
     // Focus the input so the keyboard opens immediately
     setTimeout(() => {
-        const input = document.getElementById('timmy-input');
-        if (input) input.focus();
+      const input = document.getElementById('timmy-input');
+      if (input) input.focus();
     }, 300);
 
     if (seedPrompt) {
-        setTimeout(() => {
-            const inp = document.getElementById('timmy-input');
-            if (inp) inp.value = seedPrompt;
-            this.sendMessage();
-        }, 400);
+      setTimeout(() => {
+        const inp = document.getElementById('timmy-input');
+        if (inp) inp.value = seedPrompt;
+        this.sendMessage();
+      }, 400);
     }
-},
+  },
 
-closeTimmy() {
+  closeTimmy() {
     document.getElementById('timmy-view').classList.remove('active');
 
     // Restore normal scrolling
@@ -781,10 +785,11 @@ closeTimmy() {
     document.body.style.left = '';
     document.body.style.right = '';
     document.body.style.width = '';
+    document.body.style.height = '';
 
     this.saveLocalChat();
     this.loadUsage();
-},
+  },
 
   toggleMenu(e) {
     e.stopPropagation();
@@ -835,17 +840,44 @@ closeTimmy() {
     scroll.scrollTop = scroll.scrollHeight;
   },
 
+  /**
+   * Render the bot reply HTML safely.
+   * - If the backend returns simple text, split on blank lines and wrap each
+   *   paragraph in <p> so the bubble gets proper spacing.
+   * - If the backend returns HTML tags (from Mistral), keep the allowed set
+   *   and strip anything dangerous (scripts, inline handlers).
+   */
   formatBotHTML(text) {
-    // Bot replies come as HTML from /api/ai/chat — but be safe and allow
-    // only a small set of tags. Fall back to plain-text paragraphs.
-    if (!text) return '';
-    // If it looks like plain text (no tags), escape it and wrap in <p>.
-    if (!/<[a-z][\s\S]*>/i.test(text)) {
-      return String(text).split(/\n\n+/).map(p => `<p>${esc(p)}</p>`).join('');
+    if (text == null) return '';
+    const str = String(text).trim();
+    if (!str) return '';
+
+    // Does the response contain any HTML tags we care about?
+    const hasTags = /<(p|br|strong|b|em|i|ul|ol|li|h[1-6]|code|pre|blockquote)\b/i.test(str);
+
+    if (hasTags) {
+      // Strip dangerous bits
+      let cleaned = str
+        .replace(/<script[\s\S]*?<\/script>/gi, '')
+        .replace(/<style[\s\S]*?<\/style>/gi, '')
+        .replace(/\son\w+="[^"]*"/gi, '')
+        .replace(/\son\w+='[^']*'/gi, '');
+
+      // If backend didn't wrap in <p>, wrap loose blocks so bubble spacing is right
+      if (!/<p\b/i.test(cleaned)) {
+        cleaned = cleaned
+          .split(/\n{2,}/)
+          .map(block => `<p>${block.replace(/\n/g, '<br>')}</p>`)
+          .join('');
+      }
+      return cleaned;
     }
-    // Already HTML — assume backend produced safe tags. Still strip script/style.
-    return String(text).replace(/<script[\s\S]*?<\/script>/gi, '')
-                       .replace(/<style[\s\S]*?<\/style>/gi, '');
+
+    // Plain text — split on blank lines, escape, convert single newlines to <br>
+    return str
+      .split(/\n{2,}/)
+      .map(p => `<p>${esc(p).replace(/\n/g, '<br>')}</p>`)
+      .join('');
   },
 
   renderScaffold() {
@@ -857,7 +889,6 @@ closeTimmy() {
     const userTurnCount = this.messages.filter(m => m.role === 'user').length;
     if (userTurnCount > 1) { row.style.display = 'none'; return; }
 
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
     const samples = {
       yoruba:  ["Ẹ káàrọ̀", "Báwo ni?", "Mo wà dáadáa"],
       igbo:    ["Ndeewo", "Kedu?", "Ọ dị mma"],
@@ -918,7 +949,10 @@ closeTimmy() {
       ].join(' | ');
 
       const res = await Backend.aiChat(text, context);
-      const reply = res.data || res.reply || res.message || 'Sorry — I didn\'t catch that.';
+      const reply = res.data || res.reply || res.message || "Sorry — I didn't catch that.";
+
+      // Debug: uncomment to inspect the raw AI response shape
+      // console.log('RAW AI:', reply);
 
       document.getElementById('typing')?.remove();
       this.messages.push({ role: 'assistant', content: reply, ts: Date.now() });
@@ -926,24 +960,24 @@ closeTimmy() {
       this.saveLocalChat();
       this.loadUsage();
     } catch (e) {
-    document.getElementById('typing')?.remove();
+      document.getElementById('typing')?.remove();
 
-    // Paywall for daily chat limit
-    if (Paywall.fromError(e)) {
+      // Paywall for daily chat limit
+      if (Paywall.fromError(e)) {
         this.sending = false;
         if (sendBtn) sendBtn.disabled = false;
         return;
-    }
+      }
 
-    let msg = "Couldn't reach Timmy.";
-    if (e.code === 'timeout') {
+      let msg = "Couldn't reach Timmy.";
+      if (e.code === 'timeout') {
         msg = "Timmy is waking up — this can take 20–30 seconds on the free tier. Try again.";
-    } else if (e.message) {
+      } else if (e.message) {
         msg = e.message;
-    }
-    this.messages.push({ role: 'assistant', content: msg, ts: Date.now() });
-    this.renderChat();
-} finally {
+      }
+      this.messages.push({ role: 'assistant', content: msg, ts: Date.now() });
+      this.renderChat();
+    } finally {
       this.sending = false;
       if (sendBtn) sendBtn.disabled = false;
     }
@@ -953,7 +987,6 @@ closeTimmy() {
      SPEAK MODE (Pronunciation practice)
      ============================================================ */
   async openSpeak() {
-    // Use saved words first, then fall back to current curriculum vocab
     const saved = (State.user && State.user.savedWords) || [];
     const curriculum = State.curriculumCache[State.currentLanguage] || await State.loadCurriculum(State.currentLanguage);
     let pool = saved.slice();
@@ -977,7 +1010,6 @@ closeTimmy() {
 
   speakBody(word, index, pool) {
     const supported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
     const note = supported
       ? `<div class="mic-hint">Speech recognition uses your browser's built-in engine. For non-English languages, accuracy varies — treat it as a warm-up, not a score.</div>`
       : `<div class="mic-hint">Your browser doesn't support speech recognition. You can still listen and repeat out loud.</div>`;
@@ -998,21 +1030,19 @@ closeTimmy() {
       </div>`;
   },
 
-  _bindSpeakNext() {
-    // Enter-key on next — no-op but keeps hook in case we add keyboard later
-  },
+  _bindSpeakNext() {},
 
   async playSpeakWord(index) {
     const w = this._speakList[index];
     if (!w) return;
     try {
-        await AudioMgr.play(w.word, State.currentLanguage);
+      await AudioMgr.play(w.word, State.currentLanguage);
     } catch (e) {
-        if (!Paywall.fromError(e)) {
-            showToast('Audio unavailable right now.', 'error');
-        }
+      if (!Paywall.fromError(e)) {
+        showToast('Audio unavailable right now.', 'error');
+      }
     }
-},
+  },
 
   speakPrev(index) {
     if (index <= 0) return;
@@ -1132,13 +1162,13 @@ closeTimmy() {
     const w = this._saved[i];
     if (!w) return;
     try {
-        await AudioMgr.play(w.word, w.language || State.currentLanguage);
+      await AudioMgr.play(w.word, w.language || State.currentLanguage);
     } catch (e) {
-        if (!Paywall.fromError(e)) {
-            showToast('Audio unavailable right now.', 'error');
-        }
+      if (!Paywall.fromError(e)) {
+        showToast('Audio unavailable right now.', 'error');
+      }
     }
-},
+  },
 
   async startReviewQuiz() {
     const saved = this._saved || [];
@@ -1148,7 +1178,6 @@ closeTimmy() {
     }
     closeModal('cw-generic-modal');
 
-    // Build multiple-choice questions: prompt in target language, options in English
     const questions = saved.slice(0, Math.min(8, saved.length)).map(w => {
       const wrong = saved.filter(x => x.word !== w.word).sort(() => Math.random() - 0.5).slice(0, 3);
       const options = [w.translation, ...wrong.map(x => x.translation)].sort(() => Math.random() - 0.5);
