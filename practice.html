@@ -259,7 +259,7 @@ img, svg { display: block; max-width: 100%; }
 .cw-toast-success { background: var(--brand); color: #fff; }
 
 /* ============================================================
-   TIMMY CHAT VIEW — full screen messaging app
+   TIMMY VIEW — one overlay with two sub-views
    ============================================================ */
 #timmy-view {
   position: fixed;
@@ -274,9 +274,7 @@ img, svg { display: block; max-width: 100%; }
   overflow: hidden;
   min-height: 0;
 }
-#timmy-view.active {
-  display: flex;
-}
+#timmy-view.active { display: flex; }
 
 /* ---- Top bar ---- */
 .chat-topbar {
@@ -340,9 +338,104 @@ img, svg { display: block; max-width: 100%; }
 .chat-menu button:hover { background: rgba(var(--brand-rgb), 0.08); }
 .chat-menu button.danger { color: var(--danger); }
 
+/* ---- Chat list view ---- */
+.chat-list-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.chat-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .12s;
+  text-align: left;
+  width: 100%;
+}
+.chat-list-item:active { background: rgba(var(--brand-rgb), 0.06); }
+.chat-list-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(var(--brand-rgb), 0.14);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.chat-list-body { flex: 1; min-width: 0; }
+.chat-list-title {
+  font-weight: 700; font-size: 15px;
+  color: var(--text);
+  margin-bottom: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.chat-list-preview {
+  font-size: 13px;
+  color: var(--text-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.chat-list-meta {
+  display: flex; flex-direction: column;
+  align-items: flex-end; gap: 6px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+.chat-list-time {
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+.chat-list-unread {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 800;
+  line-height: 22px;
+  text-align: center;
+}
+.chat-list-count {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.chat-list-empty {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+  gap: 14px;
+}
+.chat-list-empty-emoji { font-size: 56px; }
+.chat-list-empty-title { font-size: 18px; font-weight: 800; color: var(--text); }
+.chat-list-empty-sub { font-size: 14px; color: var(--text-2); max-width: 280px; line-height: 1.55; }
+
+.chat-fab {
+  position: absolute;
+  right: 18px;
+  bottom: calc(24px + var(--safe-bot));
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-size: 28px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  z-index: 5;
+  transition: transform .12s;
+}
+.chat-fab:active { transform: scale(.92); }
+
 /* ---- Message scroll area ---- */
 .chat-scroll {
   flex: 1 1 auto;
+  flex-shrink: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
@@ -354,7 +447,6 @@ img, svg { display: block; max-width: 100%; }
   background: var(--bg);
 }
 
-/* Day / date separator */
 .chat-daysep {
   align-self: center;
   margin: 12px 0;
@@ -369,7 +461,6 @@ img, svg { display: block; max-width: 100%; }
 }
 [data-theme="dark"] .chat-daysep { background: rgba(255,255,255,0.08); }
 
-/* Message row wrapper — holds bubble + meta */
 .msg-row {
   display: flex;
   flex-direction: column;
@@ -384,7 +475,6 @@ img, svg { display: block; max-width: 100%; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* The bubble itself */
 .bubble {
   padding: 10px 14px;
   border-radius: 18px;
@@ -412,8 +502,6 @@ img, svg { display: block; max-width: 100%; }
   border-color: rgba(229,72,77,0.35);
   color: var(--danger);
 }
-
-/* Rich text inside bot bubbles */
 .bubble p { margin: 0 0 8px 0; }
 .bubble p:last-child { margin-bottom: 0; }
 .bubble strong { color: inherit; font-weight: 700; }
@@ -427,7 +515,6 @@ img, svg { display: block; max-width: 100%; }
 }
 .msg-row.user .bubble code { background: rgba(255,255,255,0.22); }
 
-/* Meta row: timestamp + read status */
 .msg-meta {
   display: flex; align-items: center; gap: 4px;
   font-size: 10.5px;
@@ -441,7 +528,6 @@ img, svg { display: block; max-width: 100%; }
 }
 .msg-row.user .msg-meta .read-mark.read { color: #4FC3F7; }
 
-/* Typing indicator */
 .msg-row.typing .bubble {
   display: flex; gap: 4px; padding: 14px 18px;
 }
@@ -457,7 +543,6 @@ img, svg { display: block; max-width: 100%; }
   30% { transform: translateY(-5px); opacity: 1; }
 }
 
-/* Empty state */
 .chat-empty {
   flex: 1;
   display: flex; flex-direction: column;
@@ -471,7 +556,6 @@ img, svg { display: block; max-width: 100%; }
 .chat-empty-title { font-size: 18px; font-weight: 800; color: var(--text); }
 .chat-empty-sub { font-size: 14px; max-width: 280px; line-height: 1.55; }
 
-/* Scaffold / suggestion chips */
 .scaffold-row {
   flex-shrink: 0;
   display: flex; gap: 8px;
@@ -491,7 +575,6 @@ img, svg { display: block; max-width: 100%; }
 }
 .scaffold-chip:active { background: rgba(var(--brand-rgb), 0.08); }
 
-/* ---- Input bar ---- */
 .chat-foot {
   flex-shrink: 0;
   display: flex; gap: 8px; align-items: flex-end;
@@ -517,7 +600,7 @@ img, svg { display: block; max-width: 100%; }
 .chat-send:active { transform: scale(.94); }
 .chat-send:disabled { opacity: .4; }
 
-/* ============ REVIEW (Saved Words) ============ */
+/* ---- REVIEW (Saved Words) ---- */
 .word-row {
   display: flex; align-items: center; gap: 12px;
   padding: 12px 14px; border-radius: 12px;
@@ -531,7 +614,7 @@ img, svg { display: block; max-width: 100%; }
 .word-row-play { width: 36px; height: 36px; border-radius: 50%; background: rgba(var(--brand-rgb), 0.12); color: var(--brand); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
 .word-row-play:active { background: var(--brand); color: #fff; }
 
-/* ============ SPEAK MODE ============ */
+/* ---- SPEAK MODE ---- */
 .speak-card {
   background: var(--card); border: 1px solid var(--border);
   border-radius: var(--radius-lg); padding: 32px 22px; text-align: center;
@@ -559,8 +642,9 @@ img, svg { display: block; max-width: 100%; }
 .speak-result.info { background: rgba(var(--brand-rgb), 0.06); border: 1px solid rgba(var(--brand-rgb), 0.25); color: var(--text); }
 .speak-result.warn { background: rgba(var(--gold-rgb), 0.08); border: 1px solid rgba(var(--gold-rgb), 0.35); }
 
-/* ============ SITUATIONS ============ */
+/* ---- SITUATIONS ---- */
 .situation-card {
+  position: relative;
   display: flex; align-items: center; gap: 14px;
   padding: 16px; border-radius: 12px;
   background: var(--card); border: 1.5px solid var(--border);
@@ -572,7 +656,7 @@ img, svg { display: block; max-width: 100%; }
 .situation-title { font-weight: 800; font-size: 15px; }
 .situation-desc { font-size: 12.5px; color: var(--text-2); margin-top: 3px; }
 
-/* ============ BUTTONS ============ */
+/* ---- BUTTONS ---- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   padding: 12px 20px; border-radius: var(--radius-full);
@@ -587,7 +671,7 @@ img, svg { display: block; max-width: 100%; }
 .btn-secondary { background: var(--text); color: var(--bg); }
 .btn-block { width: 100%; margin-top: 12px; }
 
-/* ============ MISC ============ */
+/* ---- MISC ---- */
 .empty-note { color: var(--text-2); font-size: 14px; text-align: center; padding: 40px 16px; }
 .empty-note strong { color: var(--text); display: block; font-size: 16px; margin-bottom: 6px; }
 .skel { background: linear-gradient(90deg, var(--border) 0%, var(--border-strong) 50%, var(--border) 100%); background-size: 200% 100%; animation: skel 1.2s infinite; border-radius: 8px; }
@@ -624,10 +708,10 @@ img, svg { display: block; max-width: 100%; }
     <span class="count" id="usage-count">—</span>
   </div>
 
-  <!-- Primary: Timmy AI chat -->
+  <!-- Primary: Timmy AI sections -->
   <div class="section-h">Talk with Timmy</div>
 
-  <button class="method-card" id="timmy-card-practice" onclick="Practice.openTimmy('practice')">
+  <button class="method-card" id="section-card-practice" data-section="practice" onclick="Practice.openSection('practice')">
     <div class="method-icon">🤓</div>
     <div class="method-body">
       <div class="method-title">Practice with Timmy</div>
@@ -636,7 +720,7 @@ img, svg { display: block; max-width: 100%; }
     <div class="method-chev">›</div>
   </button>
 
-  <button class="method-card tint-indigo" onclick="Practice.openTimmy('cultural')">
+  <button class="method-card tint-indigo" data-section="cultural" onclick="Practice.openSection('cultural')">
     <div class="method-icon">🎭</div>
     <div class="method-body">
       <div class="method-title">Cultural advice</div>
@@ -645,7 +729,7 @@ img, svg { display: block; max-width: 100%; }
     <div class="method-chev">›</div>
   </button>
 
-  <button class="method-card tint-gold" onclick="Practice.openTimmy('quick')">
+  <button class="method-card tint-gold" data-section="quick" onclick="Practice.openSection('quick')">
     <div class="method-icon">⚡</div>
     <div class="method-body">
       <div class="method-title">Quick translations</div>
@@ -680,7 +764,6 @@ img, svg { display: block; max-width: 100%; }
   <div class="section-h">Situations</div>
   <div id="situations-list"></div>
 
-  <!-- Usage reset info -->
   <div style="text-align: center; font-size: 12px; color: var(--text-3); padding: 24px 0 12px;">
     Timmy resets at midnight local time
   </div>
@@ -722,46 +805,130 @@ img, svg { display: block; max-width: 100%; }
   </button>
 </nav>
 
-<!-- TIMMY CHAT VIEW -->
+<!-- ============================================================
+     TIMMY VIEW — section chat list + chat thread
+     ============================================================ -->
 <div id="timmy-view">
-  <div class="chat-topbar">
-    <button class="chat-back" onclick="Practice.closeTimmy()" aria-label="Back">←</button>
-    <div class="chat-avatar" id="timmy-avatar">🤓</div>
-    <div class="chat-name" id="timmy-name">
-      <span id="timmy-title">Timmy</span>
-      <small id="timmy-sub">Timmy AI · Yorùbá</small>
-    </div>
-    <button class="chat-menu-btn" onclick="Practice.toggleMenu(event)" aria-label="Menu">⋮
-      <div class="chat-menu" id="timmy-menu">
-        <button onclick="Practice.exportChat()">📤 Export chat</button>
-        <button class="danger" onclick="Practice.clearChat()">🗑️ Clear this chat</button>
+
+  <!-- SUB-VIEW: SECTION CHAT LIST -->
+  <div id="timmy-section-view" style="display:none; flex-direction:column; height:100%; position:relative;">
+    <div class="chat-topbar">
+      <button class="chat-back" onclick="Practice.backToSections()" aria-label="Back">←</button>
+      <div class="chat-avatar" id="section-avatar">💬</div>
+      <div class="chat-name" id="section-name">
+        <span id="section-title">Section</span>
+        <small id="section-sub">All chats</small>
       </div>
-    </button>
+      <button class="chat-menu-btn" onclick="Practice.toggleSectionMenu(event)" aria-label="Menu">⋮
+        <div class="chat-menu" id="section-menu">
+          <button onclick="Practice.markSectionAllRead()">✅ Mark all as read</button>
+          <button onclick="Practice.deleteSectionChats()" class="danger">🗑️ Delete all chats</button>
+        </div>
+      </button>
+    </div>
+
+    <div class="chat-list-scroll" id="section-chat-list"></div>
+
+    <button class="chat-fab" onclick="Practice.createNewChatInSection()" aria-label="New chat">+</button>
   </div>
 
-  <div class="chat-scroll" id="timmy-scroll"></div>
+  <!-- SUB-VIEW: CHAT THREAD -->
+  <div id="timmy-chat-view" style="display:none; flex-direction:column; height:100%;">
+    <div class="chat-topbar">
+      <button class="chat-back" onclick="Practice.backToSectionList()" aria-label="Back">←</button>
+      <div class="chat-avatar" id="timmy-avatar">🤓</div>
+      <div class="chat-name" id="timmy-name">
+        <span id="timmy-title">Timmy</span>
+        <small id="timmy-sub">Timmy AI · Yorùbá</small>
+      </div>
+      <button class="chat-menu-btn" onclick="Practice.toggleChatMenu(event)" aria-label="Menu">⋮
+        <div class="chat-menu" id="timmy-menu">
+          <button onclick="Practice.exportCurrentChat()">📤 Export chat</button>
+          <button onclick="Practice.renameCurrentChat()">✏️ Rename</button>
+          <button class="danger" onclick="Practice.deleteCurrentChat()">🗑️ Delete this chat</button>
+        </div>
+      </button>
+    </div>
 
-  <div class="scaffold-row" id="scaffold-row" style="display:none;"></div>
-
-  <div class="chat-foot">
-    <textarea class="chat-input" id="timmy-input" rows="1" placeholder="Message Timmy…" autocomplete="off"></textarea>
-    <button class="chat-send" id="timmy-send" onclick="Practice.sendMessage()" aria-label="Send">➤</button>
+    <div class="chat-scroll" id="timmy-scroll"></div>
+    <div class="scaffold-row" id="scaffold-row" style="display:none;"></div>
+    <div class="chat-foot">
+      <textarea class="chat-input" id="timmy-input" rows="1" placeholder="Message Timmy…" autocomplete="off"></textarea>
+      <button class="chat-send" id="timmy-send" onclick="Practice.sendMessage()" aria-label="Send">➤</button>
+    </div>
   </div>
+
 </div>
 
 <script src="shared.js"></script>
 <script>
 /* ============================================================
-   PRACTICE TAB — persistent Timmy chat
+   PRACTICE TAB — section → chat list → chat view
+   Server-backed via /api/timmy-chats/*
    ============================================================ */
+
+const SECTIONS = {
+  practice: {
+    id: 'practice', emoji: '🤓', title: 'Practice with Timmy', subtitle: 'Practice conversation',
+    headerSub: (lang) => `Practice conversation in ${lang}`,
+    greeting: (lang, name) => {
+      const greets = { yoruba: 'Ẹ káàbọ̀', igbo: 'Ndeewo', hausa: 'Sannu', pidgin: 'How you dey', urhobo: 'Mavọ', itsekiri: 'Mavọ' };
+      const g = greets[State.currentLanguage] || 'Hello';
+      return `${g} ${name}! Ready to practice ${lang}? We can start with something simple, or you can type whatever you like.`;
+    }
+  },
+  cultural: {
+    id: 'cultural', emoji: '🎭', title: 'Cultural advice', subtitle: 'Nigerian culture',
+    headerSub: () => 'Ask about Nigerian customs and context',
+    greeting: (lang, name) => `Hi ${name}. I'm Timmy. Ask me anything about Nigerian culture — ${lang} traditions, food, family customs, respect, proverbs, or everyday life. I'll keep it real.`
+  },
+  quick: {
+    id: 'quick', emoji: '⚡', title: 'Quick translations', subtitle: 'Translations',
+    headerSub: () => 'Fast translations and explanations',
+    greeting: (lang, name) => `Hi ${name}. Give me any word or phrase and I'll translate it into ${lang} with pronunciation. Or type a ${lang} word you heard and I'll break it down.`
+  },
+  greeting_parent: {
+    id: 'greeting_parent', emoji: '🏠', title: 'Greeting a parent', subtitle: 'Respectful greetings',
+    headerSub: () => 'Respectful morning and evening greetings',
+    greeting: (lang, name) => `Hi ${name}. Let's practice greeting an older family member in ${lang}. You play the younger person, I'll play the elder.`
+  },
+  meeting_friend: {
+    id: 'meeting_friend', emoji: '👋', title: 'Meeting a friend', subtitle: 'Casual greetings',
+    headerSub: () => 'Casual, warm, and natural',
+    greeting: (lang, name) => `Alright ${name}! Let's do a casual, friendly greeting with a peer in ${lang}. No formal stuff, just how you'd actually talk.`
+  },
+  market: {
+    id: 'market', emoji: '🛒', title: 'At the market', subtitle: 'Buying and haggling',
+    headerSub: () => 'Asking prices and haggling politely',
+    greeting: (lang, name) => `Let's do a market scene in ${lang}, ${name}. You're the buyer, I'm the seller. Try to ask for the price of tomatoes.`
+  },
+  meal_sharing: {
+    id: 'meal_sharing', emoji: '🍲', title: 'Sharing a meal', subtitle: 'Offering food',
+    headerSub: () => 'Offering and accepting food',
+    greeting: (lang, name) => `Let's practice a Nigerian meal-sharing conversation in ${lang}. I'll offer food, you accept or politely decline.`
+  },
+  directions: {
+    id: 'directions', emoji: '🚗', title: 'Asking for directions', subtitle: 'Finding your way',
+    headerSub: () => 'Finding your way without a phone',
+    greeting: (lang, name) => `Okay ${name}, you're lost in a Nigerian city and need to ask for directions in ${lang}. I'm a stranger on the street. Ask away.`
+  },
+  showing_respect: {
+    id: 'showing_respect', emoji: '🙏', title: 'Showing respect', subtitle: 'Words for elders',
+    headerSub: () => 'The right words for elders',
+    greeting: (lang, name) => `Let's practice showing respect to an elder in ${lang}, ${name}. These phrases matter a lot — get them right and people will smile.`
+  }
+};
+
 const Practice = {
   user: null,
-  messages: [],           // in-memory thread
+  messages: [],
   sending: false,
-  pendingSeed: null,
-  mode: 'practice',
+  currentSection: null,
+  currentChatId: null,
 
-  /* ---------- Boot ---------- */
+  // In-memory cache of chat metadata per section (from server)
+  _sectionsCache: {},
+
   async init() {
     const ok = await cwBoot();
     if (!ok) return;
@@ -774,7 +941,16 @@ const Practice = {
     this.renderSituations();
     this.renderSavedCount();
     this.loadUsage();
-    this.renderUnreadBadge();
+
+    // Flush any queued offline messages
+    this.flushOfflineQueue().catch(() => {});
+
+    // One-time migration of local-only chats to the server
+    this.maybeImportLocalChats().then(() => {
+      if (window.Badges) Badges.refresh();
+    }).catch(() => {
+      if (window.Badges) Badges.refresh();
+    });
 
     State.on('hydrated', () => {
       this.user = State.user;
@@ -783,11 +959,15 @@ const Practice = {
     State.on('language:changed', () => {
       this.setupLangSlots();
       this.renderSituations();
-      this.renderUnreadBadge();
+      this._sectionsCache = {};
+      if (window.Badges) Badges.refresh();
     });
 
-    // Retry any queued offline messages
-    this.flushOfflineQueue();
+    // Badges.start() already runs from cwBoot, but re-render section badges
+    // as soon as the unread snapshot updates.
+    State.on('unread:changed', () => {
+      if (window.Badges) Badges.renderTimmySectionBadges();
+    });
   },
 
   setupLangSlots() {
@@ -797,7 +977,6 @@ const Practice = {
     document.title = `ClearWords — Practice (${langCfg.name})`;
   },
 
-  /* ---------- Usage bar ---------- */
   async loadUsage() {
     try {
       const u = await Backend.getAIUsage();
@@ -820,12 +999,9 @@ const Practice = {
         if (label) label.textContent = 'Unlimited Timmy messages';
         return;
       }
-
       count.textContent = remaining + ' / ' + limit;
-
       if (remaining === 0) bar.classList.add('limit');
       else if (remaining <= limit * 0.15) bar.classList.add('warning');
-
       if (label) {
         label.textContent = remaining === 0
           ? 'Daily limit reached — resets at midnight'
@@ -837,7 +1013,6 @@ const Practice = {
     }
   },
 
-  /* ---------- Saved words count ---------- */
   renderSavedCount() {
     const el = document.getElementById('saved-count-text');
     if (!el) return;
@@ -847,22 +1022,19 @@ const Practice = {
       : "Review words you've saved during lessons";
   },
 
-  /* ---------- Situations ---------- */
   renderSituations() {
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    const container = document.getElementById('situations-list');
+    if (!container) return;
     const items = [
-      { icon: '🏠', title: 'Greeting a parent',      desc: 'Respectful morning and evening greetings', prompt: 'Practice greetings with an older family member in ' + langCfg.name + '. I will play the younger person.' },
-      { icon: '👋', title: 'Meeting a friend',       desc: 'Casual, warm, and natural',                prompt: 'Practice a casual, friendly greeting with a peer in ' + langCfg.name + '.' },
-      { icon: '🛒', title: 'At the market',          desc: 'Asking prices and haggling politely',      prompt: 'Practice a market conversation in ' + langCfg.name + '. I want to buy tomatoes and ask the price.' },
-      { icon: '🍲', title: 'Sharing a meal',         desc: 'Offering and accepting food',              prompt: 'Practice a Nigerian meal-sharing conversation in ' + langCfg.name + '.' },
-      { icon: '🚗', title: 'Asking for directions',  desc: 'Finding your way without a phone',         prompt: 'Practice asking for directions in ' + langCfg.name + '. I am lost and asking a stranger.' },
-      { icon: '🙏', title: 'Showing respect',        desc: 'The right words for elders',               prompt: 'Practice showing respect to an elder in ' + langCfg.name + ' using the right phrases.' }
+      { id: 'greeting_parent',  icon: '🏠', title: 'Greeting a parent',      desc: 'Respectful morning and evening greetings' },
+      { id: 'meeting_friend',   icon: '👋', title: 'Meeting a friend',       desc: 'Casual, warm, and natural' },
+      { id: 'market',           icon: '🛒', title: 'At the market',          desc: 'Asking prices and haggling politely' },
+      { id: 'meal_sharing',     icon: '🍲', title: 'Sharing a meal',         desc: 'Offering and accepting food' },
+      { id: 'directions',       icon: '🚗', title: 'Asking for directions',  desc: 'Finding your way without a phone' },
+      { id: 'showing_respect',  icon: '🙏', title: 'Showing respect',        desc: 'The right words for elders' }
     ];
-
-    const list = document.getElementById('situations-list');
-    if (!list) return;
-    list.innerHTML = items.map(s => `
-      <button class="situation-card" onclick='Practice.startSituation(${JSON.stringify(s.prompt).replace(/'/g, "\\'")})'>
+    container.innerHTML = items.map(s => `
+      <button class="situation-card" data-section="${s.id}" onclick="Practice.openSection('${s.id}')">
         <div class="situation-icon">${s.icon}</div>
         <div class="situation-body">
           <div class="situation-title">${esc(s.title)}</div>
@@ -872,210 +1044,446 @@ const Practice = {
       </button>`).join('');
   },
 
-  startSituation(prompt) {
-    this.openTimmy('practice', prompt);
-  },
-
   /* ============================================================
      STORAGE — server + local cache
      ============================================================ */
 
-  localCacheKey(lang) {
-    return 'cw_timmy_cache_' + (lang || State.currentLanguage);
+  _localSectionsKey(lang)  { return 'cw_timmy_cache_sections_' + (lang || State.currentLanguage); },
+  _localChatKey(lang, sid, cid) {
+    return `cw_timmy_chat_full_${lang || State.currentLanguage}_${sid}_${cid}`;
   },
-  migrationFlagKey(lang) {
-    return 'cw_timmy_migrated_' + (lang || State.currentLanguage);
-  },
-  lastReadKey(lang) {
-    return 'cw_timmy_lastread_' + (lang || State.currentLanguage);
-  },
-  offlineQueueKey() {
-    return 'cw_timmy_offline_queue';
-  },
+  _offlineQueueKey()       { return 'cw_timmy_offline_queue_v2'; },
+  _migrationFlagKey(lang)  { return 'cw_timmy_migrated_v2_' + (lang || State.currentLanguage); },
 
-  loadThreadSync(lang) {
-    // Synchronous local-cache read so first paint is instant
-    const key = lang || State.currentLanguage;
+  /**
+   * Fetch the list of chats in a section (metadata only).
+   * Falls back to local cache if offline.
+   */
+  async loadSectionChats(sectionId, { force = false } = {}) {
+    const lang = State.currentLanguage;
+
+    if (!force && this._sectionsCache[sectionId]) {
+      return this._sectionsCache[sectionId];
+    }
+
     try {
-      const raw = localStorage.getItem(this.localCacheKey(key));
-      if (raw) {
-        const arr = JSON.parse(raw);
-        if (Array.isArray(arr)) return arr;
+      const res = await Backend.listTimmyChats(sectionId, lang);
+      const chats = {};
+      for (const c of (res.chats || [])) {
+        chats[c.chatId] = {
+          id: c.chatId,
+          title: c.title,
+          unreadCount: c.unreadCount || 0,
+          lastMessageAt: c.lastMessageAt ? new Date(c.lastMessageAt).getTime() : 0,
+          messageCount: c.messageCount || 0,
+          lastMessage: c.lastMessage || null,
+          messages: null
+        };
       }
-      // Legacy key migration
-      const legacy = localStorage.getItem('cw_timmy_chat_' + key);
-      if (legacy) {
-        const arr = JSON.parse(legacy);
-        if (Array.isArray(arr)) return arr;
-      }
-    } catch {}
-    return [];
+      this._sectionsCache[sectionId] = chats;
+
+      // Persist metadata-only snapshot for offline
+      try {
+        const allCached = JSON.parse(localStorage.getItem(this._localSectionsKey(lang)) || '{}');
+        allCached[sectionId] = chats;
+        localStorage.setItem(this._localSectionsKey(lang), JSON.stringify(allCached));
+      } catch {}
+
+      return chats;
+    } catch (e) {
+      console.warn('loadSectionChats failed, using cache:', e.message);
+      try {
+        const allCached = JSON.parse(localStorage.getItem(this._localSectionsKey(lang)) || '{}');
+        this._sectionsCache[sectionId] = allCached[sectionId] || {};
+        return this._sectionsCache[sectionId];
+      } catch { return {}; }
+    }
   },
 
-  writeLocalCache(lang, messages) {
+  /**
+   * Fetch full messages for a single chat.
+   * Cached locally for instant paint; refreshed in background.
+   */
+  async loadChat(sectionId, chatId) {
+    const lang = State.currentLanguage;
+    const key = this._localChatKey(lang, sectionId, chatId);
+
+    let cached = null;
     try {
-      localStorage.setItem(
-        this.localCacheKey(lang),
-        JSON.stringify((messages || []).slice(-80))
-      );
+      const raw = localStorage.getItem(key);
+      if (raw) cached = JSON.parse(raw);
     } catch {}
-  },
 
-  async refreshThreadFromServer(lang) {
-    const key = lang || State.currentLanguage;
-    try {
-      const res = await Backend.getTimmyThread(key);
-      const serverMsgs = res.messages || [];
+    const refresh = async () => {
+      try {
+        const res = await Backend.getTimmyChat(sectionId, chatId);
+        const chat = res.chat;
+        const messages = (chat.messages || []).map(m => ({
+          id: m._id,
+          role: m.role,
+          content: m.content,
+          ts: new Date(m.ts).getTime(),
+          isError: !!m.isError
+        }));
 
-      // One-time migration: if server has nothing but we have local history
-      const alreadyMigrated = localStorage.getItem(this.migrationFlagKey(key));
-      if (!serverMsgs.length && !alreadyMigrated) {
-        let localOnly = [];
         try {
-          const raw = localStorage.getItem(this.localCacheKey(key))
-            || localStorage.getItem('cw_timmy_chat_' + key);
-          if (raw) localOnly = JSON.parse(raw) || [];
+          localStorage.setItem(key, JSON.stringify({ chat, messages }));
         } catch {}
 
-        if (localOnly.length) {
-          try {
-            await Backend.importTimmyThread(key, localOnly, true);
-            localStorage.setItem(this.migrationFlagKey(key), '1');
-            const fresh = await Backend.getTimmyThread(key);
-            this.applyServerMessages(fresh.messages || []);
-            return;
-          } catch (e) {
-            console.warn('Timmy migration failed:', e.message);
-          }
-        } else {
-          localStorage.setItem(this.migrationFlagKey(key), '1');
+        if (!this._sectionsCache[sectionId]) this._sectionsCache[sectionId] = {};
+        const existing = this._sectionsCache[sectionId][chatId] || {};
+        this._sectionsCache[sectionId][chatId] = {
+          ...existing,
+          id: chatId,
+          title: chat.title,
+          unreadCount: 0,
+          lastMessageAt: chat.lastMessageAt ? new Date(chat.lastMessageAt).getTime() : 0,
+          messageCount: chat.messageCount || messages.length,
+          lastMessage: messages.length
+            ? { role: messages[messages.length - 1].role, content: messages[messages.length - 1].content, ts: messages[messages.length - 1].ts }
+            : null,
+          messages
+        };
+
+        if (this.currentChatId === chatId && messages.length >= this.messages.length) {
+          this.messages = messages;
+          this.renderChat();
+          this.scrollToBottom();
         }
+
+        return { chat, messages };
+      } catch (e) {
+        console.warn('loadChat refresh failed:', e.message);
+        return null;
       }
+    };
 
-      this.applyServerMessages(serverMsgs);
-    } catch (e) {
-      console.warn('Timmy refresh failed:', e.message);
+    if (cached && cached.messages) {
+      refresh().then(() => this.renderScaffold());
+      return cached;
     }
+
+    return await refresh();
   },
 
-  applyServerMessages(serverMsgs) {
-    const mapped = (serverMsgs || []).map(m => ({
-      id: m._id,
-      role: m.role,
-      content: m.content,
-      ts: new Date(m.ts).getTime(),
-      isError: !!m.isError
-    }));
-
-    // Only apply if server's list is >= in-memory length
-    // (protects freshly-sent-but-not-yet-synced messages)
-    if (mapped.length >= this.messages.length) {
-      this.messages = mapped;
-      this.writeLocalCache(State.currentLanguage, mapped);
-      this.renderChat();
-      this.scrollToBottom();
-    }
-  },
-
-  markThreadRead(lang) {
-    const key = lang || State.currentLanguage;
+  /**
+   * Queue a message locally when the server is unreachable.
+   */
+  queueOffline(item) {
     try {
-      localStorage.setItem(this.lastReadKey(key), String(Date.now()));
-    } catch {}
-    Backend.markTimmyRead(key).catch(() => {});
-    this.renderUnreadBadge();
-  },
-
-  /* ============================================================
-     OFFLINE QUEUE — persists messages when backend is unreachable
-     ============================================================ */
-
-  queueOffline(lang, role, content, isError) {
-    try {
-      const raw = localStorage.getItem(this.offlineQueueKey());
+      const raw = localStorage.getItem(this._offlineQueueKey());
       const queue = raw ? JSON.parse(raw) : [];
-      queue.push({
-        lang: lang || State.currentLanguage,
-        role, content, isError: !!isError,
-        ts: Date.now()
-      });
-      localStorage.setItem(this.offlineQueueKey(), JSON.stringify(queue.slice(-200)));
+      queue.push({ ...item, ts: Date.now() });
+      localStorage.setItem(this._offlineQueueKey(), JSON.stringify(queue.slice(-200)));
     } catch {}
   },
 
   async flushOfflineQueue() {
     let queue = [];
     try {
-      const raw = localStorage.getItem(this.offlineQueueKey());
+      const raw = localStorage.getItem(this._offlineQueueKey());
       queue = raw ? JSON.parse(raw) : [];
     } catch {}
-
     if (!queue.length) return;
 
     const remaining = [];
     for (const item of queue) {
       try {
-        await Backend.appendTimmyMessage(item.lang, item.role, item.content, item.isError);
-      } catch (e) {
-        // Still offline or rejected — keep it for next time
+        await Backend.appendTimmyChatMessage(item.sectionId, item.chatId, item.role, item.content, item.isError);
+      } catch {
         remaining.push(item);
       }
     }
-
     try {
       if (remaining.length) {
-        localStorage.setItem(this.offlineQueueKey(), JSON.stringify(remaining));
+        localStorage.setItem(this._offlineQueueKey(), JSON.stringify(remaining));
       } else {
-        localStorage.removeItem(this.offlineQueueKey());
+        localStorage.removeItem(this._offlineQueueKey());
       }
     } catch {}
   },
 
-  /* ============================================================
-     UNREAD BADGE
-     ============================================================ */
-  async renderUnreadBadge() {
-    const card = document.getElementById('timmy-card-practice');
-    if (!card) return;
-    card.querySelector('.method-badge')?.remove();
+  /**
+   * One-time push of local-only chats to the server.
+   * Runs the first time a user loads the app after the update.
+   */
+  async maybeImportLocalChats() {
+    const lang = State.currentLanguage;
+    if (localStorage.getItem(this._migrationFlagKey(lang))) return;
 
-    const thread = this.messages.length
-      ? this.messages
-      : this.loadThreadSync(State.currentLanguage);
+    try {
+      // Old v2 shape: cw_timmy_sections_<lang> = { practice: { chats: {...} } }
+      const legacy = JSON.parse(localStorage.getItem('cw_timmy_sections_' + lang) || '{}');
+      const threads = [];
+      for (const [sid, s] of Object.entries(legacy)) {
+        if (!SECTIONS[sid]) continue;
+        for (const [cid, c] of Object.entries(s.chats || {})) {
+          if (Array.isArray(c.messages) && c.messages.length) {
+            threads.push({
+              sectionId: sid,
+              chatId: cid,
+              title: c.title || SECTIONS[sid].title,
+              messages: c.messages
+            });
+          }
+        }
+      }
 
-    const lastReadAt = parseInt(
-      localStorage.getItem(this.lastReadKey(State.currentLanguage)) || '0',
-      10
-    );
-    let unread = thread.filter(m => m.role === 'assistant' && (m.ts || 0) > lastReadAt).length;
+      // Older single-thread keys
+      const oldKeys = ['cw_timmy_chat_' + lang, 'cw_timmy_cache_' + lang, 'cw_chat_practice_' + lang, 'cw_chat_cultural_' + lang, 'cw_chat_quick_' + lang];
+      for (const k of oldKeys) {
+        try {
+          const raw = localStorage.getItem(k);
+          if (!raw) continue;
+          const arr = JSON.parse(raw);
+          if (!Array.isArray(arr) || !arr.length) continue;
+          let sid = 'practice';
+          if (k.includes('cultural')) sid = 'cultural';
+          else if (k.includes('quick')) sid = 'quick';
+          threads.push({
+            sectionId: sid,
+            chatId: 'migrated_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+            title: SECTIONS[sid]?.title || 'Chat',
+            messages: arr
+          });
+          localStorage.removeItem(k);
+        } catch {}
+      }
 
-    // If zero locally, ask the server in case another device wrote
-    if (unread === 0) {
-      try {
-        const res = await Backend.getTimmyUnread();
-        unread = res.unread?.[State.currentLanguage] || 0;
-      } catch {}
+      if (threads.length) {
+        await Backend.importTimmyChats(lang, threads);
+        console.log(`[Timmy] Imported ${threads.length} local chats to server`);
+      }
+      localStorage.setItem(this._migrationFlagKey(lang), '1');
+    } catch (e) {
+      console.warn('maybeImportLocalChats failed:', e.message);
     }
+  },
 
-    if (unread > 0) {
-      const badge = document.createElement('span');
-      badge.className = 'method-badge';
-      badge.textContent = unread > 99 ? '99+' : String(unread);
-      card.appendChild(badge);
+  /**
+   * Mark a chat as read on the server.
+   */
+  async markChatReadServer(sectionId, chatId) {
+    try {
+      await Backend.markTimmyChatRead(sectionId, chatId);
+      if (this._sectionsCache[sectionId]?.[chatId]) {
+        this._sectionsCache[sectionId][chatId].unreadCount = 0;
+      }
+      State.emit('timmy:chat-read', { sectionId, chatId });
+    } catch (e) {
+      console.warn('markChatReadServer failed:', e.message);
     }
   },
 
   /* ============================================================
-     OPEN TIMMY CHAT
+     NAVIGATION
      ============================================================ */
-  openTimmy(mode, seedPrompt) {
-    this.mode = mode || 'practice';
-    this.pendingSeed = seedPrompt || null;
 
+  async openSection(sectionId) {
+    const section = SECTIONS[sectionId];
+    if (!section) return;
+    this.currentSection = sectionId;
+    this.currentChatId = null;
+
+    this.showOverlay();
+    document.getElementById('timmy-section-view').style.display = 'flex';
+    document.getElementById('timmy-chat-view').style.display = 'none';
+
+    this.renderSectionHeader(sectionId);
+
+    const list = document.getElementById('section-chat-list');
+    list.innerHTML = '<div class="modal-loading">Loading chats…</div>';
+
+    await this.loadSectionChats(sectionId, { force: true });
+    this.renderSectionChatList(sectionId);
+  },
+
+  renderSectionHeader(sectionId) {
+    const section = SECTIONS[sectionId];
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    document.getElementById('section-avatar').textContent = section.emoji;
+    document.getElementById('section-title').textContent = section.title;
+    document.getElementById('section-sub').textContent = section.headerSub
+      ? section.headerSub(langCfg.name)
+      : section.subtitle || 'All chats';
+  },
+
+  renderSectionChatList(sectionId) {
+    const host = document.getElementById('section-chat-list');
+    if (!host) return;
+
+    const chatsObj = this._sectionsCache[sectionId] || {};
+    const chats = Object.values(chatsObj)
+      .sort((a, b) => (b.lastMessageAt || 0) - (a.lastMessageAt || 0));
+
+    if (!chats.length) {
+      host.innerHTML = `
+        <div class="chat-list-empty">
+          <div class="chat-list-empty-emoji">💬</div>
+          <div class="chat-list-empty-title">No chats yet</div>
+          <div class="chat-list-empty-sub">Tap + to start a new conversation in this section.</div>
+        </div>`;
+      return;
+    }
+
+    host.innerHTML = chats.map(c => {
+      let preview = 'No messages yet';
+      if (c.lastMessage?.content) {
+        preview = String(c.lastMessage.content).replace(/<[^>]+>/g, '').trim();
+        if (c.lastMessage.role === 'assistant') preview = 'T: ' + preview;
+      } else if (Array.isArray(c.messages) && c.messages.length) {
+        preview = this.previewOf(c.messages[c.messages.length - 1]);
+      }
+      if (preview.length > 60) preview = preview.slice(0, 60) + '…';
+
+      const time = this.shortTime(c.lastMessageAt);
+      const unread = c.unreadCount || 0;
+      const count = c.messageCount || (c.messages?.length || 0);
+
+      return `
+        <button class="chat-list-item" onclick="Practice.openChat('${c.id}')">
+          <div class="chat-list-avatar">${SECTIONS[sectionId].emoji}</div>
+          <div class="chat-list-body">
+            <div class="chat-list-title">${esc(c.title || 'New chat')}</div>
+            <div class="chat-list-preview">${esc(preview)}</div>
+          </div>
+          <div class="chat-list-meta">
+            <div class="chat-list-time">${esc(time)}</div>
+            ${unread > 0
+              ? `<div class="chat-list-unread">${unread > 99 ? '99+' : unread}</div>`
+              : `<div class="chat-list-count">${count} msg${count === 1 ? '' : 's'}</div>`}
+          </div>
+        </button>`;
+    }).join('');
+  },
+
+  previewOf(msg) {
+    if (!msg) return 'No messages yet';
+    let t = String(msg.content || '').replace(/<[^>]+>/g, '').trim().replace(/\s+/g, ' ');
+    if (msg.role === 'assistant') t = 'T: ' + t;
+    return t.length > 60 ? t.slice(0, 60) + '…' : t;
+  },
+
+  shortTime(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    const now = new Date();
+    const sameDay = d.toDateString() === now.toDateString();
+    const diffMs = now - d;
+    const diffMin = Math.floor(diffMs / 60000);
+    if (diffMin < 1) return 'now';
+    if (diffMin < 60) return diffMin + 'm';
+    if (sameDay) return d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    const yesterday = new Date(); yesterday.setDate(now.getDate() - 1);
+    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+    const diffDays = Math.floor(diffMs / 86400000);
+    if (diffDays < 7) return diffDays + 'd';
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  },
+
+  async createNewChatInSection() {
+    if (!this.currentSection) return;
+    const sectionId = this.currentSection;
+    const section = SECTIONS[sectionId];
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    const firstName = (this.user?.fullName || 'friend').split(' ')[0];
+
+    const chatId = 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+    const greeting = section.greeting
+      ? section.greeting(langCfg.name, firstName)
+      : `Hi ${firstName}! Let's start.`;
+
+    // Optimistic cache entry so the list has it immediately
+    if (!this._sectionsCache[sectionId]) this._sectionsCache[sectionId] = {};
+    this._sectionsCache[sectionId][chatId] = {
+      id: chatId,
+      title: section.title,
+      unreadCount: 0,
+      lastMessageAt: Date.now(),
+      messageCount: 1,
+      lastMessage: { role: 'assistant', content: greeting, ts: Date.now() },
+      messages: [{ id: 'a_' + Date.now(), role: 'assistant', content: greeting, ts: Date.now() }]
+    };
+
+    try {
+      await Backend.createTimmyChat({
+        sectionId,
+        language: State.currentLanguage,
+        chatId,
+        title: section.title,
+        greeting
+      });
+    } catch (e) {
+      console.warn('createTimmyChat failed:', e.message);
+      showToast('Could not sync new chat. It will retry.', 'error');
+    }
+
+    this.openChat(chatId);
+  },
+
+  async openChat(chatId) {
+    const sectionId = this.currentSection;
+    if (!sectionId) return;
+
+    this.currentChatId = chatId;
+
+    const section = SECTIONS[sectionId];
+    const meta = this._sectionsCache[sectionId]?.[chatId] || { title: section.title };
+    this.renderChatHeader(sectionId, meta);
+
+    document.getElementById('timmy-section-view').style.display = 'none';
+    document.getElementById('timmy-chat-view').style.display = 'flex';
+    document.getElementById('timmy-scroll').innerHTML = '<div class="modal-loading">Loading messages…</div>';
+
+    const result = await this.loadChat(sectionId, chatId);
+    this.messages = result?.messages || [];
+
+    this.renderChat();
+    this.scrollToBottom();
+    this.renderScaffold();
+
+    await this.markChatReadServer(sectionId, chatId);
+    if (window.Badges) Badges.refresh();
+
+    setTimeout(() => {
+      const inp = document.getElementById('timmy-input');
+      if (inp) inp.focus();
+    }, 250);
+  },
+
+  renderChatHeader(sectionId, chat) {
+    const section = SECTIONS[sectionId];
+    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    document.getElementById('timmy-avatar').textContent = section.emoji;
+    document.getElementById('timmy-title').textContent = chat.title || section.title;
+    document.getElementById('timmy-sub').textContent = section.headerSub
+      ? section.headerSub(langCfg.name)
+      : `${section.title} · ${langCfg.name}`;
+    const input = document.getElementById('timmy-input');
+    if (input) input.placeholder = `Message Timmy in ${langCfg.name}…`;
+  },
+
+  backToSectionList() {
+    if (!this.currentSection) { this.closeOverlay(); return; }
+    this.currentChatId = null;
+    this.messages = [];
+    document.getElementById('timmy-chat-view').style.display = 'none';
+    document.getElementById('timmy-section-view').style.display = 'flex';
+    this.renderSectionChatList(this.currentSection);
+    if (window.Badges) Badges.refresh();
+  },
+
+  backToSections() {
+    this.currentSection = null;
+    this.currentChatId = null;
+    this.closeOverlay();
+    if (window.Badges) Badges.refresh();
+  },
+
+  showOverlay() {
     const view = document.getElementById('timmy-view');
     view.classList.add('active');
-
-    // Lock background scroll
+    view.style.display = 'flex';
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
@@ -1084,62 +1492,12 @@ const Practice = {
     document.body.style.right = '0';
     document.body.style.width = '100%';
     document.body.style.height = '100%';
-
-    this.updateHeaderForMode();
-
-    // 1. Instant paint from local cache
-    this.messages = this.loadThreadSync(State.currentLanguage);
-    this.renderChat();
-    this.scrollToBottom();
-
-    // 2. Background refresh from server
-    this.refreshThreadFromServer(State.currentLanguage).then(() => {
-      this.renderScaffold();
-    });
-
-    // 3. Seed prompt if provided AND thread is empty or very short
-    setTimeout(() => {
-      if (this.pendingSeed && this.messages.length <= 1) {
-        const seed = this.pendingSeed;
-        this.pendingSeed = null;
-        const inp = document.getElementById('timmy-input');
-        if (inp) inp.value = seed;
-        this.sendMessage();
-      } else {
-        this.pendingSeed = null;
-      }
-      // Focus input for immediate typing
-      const inp = document.getElementById('timmy-input');
-      if (inp && !seedPrompt) inp.focus();
-    }, 250);
-
-    // 4. Mark read
-    this.markThreadRead(State.currentLanguage);
-    this.renderScaffold();
   },
 
-  updateHeaderForMode() {
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
-    const modes = {
-      practice: { emoji: '🤓', title: 'Timmy', sub: `Timmy AI · ${langCfg.name}` },
-      cultural: { emoji: '🎭', title: 'Timmy · Culture', sub: `Nigerian culture · ${langCfg.name}` },
-      quick:    { emoji: '⚡', title: 'Timmy · Quick', sub: `Translations · ${langCfg.name}` }
-    };
-    const m = modes[this.mode] || modes.practice;
-    const avatar = document.getElementById('timmy-avatar');
-    const title = document.getElementById('timmy-title');
-    const sub = document.getElementById('timmy-sub');
-    if (avatar) avatar.textContent = m.emoji;
-    if (title) title.textContent = m.title;
-    if (sub) sub.textContent = m.sub;
-
-    const input = document.getElementById('timmy-input');
-    if (input) input.placeholder = `Message Timmy in ${langCfg.name}…`;
-  },
-
-  closeTimmy() {
-    document.getElementById('timmy-view').classList.remove('active');
-
+  closeOverlay() {
+    const view = document.getElementById('timmy-view');
+    view.classList.remove('active');
+    view.style.display = 'none';
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
     document.body.style.position = '';
@@ -1148,21 +1506,65 @@ const Practice = {
     document.body.style.right = '';
     document.body.style.width = '';
     document.body.style.height = '';
-
-    this.writeLocalCache(State.currentLanguage, this.messages);
-    this.markThreadRead(State.currentLanguage);
     this.loadUsage();
   },
 
-  toggleMenu(e) {
+  /* ============================================================
+     MENUS
+     ============================================================ */
+  toggleSectionMenu(e) {
+    e.stopPropagation();
+    const menu = document.getElementById('section-menu');
+    if (menu) menu.classList.toggle('show');
+  },
+
+  toggleChatMenu(e) {
     e.stopPropagation();
     const menu = document.getElementById('timmy-menu');
     if (menu) menu.classList.toggle('show');
   },
 
-  exportChat() {
+  async markSectionAllRead() {
+    if (!this.currentSection) return;
+    const sectionId = this.currentSection;
+    try {
+      await Backend.markTimmySectionRead(sectionId);
+      if (this._sectionsCache[sectionId]) {
+        for (const c of Object.values(this._sectionsCache[sectionId])) c.unreadCount = 0;
+      }
+      document.getElementById('section-menu')?.classList.remove('show');
+      this.renderSectionChatList(sectionId);
+      State.emit('timmy:section-cleared', { sectionId });
+      if (window.Badges) Badges.refresh();
+      showToast('Marked all as read', 'success');
+    } catch (e) {
+      showToast(e.message || 'Could not mark as read', 'error');
+    }
+  },
+
+  async deleteSectionChats() {
+    if (!this.currentSection) return;
+    const sectionId = this.currentSection;
+    const section = SECTIONS[sectionId];
+    if (!confirm(`Delete ALL chats in "${section.title}"? This cannot be undone.`)) return;
+
+    this._sectionsCache[sectionId] = {};
+    try {
+      await Backend.deleteTimmySection(sectionId);
+    } catch (e) {
+      console.warn('deleteTimmySection failed:', e.message);
+    }
+    document.getElementById('section-menu')?.classList.remove('show');
+    this.renderSectionChatList(sectionId);
+    State.emit('timmy:section-cleared', { sectionId });
+    if (window.Badges) Badges.refresh();
+    showToast('Section cleared', 'info');
+  },
+
+  exportCurrentChat() {
+    if (!this.currentChatId || !this.currentSection) return;
     const lines = this.messages.map(m => `[${m.role.toUpperCase()}] ${m.content}`);
-    const text = `ClearWords chat export\nLanguage: ${State.currentLanguage}\nDate: ${new Date().toISOString()}\n\n${lines.join('\n\n')}`;
+    const text = `ClearWords chat export\nSection: ${SECTIONS[this.currentSection].title}\nLanguage: ${State.currentLanguage}\nDate: ${new Date().toISOString()}\n\n${lines.join('\n\n')}`;
     const blob = new Blob([text], { type: 'text/plain' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -1173,22 +1575,54 @@ const Practice = {
     document.getElementById('timmy-menu')?.classList.remove('show');
   },
 
-  clearChat() {
-    if (!confirm('Clear this conversation?')) return;
-    this.messages = [];
+  async renameCurrentChat() {
+    if (!this.currentChatId || !this.currentSection) return;
+    const current = this._sectionsCache[this.currentSection]?.[this.currentChatId];
+    const newTitle = prompt('Rename this chat:', current?.title || 'New chat');
+    if (newTitle == null) return;
+    const trimmed = newTitle.trim();
+    if (!trimmed) return;
+
     try {
-      localStorage.removeItem(this.localCacheKey(State.currentLanguage));
-      localStorage.removeItem('cw_timmy_chat_' + State.currentLanguage);
-    } catch {}
-    Backend.clearTimmyThread(State.currentLanguage).catch(() => {});
+      await Backend.renameTimmyChat(this.currentSection, this.currentChatId, trimmed);
+      if (current) current.title = trimmed;
+      this.renderChatHeader(this.currentSection, { title: trimmed });
+      showToast('Renamed', 'success');
+    } catch (e) {
+      showToast(e.message || 'Could not rename', 'error');
+    }
     document.getElementById('timmy-menu')?.classList.remove('show');
-    this.openTimmy(this.mode);
+  },
+
+  async deleteCurrentChat() {
+    if (!this.currentChatId || !this.currentSection) return;
+    if (!confirm('Delete this chat permanently?')) return;
+
+    const sectionId = this.currentSection;
+    const chatId = this.currentChatId;
+
+    if (this._sectionsCache[sectionId]?.[chatId]) {
+      delete this._sectionsCache[sectionId][chatId];
+    }
+
+    try {
+      await Backend.deleteTimmyChat(sectionId, chatId);
+    } catch (e) {
+      console.warn('deleteTimmyChat failed:', e.message);
+    }
+
+    try { localStorage.removeItem(this._localChatKey(State.currentLanguage, sectionId, chatId)); } catch {}
+
+    document.getElementById('timmy-menu')?.classList.remove('show');
+    State.emit('timmy:chat-read', { sectionId, chatId });
+    if (window.Badges) Badges.refresh();
+    showToast('Chat deleted', 'info');
+    this.backToSectionList();
   },
 
   /* ============================================================
-     RENDERING
+     CHAT RENDERING
      ============================================================ */
-
   renderChat() {
     const scroll = document.getElementById('timmy-scroll');
     if (!scroll) return;
@@ -1196,17 +1630,15 @@ const Practice = {
     if (!this.messages.length) {
       scroll.innerHTML = `
         <div class="chat-empty">
-          <div class="chat-empty-emoji">🤓</div>
-          <div class="chat-empty-title">Hi, I'm Timmy</div>
-          <div class="chat-empty-sub">Type a message below, or tap a suggestion to start practicing ${CW_CONFIG.LANGUAGES[State.currentLanguage].name}.</div>
+          <div class="chat-empty-emoji">${SECTIONS[this.currentSection]?.emoji || '💬'}</div>
+          <div class="chat-empty-title">Say something to start</div>
+          <div class="chat-empty-sub">Type a message below and Timmy will reply.</div>
         </div>`;
       return;
     }
 
     let lastDayKey = '';
     let lastUserMsgIndex = -1;
-
-    // Find the last user message index (to show "Read" under it)
     for (let i = this.messages.length - 1; i >= 0; i--) {
       if (this.messages[i].role === 'user') { lastUserMsgIndex = i; break; }
     }
@@ -1242,7 +1674,6 @@ const Practice = {
     const d = new Date(ts || Date.now());
     const today = new Date();
     const yesterday = new Date(); yesterday.setDate(today.getDate() - 1);
-
     if (d.toDateString() === today.toDateString()) return 'Today';
     if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
     return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
@@ -1262,16 +1693,13 @@ const Practice = {
     if (text == null) return '';
     const str = String(text).trim();
     if (!str) return '';
-
     const hasTags = /<(p|br|strong|b|em|i|ul|ol|li|h[1-6]|code|pre|blockquote)\b/i.test(str);
-
     if (hasTags) {
       let cleaned = str
         .replace(/<script[\s\S]*?<\/script>/gi, '')
         .replace(/<style[\s\S]*?<\/style>/gi, '')
         .replace(/\son\w+="[^"]*"/gi, '')
         .replace(/\son\w+='[^']*'/gi, '');
-
       if (!/<p\b/i.test(cleaned)) {
         cleaned = cleaned
           .split(/\n{2,}/)
@@ -1280,7 +1708,6 @@ const Practice = {
       }
       return cleaned;
     }
-
     return str
       .split(/\n{2,}/)
       .map(p => `<p>${esc(p).replace(/\n/g, '<br>')}</p>`)
@@ -1290,9 +1717,8 @@ const Practice = {
   renderScaffold() {
     const row = document.getElementById('scaffold-row');
     if (!row) return;
-
-    // Only show in practice mode, only if user hasn't sent anything yet
-    if (this.mode !== 'practice') { row.style.display = 'none'; return; }
+    const practiceLike = ['practice', 'greeting_parent', 'meeting_friend', 'market', 'meal_sharing', 'directions', 'showing_respect'];
+    if (!practiceLike.includes(this.currentSection)) { row.style.display = 'none'; return; }
     const userTurns = this.messages.filter(m => m.role === 'user').length;
     if (userTurns >= 1) { row.style.display = 'none'; return; }
 
@@ -1318,11 +1744,7 @@ const Practice = {
 
   scrollToBottom() {
     const scroll = document.getElementById('timmy-scroll');
-    if (scroll) {
-      requestAnimationFrame(() => {
-        scroll.scrollTop = scroll.scrollHeight;
-      });
-    }
+    if (scroll) requestAnimationFrame(() => { scroll.scrollTop = scroll.scrollHeight; });
   },
 
   /* ============================================================
@@ -1334,30 +1756,41 @@ const Practice = {
     if (!inp) return;
     const text = inp.value.trim();
     if (!text) return;
+    if (!this.currentSection || !this.currentChatId) return;
 
     this.sending = true;
     inp.value = '';
     inp.style.height = 'auto';
     document.getElementById('scaffold-row').style.display = 'none';
 
-    // 1. Optimistic push of user message
-    const userMsg = {
-      role: 'user',
-      content: text,
-      ts: Date.now(),
-      id: 'u_' + Date.now()
-    };
+    const userMsg = { id: 'u_' + Date.now(), role: 'user', content: text, ts: Date.now() };
     this.messages.push(userMsg);
     this.renderChat();
     this.scrollToBottom();
-    this.writeLocalCache(State.currentLanguage, this.messages);
-    this.markThreadRead(State.currentLanguage);
 
-    // 2. Persist to server (queue on failure)
-    Backend.appendTimmyMessage(State.currentLanguage, 'user', text)
-      .catch(() => this.queueOffline(State.currentLanguage, 'user', text, false));
+    // Persist user message to server
+    Backend.appendTimmyChatMessage(this.currentSection, this.currentChatId, 'user', text, false)
+      .then(res => {
+        const cache = this._sectionsCache[this.currentSection]?.[this.currentChatId];
+        if (cache) {
+          cache.lastMessageAt = Date.now();
+          cache.messageCount = res.messageCount || cache.messageCount;
+          if (res.title) cache.title = res.title;
+          cache.lastMessage = { role: 'user', content: text, ts: Date.now() };
+          this.renderChatHeader(this.currentSection, cache);
+        }
+      })
+      .catch(() => {
+        this.queueOffline({
+          sectionId: this.currentSection,
+          chatId: this.currentChatId,
+          role: 'user',
+          content: text,
+          isError: false
+        });
+      });
 
-    // 3. Typing indicator
+    // Typing indicator
     const scroll = document.getElementById('timmy-scroll');
     const typing = document.createElement('div');
     typing.className = 'msg-row bot typing';
@@ -1376,27 +1809,39 @@ const Practice = {
         `Language: ${langCfg.name} (${State.currentLanguage})`,
         `Learner: ${user.fullName || 'learner'}`,
         `Level: ${(State.progress && State.progress.currentLevel) || user.currentLevel || 1}`,
-        `Mode: ${this.mode}`
+        `Section: ${SECTIONS[this.currentSection]?.title || 'Practice'}`
       ].join(' | ');
 
       const res = await Backend.aiChat(text, context);
       const reply = res.data || res.reply || res.message || "Sorry — I didn't catch that.";
 
       document.getElementById('typing')?.remove();
-      this.messages.push({
-        role: 'assistant',
-        content: reply,
-        ts: Date.now(),
-        id: 'a_' + Date.now()
-      });
+      this.messages.push({ id: 'a_' + Date.now(), role: 'assistant', content: reply, ts: Date.now() });
       this.renderChat();
       this.scrollToBottom();
-      this.writeLocalCache(State.currentLanguage, this.messages);
       this.loadUsage();
-      this.markThreadRead(State.currentLanguage);
 
-      Backend.appendTimmyMessage(State.currentLanguage, 'assistant', reply)
-        .catch(() => this.queueOffline(State.currentLanguage, 'assistant', reply, false));
+      Backend.appendTimmyChatMessage(this.currentSection, this.currentChatId, 'assistant', reply, false)
+        .then(() => {
+          const cache = this._sectionsCache[this.currentSection]?.[this.currentChatId];
+          if (cache) {
+            cache.lastMessageAt = Date.now();
+            cache.lastMessage = { role: 'assistant', content: reply, ts: Date.now() };
+          }
+          State.emit('timmy:chat-updated', {
+            sectionId: this.currentSection,
+            chatId: this.currentChatId
+          });
+        })
+        .catch(() => {
+          this.queueOffline({
+            sectionId: this.currentSection,
+            chatId: this.currentChatId,
+            role: 'assistant',
+            content: reply,
+            isError: false
+          });
+        });
     } catch (e) {
       document.getElementById('typing')?.remove();
 
@@ -1408,21 +1853,13 @@ const Practice = {
 
       let msg = "Couldn't reach Timmy.";
       if (e.code === 'timeout') {
-        msg = "Timmy is waking up — this can take 20–30 seconds on the free tier. Try again.";
+        msg = "Timmy is waking up — this can take 20–30 seconds. Try again.";
       } else if (e.message) {
         msg = e.message;
       }
-
-      this.messages.push({
-        role: 'assistant',
-        content: msg,
-        ts: Date.now(),
-        id: 'a_' + Date.now(),
-        isError: true
-      });
+      this.messages.push({ id: 'a_' + Date.now(), role: 'assistant', content: msg, ts: Date.now(), isError: true });
       this.renderChat();
       this.scrollToBottom();
-      this.writeLocalCache(State.currentLanguage, this.messages);
     } finally {
       this.sending = false;
       if (sendBtn) sendBtn.disabled = false;
@@ -1434,8 +1871,7 @@ const Practice = {
      ============================================================ */
   async openSpeak() {
     const saved = (State.user && State.user.savedWords) || [];
-    const curriculum = State.curriculumCache[State.currentLanguage]
-      || await State.loadCurriculum(State.currentLanguage);
+    const curriculum = State.curriculumCache[State.currentLanguage] || await State.loadCurriculum(State.currentLanguage);
     let pool = saved.slice();
     if (!pool.length && curriculum) {
       const lessons = Curriculum.allLessons(curriculum);
@@ -1445,7 +1881,6 @@ const Practice = {
       showToast('Complete a lesson first to practice pronunciation.', 'info');
       return;
     }
-
     Header._modal('Pronunciation practice', this.speakBody(pool[0], 0, pool));
     this._speakList = pool;
   },
@@ -1475,13 +1910,8 @@ const Practice = {
   async playSpeakWord(index) {
     const w = this._speakList[index];
     if (!w) return;
-    try {
-      await AudioMgr.play(w.word, State.currentLanguage);
-    } catch (e) {
-      if (!Paywall.fromError(e)) {
-        showToast('Audio unavailable right now.', 'error');
-      }
-    }
+    try { await AudioMgr.play(w.word, State.currentLanguage); }
+    catch (e) { if (!Paywall.fromError(e)) showToast('Audio unavailable right now.', 'error'); }
   },
 
   speakPrev(index) {
@@ -1518,26 +1948,19 @@ const Practice = {
       const got = said.toLowerCase().trim();
       const exact = got === target;
       const close = !exact && this.levenshtein(got, target) <= Math.max(2, Math.floor(target.length / 3));
-
       if (result) {
         if (exact) {
           result.innerHTML = `<div class="speak-result info"><strong>Nice — match!</strong><br>You said: <em>${esc(said)}</em></div>`;
           showToast('Perfect match! 🎉', 'success');
         } else if (close) {
-          result.innerHTML = `<div class="speak-result info"><strong>Close.</strong><br>You said: <em>${esc(said)}</em><br>Target: <em>${esc(w.word)}</em><br>Try listening again and repeating.</div>`;
+          result.innerHTML = `<div class="speak-result info"><strong>Close.</strong><br>You said: <em>${esc(said)}</em><br>Target: <em>${esc(w.word)}</em></div>`;
         } else {
-          result.innerHTML = `<div class="speak-result warn"><strong>Different sound.</strong><br>You said: <em>${esc(said)}</em><br>Target: <em>${esc(w.word)}</em><br>Use 🔊 Listen to hear it again.</div>`;
+          result.innerHTML = `<div class="speak-result warn"><strong>Different sound.</strong><br>You said: <em>${esc(said)}</em><br>Target: <em>${esc(w.word)}</em></div>`;
         }
       }
     };
-
-    rec.onerror = (e) => {
-      if (result) result.innerHTML = `<div class="speak-result warn">Couldn't capture audio (${e.error || 'unknown'}).</div>`;
-    };
-
-    rec.onend = () => {
-      if (btn) { btn.classList.remove('recording'); btn.textContent = '🎤'; }
-    };
+    rec.onerror = (e) => { if (result) result.innerHTML = `<div class="speak-result warn">Couldn't capture audio (${e.error || 'unknown'}).</div>`; };
+    rec.onend = () => { if (btn) { btn.classList.remove('recording'); btn.textContent = '🎤'; } };
 
     try { rec.start(); }
     catch (e) {
@@ -1576,7 +1999,6 @@ const Practice = {
         </div>`);
       return;
     }
-
     const list = saved.map((w, i) => `
       <div class="word-row">
         <div class="word-row-body">
@@ -1586,7 +2008,6 @@ const Practice = {
         </div>
         <button class="word-row-play" onclick="Practice.playSaved(${i})">🔊</button>
       </div>`).join('');
-
     Header._modal('Saved words', list + `
       <button class="btn btn-ghost btn-block" onclick="Practice.startReviewQuiz()" style="margin-top: 14px;">
         Quiz me on these ${saved.length} word${saved.length === 1 ? '' : 's'} →
@@ -1597,39 +2018,27 @@ const Practice = {
   async playSaved(i) {
     const w = this._saved[i];
     if (!w) return;
-    try {
-      await AudioMgr.play(w.word, w.language || State.currentLanguage);
-    } catch (e) {
-      if (!Paywall.fromError(e)) {
-        showToast('Audio unavailable right now.', 'error');
-      }
-    }
+    try { await AudioMgr.play(w.word, w.language || State.currentLanguage); }
+    catch (e) { if (!Paywall.fromError(e)) showToast('Audio unavailable right now.', 'error'); }
   },
 
   async startReviewQuiz() {
     const saved = this._saved || [];
-    if (saved.length < 4) {
-      showToast('Save at least 4 words to build a quiz.', 'info');
-      return;
-    }
+    if (saved.length < 4) { showToast('Save at least 4 words to build a quiz.', 'info'); return; }
     closeModal('cw-generic-modal');
-
     const questions = saved.slice(0, Math.min(8, saved.length)).map(w => {
       const wrong = saved.filter(x => x.word !== w.word).sort(() => Math.random() - 0.5).slice(0, 3);
       const options = [w.translation, ...wrong.map(x => x.translation)].sort(() => Math.random() - 0.5);
       return { word: w.word, correctIndex: options.indexOf(w.translation), options };
     });
-    this._quiz = questions;
-    this._quizIndex = 0;
-    this._quizCorrect = 0;
+    this._quiz = questions; this._quizIndex = 0; this._quizCorrect = 0;
     this.renderQuizQuestion();
   },
 
   renderQuizQuestion() {
     const q = this._quiz[this._quizIndex];
     const total = this._quiz.length;
-    const pct = Math.round(((this._quizIndex) / total) * 100);
-
+    const pct = Math.round((this._quizIndex / total) * 100);
     Header._modal('Review quiz', `
       <div style="font-size: 12px; color: var(--text-3); font-weight: 800; letter-spacing: .08em; text-transform: uppercase;">Question ${this._quizIndex + 1} of ${total}</div>
       <div style="height: 6px; background: var(--border); border-radius: 3px; margin: 8px 0 22px; overflow: hidden;">
@@ -1638,9 +2047,7 @@ const Practice = {
       <div style="font-size: 26px; font-weight: 800; color: var(--brand); text-align: center; padding: 20px 0;">${esc(q.word)}</div>
       <div style="text-align: center; color: var(--text-2); font-size: 14px; margin-bottom: 18px;">What does this mean?</div>
       <div style="display: flex; flex-direction: column; gap: 10px;" id="quiz-opts">
-        ${q.options.map((opt, i) => `
-          <button class="ex-opt" onclick="Practice.answerQuiz(${i})" id="quiz-opt-${i}">${esc(opt)}</button>
-        `).join('')}
+        ${q.options.map((opt, i) => `<button class="ex-opt" onclick="Practice.answerQuiz(${i})" id="quiz-opt-${i}">${esc(opt)}</button>`).join('')}
       </div>
       <div id="quiz-feedback" style="margin-top: 14px;"></div>
     `);
@@ -1659,7 +2066,6 @@ const Practice = {
       else if (i === index) { b.style.borderColor = 'var(--danger)'; b.style.background = 'rgba(229,72,77,0.08)'; b.style.color = 'var(--danger)'; }
     });
     if (index === correct) this._quizCorrect++;
-
     const fb = document.getElementById('quiz-feedback');
     if (fb) fb.innerHTML = `<button class="btn btn-block" onclick="Practice.nextQuizQuestion()">${this._quizIndex === this._quiz.length - 1 ? 'See results →' : 'Next question →'}</button>`;
   },
@@ -1701,15 +2107,16 @@ document.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('click', (e) => {
-  const menu = document.getElementById('timmy-menu');
-  if (!menu || !menu.classList.contains('show')) return;
-  const btn = e.target.closest('.chat-menu-btn');
-  if (!btn) menu.classList.remove('show');
+  const chatMenu = document.getElementById('timmy-menu');
+  if (chatMenu?.classList.contains('show') && !e.target.closest('.chat-menu-btn') && !chatMenu.contains(e.target)) {
+    chatMenu.classList.remove('show');
+  }
+  const sectionMenu = document.getElementById('section-menu');
+  if (sectionMenu?.classList.contains('show') && !e.target.closest('.chat-menu-btn') && !sectionMenu.contains(e.target)) {
+    sectionMenu.classList.remove('show');
+  }
 });
 
-/* ============================================================
-   BOOT
-   ============================================================ */
 document.addEventListener('DOMContentLoaded', () => Practice.init());
 window.Practice = Practice;
 </script>
