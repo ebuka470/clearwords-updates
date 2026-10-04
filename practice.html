@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#2E8B57">
 <title>ClearWords — Practice</title>
 <style>
-:root{--brand:#2E8B57;--brand-rgb:46,139,87;--gold:#E8B33C;--gold-rgb:232,179,60;--indigo-rgb:59,91,165;--terracotta-rgb:217,119,87;--danger:#E5484D;--bg:#FAF7F2;--bg-elev:#fff;--card:#fff;--text:#1C1E21;--text-2:#6B6F76;--text-3:#9AA0A6;--border:#E5E1D8;--shadow:0 2px 12px rgba(28,30,33,.06);--shadow-lg:0 8px 28px rgba(28,30,33,.1);--radius:14px;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)}
-[data-theme=dark]{--bg:#0F1114;--bg-elev:#16191D;--card:#1A1D21;--text:#F2EFE9;--text-2:#9AA0A6;--text-3:#6B6F76;--border:#2A2E33;--brand:#4CAF7A;--brand-rgb:76,175,122;--shadow:0 2px 12px rgba(0,0,0,.4)}
+:root{--brand:#2E8B57;--brand-rgb:46,139,87;--gold:#E8B33C;--gold-rgb:232,179,60;--indigo-rgb:59,91,165;--terracotta-rgb:217,119,87;--danger:#E5484D;--bg:#FAF7F2;--bg-elev:#fff;--card:#fff;--text:#1C1E21;--text-2:#6B6F76;--text-3:#9AA0A6;--border:#E5E1D8;--shadow:0 2px 12px rgba(28,30,33,.06);--shadow-lg:0 8px 28px rgba(28,30,33,.1);--danger-rgb:229,72,77;--border-strong:#D4CFC2;--radius-lg:20px;--radius-full:999px;--indigo:#3B5BA5;--terracotta:#D97757;--radius:14px;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)}
+[data-theme=dark]{--bg:#0F1114;--bg-elev:#16191D;--card:#1A1D21;--text:#F2EFE9;--text-2:#9AA0A6;--text-3:#6B6F76;--border:#2A2E33;--brand:#4CAF7A;--brand-rgb:76,175,122;--border-strong:#3A3E44;--shadow:0 2px 12px rgba(0,0,0,.4);--shadow-lg:0 8px 28px rgba(0,0,0,.6)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:calc(84px + var(--safe-bot))}
@@ -30,7 +30,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 #cw-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;padding:8px 8px calc(8px + var(--safe-bot));background:var(--card);border-top:1px solid var(--border);max-width:520px;margin:0 auto}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;color:var(--text-3);font-size:11px;font-weight:600}
 .tab.active{color:var(--brand)}.tab svg{width:22px;height:22px}
-.cw-toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 20px;border-radius:999px;font-size:14px;font-weight:600;z-index:20000;max-width:90%}
 .modal-loading{padding:40px;text-align:center;color:var(--text-2);font-size:14px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 20px;border-radius:999px;font-weight:700;font-size:15px;background:var(--brand);color:#fff;min-height:46px}
 
@@ -108,6 +107,56 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .speak-result.warn{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.35)}
 .ex-opt{width:100%;text-align:left;padding:16px 18px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg-elev);font-weight:600;font-size:15px}
 .ex-opt:active{border-color:var(--brand)}.ex-opt:disabled{opacity:1;cursor:default}
+/* ===== SHARED SHELL STYLES (header, nav, modals, toast, forms) — same as community.html ===== */
+input,textarea{font-family:inherit}
+::-webkit-scrollbar{width:0;height:0}
+body{-webkit-font-smoothing:antialiased;overscroll-behavior-y:contain}
+#cw-header{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:calc(12px + var(--safe-top)) 16px 12px;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:saturate(180%) blur(12px)}
+.hdr-left,.hdr-right{display:flex;align-items:center;gap:8px}
+.lang-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:14px;font-weight:700}
+.lang-pill .chev{color:var(--text-3);font-size:11px}
+.icon-btn{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--card);border:1px solid var(--border);position:relative;color:var(--text)}
+.streak-btn{width:auto;padding:0 12px;gap:4px;font-weight:700;font-size:13px;color:var(--gold);background:rgba(var(--gold-rgb),.12);border-color:rgba(var(--gold-rgb),.28)}
+.streak-icon{font-size:14px}
+.notif-dot{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--danger);border:2px solid var(--card)}
+#cw-bottom-nav{background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:saturate(180%) blur(16px);justify-content:space-around;align-items:center}
+.tab{border-radius:10px;position:relative}.tab:active{transform:scale(.94)}
+.tab-badge{position:absolute;top:2px;right:22%;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--danger);color:#fff;font-size:10.5px;font-weight:800;line-height:18px;text-align:center;box-shadow:0 0 0 2px var(--card);pointer-events:none;animation:badgePop .25s ease}
+.method-badge{box-shadow:0 0 0 2px var(--card);pointer-events:none;animation:badgePop .25s ease}
+@keyframes badgePop{0%{transform:scale(.4)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.cw-modal-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+.cw-modal-overlay.active{display:flex}
+.cw-modal{width:100%;max-width:520px;max-height:90vh;display:flex;flex-direction:column;background:var(--card);border-radius:24px 24px 0 0;animation:modalUp .25s ease;border:1px solid var(--border);border-bottom:none}
+@keyframes modalUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.cw-modal-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 12px;border-bottom:1px solid var(--border)}
+.cw-modal-title{font-weight:800;font-size:16px}
+.cw-modal-close{font-size:26px;line-height:1;color:var(--text-2);padding:0 4px}
+.cw-modal-body{padding:16px 20px 24px;overflow-y:auto;flex:1}
+.lang-option{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;margin-bottom:8px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg-elev);text-align:left}
+.lang-option.active{border-color:var(--brand);background:rgba(var(--brand-rgb),.08)}
+.lang-emoji{font-size:22px}.lang-name{flex:1;font-weight:700;font-size:15px}.lang-check{color:var(--brand);font-weight:800}
+.notif-item{display:flex;gap:12px;padding:12px;border-radius:12px;background:var(--bg-elev);border:1px solid var(--border);margin-bottom:8px}
+.notif-item.unread{border-color:rgba(var(--brand-rgb),.35);background:rgba(var(--brand-rgb),.05)}
+.notif-icon{font-size:20px;flex-shrink:0}.notif-body{flex:1;min-width:0}
+.notif-title{font-weight:700;font-size:13px}.notif-text{font-size:12.5px;color:var(--text-2);margin-top:2px}.notif-time{font-size:11px;color:var(--text-3);margin-top:4px}
+.cw-toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:12px 20px;border-radius:999px;font-size:14px;font-weight:600;z-index:20000;opacity:0;transition:opacity .2s,transform .2s;max-width:90%;text-align:center;box-shadow:var(--shadow-lg)}
+.cw-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.cw-toast-error{background:var(--danger);color:#fff}.cw-toast-success{background:var(--brand);color:#fff}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:13px;font-weight:700;color:var(--text-2)}
+.field input,.field textarea,.field select{width:100%;padding:14px 16px;font-size:16px;border-radius:12px;background:var(--bg-elev);border:1.5px solid var(--border);color:var(--text);-webkit-appearance:none;appearance:none}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(var(--brand-rgb),.12)}
+.field-hint{font-size:12px;color:var(--text-3)}.field-error{font-size:12.5px;color:var(--danger);min-height:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card-tint-primary{background:rgba(var(--brand-rgb),.06);border-color:rgba(var(--brand-rgb),.22)}
+.chip-btn{padding:8px 14px;border-radius:999px;font-size:12.5px;font-weight:700;background:var(--bg-elev);border:1.5px solid var(--border);color:var(--text)}
+.chip-btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}.chip-btn:active{transform:scale(.97)}
+.btn-secondary{background:var(--text);color:var(--bg)}.btn-danger{background:var(--danger);color:#fff}.btn-sm{padding:9px 16px;min-height:36px;font-size:13px}
+.spinner-inline{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.skel{background:linear-gradient(90deg,var(--border) 0%,#D4CFC2 50%,var(--border) 100%);background-size:200% 100%;animation:skel 1.2s infinite;border-radius:8px}
+@keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -602,6 +651,21 @@ const Practice = {
     } catch (e) { console.warn('maybeImportLocalChats', e.message); }
   },
 
+  /* ---------- self-contained bottom-sheet modal (no dependency on shared.js) ---------- */
+  modal(title, html) {
+    let o = $('cw-practice-modal');
+    if (!o) {
+      o = document.createElement('div'); o.id = 'cw-practice-modal'; o.className = 'cw-modal-overlay';
+      o.innerHTML = '<div class="cw-modal"><div class="cw-modal-head"><div class="cw-modal-title"></div><button class="cw-modal-close" onclick="Practice.closeModal()" aria-label="Close">×</button></div><div class="cw-modal-body"></div></div>';
+      o.addEventListener('click', e => { if (e.target === o) Practice.closeModal(); });
+      document.body.appendChild(o);
+    }
+    o.querySelector('.cw-modal-title').textContent = title;
+    o.querySelector('.cw-modal-body').innerHTML = html;
+    o.classList.add('active');
+  },
+  closeModal() { $('cw-practice-modal')?.classList.remove('active'); },
+
   /* ---------- SPEAK MODE ---------- */
   async openSpeak() {
     const saved = (State.user && State.user.savedWords) || [];
@@ -610,7 +674,7 @@ const Practice = {
     if (!pool.length && curriculum) pool = Curriculum.allLessons(curriculum).flatMap(l => l.vocabulary || []).slice(0, 20);
     if (!pool.length) { showToast('Complete a lesson first to practice pronunciation.', 'info'); return; }
     this._speakList = pool;
-    Header._modal('Pronunciation practice', this.speakBody(pool[0], 0, pool));
+    Practice.modal('Pronunciation practice', this.speakBody(pool[0], 0, pool));
   },
   speakBody(word, index, pool) {
     const supported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
@@ -637,8 +701,8 @@ const Practice = {
     try { await AudioMgr.play(w.word, State.currentLanguage); }
     catch (e) { if (!Paywall.fromError(e)) showToast('Audio unavailable right now.', 'error'); }
   },
-  speakPrev(i) { if (i > 0) Header._modal('Pronunciation practice', this.speakBody(this._speakList[i - 1], i - 1, this._speakList)); },
-  speakNext(i, total) { if (i < total - 1) Header._modal('Pronunciation practice', this.speakBody(this._speakList[i + 1], i + 1, this._speakList)); },
+  speakPrev(i) { if (i > 0) Practice.modal('Pronunciation practice', this.speakBody(this._speakList[i - 1], i - 1, this._speakList)); },
+  speakNext(i, total) { if (i < total - 1) Practice.modal('Pronunciation practice', this.speakBody(this._speakList[i + 1], i + 1, this._speakList)); },
   recordSpeak(index) {
     const w = this._speakList[index]; if (!w) return;
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -678,7 +742,7 @@ const Practice = {
   /* ---------- REVIEW (saved words + quiz) ---------- */
   async openReview() {
     const saved = (State.user && State.user.savedWords) || [];
-    if (!saved.length) { Header._modal('Saved words', `<div class="empty-note"><strong>No saved words yet</strong>In any lesson, tap ☆ Save next to a word to keep it here for review.</div>`); return; }
+    if (!saved.length) { Practice.modal('Saved words', `<div class="empty-note"><strong>No saved words yet</strong>In any lesson, tap ☆ Save next to a word to keep it here for review.</div>`); return; }
     const list = saved.map((w, i) => `
       <div class="word-row">
         <div class="word-row-body">
@@ -689,7 +753,7 @@ const Practice = {
         <button class="word-row-play" onclick="Practice.playSaved(${i})">🔊</button>
       </div>`).join('');
     this._saved = saved;
-    Header._modal('Saved words', list + `<button class="btn btn-ghost btn-block" onclick="Practice.startReviewQuiz()" style="margin-top:14px">Quiz me on these ${saved.length} word${saved.length === 1 ? '' : 's'} →</button>`);
+    Practice.modal('Saved words', list + `<button class="btn btn-ghost btn-block" onclick="Practice.startReviewQuiz()" style="margin-top:14px">Quiz me on these ${saved.length} word${saved.length === 1 ? '' : 's'} →</button>`);
   },
   async playSaved(i) {
     const w = this._saved[i]; if (!w) return;
@@ -699,7 +763,7 @@ const Practice = {
   startReviewQuiz() {
     const saved = this._saved || [];
     if (saved.length < 4) { showToast('Save at least 4 words to build a quiz.', 'info'); return; }
-    closeModal('cw-generic-modal');
+    Practice.closeModal();
     this._quiz = saved.slice(0, Math.min(8, saved.length)).map(w => {
       const wrong = saved.filter(x => x.word !== w.word).sort(() => Math.random() - .5).slice(0, 3);
       const options = [w.translation, ...wrong.map(x => x.translation)].sort(() => Math.random() - .5);
@@ -710,7 +774,7 @@ const Practice = {
   },
   renderQuizQuestion() {
     const q = this._quiz[this._quizIndex], total = this._quiz.length, pct = Math.round(this._quizIndex / total * 100);
-    Header._modal('Review quiz', `
+    Practice.modal('Review quiz', `
       <div style="font-size:12px;color:var(--text-3);font-weight:800;letter-spacing:.08em;text-transform:uppercase">Question ${this._quizIndex + 1} of ${total}</div>
       <div style="height:6px;background:var(--border);border-radius:3px;margin:8px 0 22px;overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--brand);border-radius:3px"></div></div>
       <div style="font-size:26px;font-weight:800;color:var(--brand);text-align:center;padding:20px 0">${esc(q.word)}</div>
@@ -734,12 +798,12 @@ const Practice = {
     if (this._quizIndex < this._quiz.length - 1) { this._quizIndex++; this.renderQuizQuestion(); return; }
     const score = this._quizCorrect, total = this._quiz.length, pct = Math.round(score / total * 100);
     const msg = pct === 100 ? 'Perfect!' : pct >= 80 ? 'Great work!' : pct >= 50 ? 'Solid start.' : 'Keep practicing.';
-    Header._modal('Review quiz', `
+    Practice.modal('Review quiz', `
       <div style="text-align:center;padding:16px 0">
         <div style="font-size:64px">${pct >= 80 ? '🎉' : '💪'}</div>
         <div style="font-size:26px;font-weight:800;margin-top:8px">${msg}</div>
         <div style="font-size:15px;color:var(--text-2);margin-top:6px">You scored ${score}/${total} (${pct}%)</div>
-        <button class="btn btn-block" onclick="closeModal('cw-generic-modal')" style="margin-top:22px">Done</button>
+        <button class="btn btn-block" onclick="Practice.closeModal()" style="margin-top:22px">Done</button>
       </div>`);
   },
 };
