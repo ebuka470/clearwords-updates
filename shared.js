@@ -1,5 +1,7 @@
 /* ============================================================
    ClearWords — Shared Runtime
+   Loaded by learn.html, practice.html, community.html, profile.html,
+   and onboarding.html.
    ============================================================ */
 
 /* ============================================================
@@ -7,7 +9,7 @@
    ============================================================ */
 const CW_CONFIG = {
   API_BASE: 'https://clearwords-backend.onrender.com',
-  REQUEST_TIMEOUT: 12000,
+  REQUEST_TIMEOUT: 30000,
   TOKEN_KEY: 'cw_jwt',
   LANG_KEY: 'cw_language',
   THEME_KEY: 'cw_theme',
@@ -170,7 +172,11 @@ const Backend = {
   aiChat: (prompt, context) => {
     const tz = -new Date().getTimezoneOffset();
     const fullPrompt = context ? context + '\n\n' + prompt : prompt;
-    return api.post('/api/ai/chat', { prompt: fullPrompt, timezoneOffsetMinutes: tz });
+    return api.post(
+      '/api/ai/chat',
+      { prompt: fullPrompt, timezoneOffsetMinutes: tz },
+      { timeout: 60000 }
+    );
   },
   generateCustomLesson: (payload) => {
     const tz = -new Date().getTimezoneOffset();
@@ -183,7 +189,7 @@ const Backend = {
           context: payload.context,
           timezoneOffsetMinutes: tz
         };
-    return api.post('/api/ai/custom-lesson', body);
+    return api.post('/api/ai/custom-lesson', body, { timeout: 60000 });
   },
   getAIUsage: () => api.get('/api/ai/usage'),
 
@@ -251,10 +257,50 @@ const Backend = {
   ttsUsage: () => api.get('/api/tts/usage'),
   ttsCredits: () => api.get('/api/tts/credits', { auth: false }),
 
-  // ---- MESSAGES / UNREAD ----
+  // ---- MESSAGES / POD+PAIR UNREAD ----
   getUnreadCounts: () => api.get('/api/messages/unread'),
   markPodRead: (podId) => api.post('/api/pods/' + podId + '/read'),
-  markPairRead: (pairId) => api.post('/api/pairs/' + pairId + '/read')
+  markPairRead: (pairId) => api.post('/api/pairs/' + pairId + '/read'),
+
+  // ---- TIMMY CHATS (per section, per chat) ----
+  getTimmySections: (language) =>
+    api.get('/api/timmy-chats/sections', { params: { language } }),
+
+  listTimmyChats: (sectionId, language) =>
+    api.get('/api/timmy-chats', { params: { section: sectionId, language } }),
+
+  getTimmyChat: (sectionId, chatId) =>
+    api.get(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`),
+
+  createTimmyChat: (payload) =>
+    api.post('/api/timmy-chats', payload),
+
+  appendTimmyChatMessage: (sectionId, chatId, role, content, isError) =>
+    api.post(
+      `/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}/message`,
+      { role, content, isError: !!isError }
+    ),
+
+  markTimmyChatRead: (sectionId, chatId) =>
+    api.post(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}/read`),
+
+  markTimmySectionRead: (sectionId) =>
+    api.post(`/api/timmy-chats/${encodeURIComponent(sectionId)}/read-all`),
+
+  renameTimmyChat: (sectionId, chatId, title) =>
+    api.patch(
+      `/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`,
+      { title }
+    ),
+
+  deleteTimmyChat: (sectionId, chatId) =>
+    api.delete(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`),
+
+  deleteTimmySection: (sectionId) =>
+    api.delete(`/api/timmy-chats/section/${encodeURIComponent(sectionId)}`),
+
+  importTimmyChats: (language, threads) =>
+    api.post('/api/timmy-chats/import', { language, threads })
 };
 
 /* ============================================================
@@ -1118,10 +1164,11 @@ const Header = {
 };
 
 /* ============================================================
-   10b. BADGES — unread counts on tabs, pods, and pairs
+   10b. BADGES — unread counts across the whole app
+   Covers: pod messages, pair messages, AND Timmy chats.
    ============================================================ */
 const Badges = {
-  _unread: { pods: {}, pairs: {}, total: 0 },
+  _unread: { pods: {}, pairs: {}, timmy: {}, total: 0 },
   _pollTimer: null,
   _POLL_MS: 20000,
 
@@ -1136,6 +1183,10 @@ const Badges = {
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') this.refresh();
     });
+
+    State.on('timmy:chat-updated',   () => this.refresh());
+    State.on('timmy:chat-read',      () => this.refresh());
+    State.on('timmy:section-cleared',() => this.refresh());
   },
 
   stop() {
@@ -1145,20 +1196,41 @@ const Badges = {
 
   async refresh() {
     if (!Auth.isLoggedIn()) return;
-    try {
-      const data = await Backend.getUnreadCounts();
-      this._unread = data || { pods: {}, pairs: {}, total: 0 };
-      this.renderAll();
-      State.emit('unread:changed', this._unread);
-    } catch (e) {
-      // Silent — badges are nice-to-have
+
+    const [msgRes, timmyRes] = await Promise.allSettled([
+      Backend.getUnreadCounts(),
+      Backend.getTimmySections(State.currentLanguage)
+    ]);
+
+    const pods  = (msgRes.status === 'fulfilled' && msgRes.value?.pods)  || {};
+    const pairs = (msgRes.status === 'fulfilled' && msgRes.value?.pairs) || {};
+    const podTotal = msgRes.status === 'fulfilled' ? (msgRes.value?.total || 0) : 0;
+
+    const timmy = {};
+    let timmyTotal = 0;
+    if (timmyRes.status === 'fulfilled') {
+      for (const [sid, s] of Object.entries(timmyRes.value?.sections || {})) {
+        const n = s?.totalUnread || 0;
+        if (n > 0) { timmy[sid] = n; timmyTotal += n; }
+      }
     }
+
+    this._unread = {
+      pods,
+      pairs,
+      timmy,
+      total: podTotal + timmyTotal
+    };
+
+    this.renderAll();
+    State.emit('unread:changed', this._unread);
   },
 
   renderAll() {
     this.renderNavBadge();
     this.renderPodBadges();
     this.renderPairBadges();
+    this.renderTimmySectionBadges();
   },
 
   renderNavBadge() {
@@ -1212,7 +1284,26 @@ const Badges = {
         card.appendChild(badge);
       }
     });
-  }
+  },
+
+  renderTimmySectionBadges() {
+    const timmy = this._unread.timmy || {};
+    document.querySelectorAll('[data-section]').forEach(card => {
+      const sid = card.getAttribute('data-section');
+      const existing = card.querySelector('.method-badge');
+      if (existing) existing.remove();
+
+      const count = timmy[sid] || 0;
+      if (count > 0) {
+        const badge = document.createElement('span');
+        badge.className = 'method-badge';
+        badge.textContent = count > 99 ? '99+' : String(count);
+        card.appendChild(badge);
+      }
+    });
+  },
+
+  getUnread() { return { ...this._unread }; }
 };
 
 /* ============================================================
@@ -1246,6 +1337,7 @@ async function cwLogin(email, password) {
 
 function cwLogout() {
   Badges.stop();
+  Badges._unread = { pods: {}, pairs: {}, timmy: {}, total: 0 };
   Auth.clear();
   localStorage.removeItem(CW_CONFIG.LANG_KEY);
   localStorage.removeItem('cw_onboarding_partial');
@@ -1281,7 +1373,6 @@ async function cwBoot() {
     location.href = 'onboarding.html';
   });
 
-  // Start polling for unread message badges
   Badges.start();
 
   return true;
