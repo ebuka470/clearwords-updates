@@ -6,692 +6,108 @@
 <meta name="theme-color" content="#2E8B57">
 <title>ClearWords — Practice</title>
 <style>
-:root {
-  --brand: #2E8B57;
-  --brand-rgb: 46,139,87;
-  --gold: #E8B33C;
-  --gold-rgb: 232,179,60;
-  --indigo: #3B5BA5;
-  --indigo-rgb: 59,91,165;
-  --terracotta: #D97757;
-  --terracotta-rgb: 217,119,87;
-  --danger: #E5484D;
-  --bg: #FAF7F2;
-  --bg-elev: #FFFFFF;
-  --card: #FFFFFF;
-  --text: #1C1E21;
-  --text-2: #6B6F76;
-  --text-3: #9AA0A6;
-  --border: #E5E1D8;
-  --border-strong: #D4CFC2;
-  --shadow: 0 2px 12px rgba(28,30,33,0.06);
-  --shadow-lg: 0 8px 28px rgba(28,30,33,0.10);
-  --radius: 14px;
-  --radius-lg: 20px;
-  --radius-full: 999px;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bot: env(safe-area-inset-bottom, 0px);
-}
-[data-theme="dark"] {
-  --bg: #0F1114;
-  --bg-elev: #16191D;
-  --card: #1A1D21;
-  --text: #F2EFE9;
-  --text-2: #9AA0A6;
-  --text-3: #6B6F76;
-  --border: #2A2E33;
-  --border-strong: #3A3E44;
-  --shadow: 0 2px 12px rgba(0,0,0,0.4);
-  --shadow-lg: 0 8px 28px rgba(0,0,0,0.6);
-  --brand: #4CAF7A;
-  --brand-rgb: 76,175,122;
-}
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  overscroll-behavior-y: contain;
-  padding-bottom: calc(84px + var(--safe-bot));
-}
-button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
-img, svg { display: block; max-width: 100%; }
-::-webkit-scrollbar { width: 0; height: 0; }
+:root{--brand:#2E8B57;--brand-rgb:46,139,87;--gold:#E8B33C;--gold-rgb:232,179,60;--indigo-rgb:59,91,165;--terracotta-rgb:217,119,87;--danger:#E5484D;--bg:#FAF7F2;--bg-elev:#fff;--card:#fff;--text:#1C1E21;--text-2:#6B6F76;--text-3:#9AA0A6;--border:#E5E1D8;--shadow:0 2px 12px rgba(28,30,33,.06);--shadow-lg:0 8px 28px rgba(28,30,33,.1);--radius:14px;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)}
+[data-theme=dark]{--bg:#0F1114;--bg-elev:#16191D;--card:#1A1D21;--text:#F2EFE9;--text-2:#9AA0A6;--text-3:#6B6F76;--border:#2A2E33;--brand:#4CAF7A;--brand-rgb:76,175,122;--shadow:0 2px 12px rgba(0,0,0,.4)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:calc(84px + var(--safe-bot))}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#cw-header{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:calc(12px + var(--safe-top)) 16px 12px;background:var(--bg);border-bottom:1px solid var(--border)}
+.page{max-width:520px;margin:0 auto;padding:0 16px}
+.page-hero{padding:22px 4px 18px}.page-hero h1{font-size:24px;font-weight:800}.page-hero p{font-size:14px;color:var(--text-2);margin-top:4px}
+.section-h{font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--text-3);text-transform:uppercase;margin:22px 4px 10px}
+.method-card,.situation-card{position:relative;display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--radius);background:var(--card);border:1.5px solid var(--border);width:100%;text-align:left;margin-bottom:10px}
+.method-card:active,.situation-card:active{transform:scale(.985);border-color:var(--brand)}
+.method-icon,.situation-icon{width:48px;height:48px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(var(--brand-rgb),.12)}
+.tint-indigo .method-icon{background:rgba(var(--indigo-rgb),.12)}.tint-gold .method-icon{background:rgba(var(--gold-rgb),.14)}.tint-terracotta .method-icon,.situation-icon{background:rgba(var(--terracotta-rgb),.14)}
+.method-body,.situation-body{flex:1;min-width:0}
+.method-title,.situation-title{font-weight:800;font-size:15px}.method-desc,.situation-desc{font-size:12.5px;color:var(--text-2);margin-top:3px}
+.method-chev{color:var(--text-3);font-size:20px}
+.method-badge{position:absolute;top:12px;right:46px;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--danger);color:#fff;font-size:11px;font-weight:800;line-height:20px;text-align:center}
+.usage-bar{display:flex;gap:10px;padding:12px 16px;border-radius:12px;background:rgba(var(--brand-rgb),.06);border:1px solid rgba(var(--brand-rgb),.22);font-size:13px;font-weight:600;margin-bottom:14px}
+.usage-bar.warning{background:rgba(var(--gold-rgb),.08);color:var(--gold)}.usage-bar.limit{background:rgba(229,72,77,.08);color:var(--danger)}
+.usage-bar .label{flex:1}.usage-bar .count{font-weight:800}
+#cw-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;padding:8px 8px calc(8px + var(--safe-bot));background:var(--card);border-top:1px solid var(--border);max-width:520px;margin:0 auto}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;color:var(--text-3);font-size:11px;font-weight:600}
+.tab.active{color:var(--brand)}.tab svg{width:22px;height:22px}
+.cw-toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 20px;border-radius:999px;font-size:14px;font-weight:600;z-index:20000;max-width:90%}
+.modal-loading{padding:40px;text-align:center;color:var(--text-2);font-size:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 20px;border-radius:999px;font-weight:700;font-size:15px;background:var(--brand);color:#fff;min-height:46px}
 
-/* ============ HEADER ============ */
-#cw-header {
-  position: sticky; top: 0; z-index: 40;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: calc(12px + var(--safe-top)) 16px 12px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: saturate(180%) blur(12px);
-}
-.hdr-left, .hdr-right { display: flex; align-items: center; gap: 8px; }
-.lang-pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 12px; border-radius: var(--radius-full);
-  background: var(--card); border: 1px solid var(--border);
-  font-size: 14px; font-weight: 700;
-}
-.lang-pill .chev { color: var(--text-3); font-size: 11px; }
-.icon-btn {
-  width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 50%; background: var(--card); border: 1px solid var(--border);
-  position: relative; color: var(--text);
-}
-.streak-btn { width: auto; padding: 0 12px; gap: 4px; font-weight: 700; font-size: 13px; color: var(--gold); background: rgba(var(--gold-rgb), 0.12); border-color: rgba(var(--gold-rgb), 0.28); }
-.streak-icon { font-size: 14px; }
-.notif-dot {
-  position: absolute; top: 8px; right: 9px;
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--danger); border: 2px solid var(--card);
-}
-
-/* ============ PAGE ============ */
-.page { max-width: 520px; margin: 0 auto; padding: 0 16px; }
-.page-hero { padding: 22px 4px 18px; }
-.page-hero h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
-.page-hero p { font-size: 14px; color: var(--text-2); margin-top: 4px; }
-
-.section-h { font-size: 13px; font-weight: 800; letter-spacing: .08em; color: var(--text-3); text-transform: uppercase; margin: 22px 4px 10px; }
-
-.card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 18px;
-  margin-bottom: 12px; box-shadow: var(--shadow);
-}
-
-/* ============ PRACTICE METHOD CARDS ============ */
-.method-card {
-  position: relative;
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px; border-radius: var(--radius);
-  background: var(--card); border: 1.5px solid var(--border);
-  width: 100%; text-align: left; transition: transform .08s, border-color .15s;
-  margin-bottom: 10px;
-}
-.method-card:active { transform: scale(.985); }
-.method-icon {
-  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; font-size: 24px;
-  background: rgba(var(--brand-rgb), 0.12);
-}
-.method-card.tint-indigo .method-icon { background: rgba(var(--indigo-rgb), 0.12); }
-.method-card.tint-gold .method-icon { background: rgba(var(--gold-rgb), 0.14); }
-.method-card.tint-terracotta .method-icon { background: rgba(var(--terracotta-rgb), 0.14); }
-.method-body { flex: 1; min-width: 0; }
-.method-title { font-weight: 800; font-size: 15px; }
-.method-desc { font-size: 12.5px; color: var(--text-2); margin-top: 3px; line-height: 1.4; }
-.method-chev { color: var(--text-3); font-size: 20px; }
-
-.method-badge {
-  position: absolute;
-  top: 12px;
-  right: 46px;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 10px;
-  background: var(--danger);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
-  line-height: 20px;
-  text-align: center;
-  box-shadow: 0 0 0 2px var(--card);
-  pointer-events: none;
-}
-
-/* ============ USAGE BADGE ============ */
-.usage-bar {
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px 16px; border-radius: 12px;
-  background: rgba(var(--brand-rgb), 0.06);
-  border: 1px solid rgba(var(--brand-rgb), 0.22);
-  font-size: 13px; font-weight: 600;
-  margin-bottom: 14px;
-}
-.usage-bar.warning { background: rgba(var(--gold-rgb), 0.08); border-color: rgba(var(--gold-rgb), 0.35); color: var(--gold); }
-.usage-bar.limit { background: rgba(229,72,77,0.08); border-color: rgba(229,72,77,0.35); color: var(--danger); }
-.usage-bar .label { flex: 1; }
-.usage-bar .count { font-weight: 800; }
-
-/* ============ BOTTOM NAV ============ */
-#cw-bottom-nav {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
-  display: flex; justify-content: space-around; align-items: center;
-  padding: 8px 8px calc(8px + var(--safe-bot));
-  background: color-mix(in srgb, var(--card) 92%, transparent);
-  backdrop-filter: saturate(180%) blur(16px);
-  border-top: 1px solid var(--border);
-  max-width: 520px; margin: 0 auto;
-}
-.tab {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
-  padding: 6px 4px; border-radius: 10px;
-  color: var(--text-3); font-size: 11px; font-weight: 600;
-  position: relative;
-}
-.tab.active { color: var(--brand); }
-.tab svg { width: 22px; height: 22px; }
-.tab:active { transform: scale(.94); }
-
-.tab-badge {
-  position: absolute;
-  top: 2px;
-  right: 22%;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 9px;
-  background: var(--danger);
-  color: #fff;
-  font-size: 10.5px;
-  font-weight: 800;
-  line-height: 18px;
-  text-align: center;
-  box-shadow: 0 0 0 2px var(--card);
-  pointer-events: none;
-  animation: badgePop 0.25s ease;
-}
-@keyframes badgePop {
-  0% { transform: scale(0.4); }
-  60% { transform: scale(1.15); }
-  100% { transform: scale(1); }
-}
-
-/* ============ MODAL ============ */
-.cw-modal-overlay {
-  position: fixed; inset: 0; z-index: 100;
-  background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
-  display: none; align-items: flex-end; justify-content: center;
-}
-.cw-modal-overlay.active { display: flex; }
-.cw-modal {
-  width: 100%; max-width: 520px;
-  max-height: 88vh; display: flex; flex-direction: column;
-  background: var(--card); border-radius: 24px 24px 0 0;
-  animation: modalUp .25s ease;
-  border: 1px solid var(--border); border-bottom: none;
-}
-@keyframes modalUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-.cw-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 12px; border-bottom: 1px solid var(--border); }
-.cw-modal-title { font-weight: 800; font-size: 16px; }
-.cw-modal-close { font-size: 26px; line-height: 1; color: var(--text-2); padding: 0 4px; }
-.cw-modal-body { padding: 16px 20px 24px; overflow-y: auto; }
-
-.lang-option {
-  display: flex; align-items: center; gap: 12px;
-  width: 100%; padding: 14px 16px; margin-bottom: 8px;
-  border-radius: 12px; border: 1.5px solid var(--border);
-  background: var(--bg-elev); text-align: left;
-}
-.lang-option.active { border-color: var(--brand); background: rgba(var(--brand-rgb), 0.08); }
-.lang-emoji { font-size: 22px; }
-.lang-name { flex: 1; font-weight: 700; font-size: 15px; }
-.lang-check { color: var(--brand); font-weight: 800; }
-
-.notif-item { display: flex; gap: 12px; padding: 12px; border-radius: 12px; background: var(--bg-elev); border: 1px solid var(--border); margin-bottom: 8px; }
-.notif-item.unread { border-color: rgba(var(--brand-rgb), 0.35); background: rgba(var(--brand-rgb), 0.05); }
-.notif-icon { font-size: 20px; flex-shrink: 0; }
-.notif-body { flex: 1; min-width: 0; }
-.notif-title { font-weight: 700; font-size: 13px; }
-.notif-text { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
-.notif-time { font-size: 11px; color: var(--text-3); margin-top: 4px; }
-.modal-loading { padding: 40px; text-align: center; color: var(--text-2); font-size: 14px; }
-
-.cw-toast {
-  position: fixed; left: 50%; bottom: 100px;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--text); color: var(--bg);
-  padding: 12px 20px; border-radius: var(--radius-full);
-  font-size: 14px; font-weight: 600; z-index: 200;
-  opacity: 0; transition: opacity .2s, transform .2s;
-  max-width: 90%; text-align: center; box-shadow: var(--shadow-lg);
-}
-.cw-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.cw-toast-error { background: var(--danger); color: #fff; }
-.cw-toast-success { background: var(--brand); color: #fff; }
-
-/* ============================================================
-   TIMMY FULLSCREEN VIEW — native app header style
-   ============================================================ */
-#timmy-view {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  z-index: 9999;
-  background: var(--bg);
-  display: none;
-  flex-direction: column;
-  overflow: hidden;
-  min-height: 0;
-}
-#timmy-view.active { display: flex; }
-#timmy-view > * { flex-shrink: 0; }
-
-/* ---- Native top bar (matches rest of app) ---- */
-.chat-topbar {
-  flex-shrink: 0;
-  display: flex; align-items: center; gap: 10px;
-  padding: calc(12px + var(--safe-top)) 14px 12px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: saturate(180%) blur(12px);
-  position: relative;
-  z-index: 2;
-}
-.chat-back {
-  width: 38px; height: 38px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; color: var(--text-2);
-  border-radius: 50%;
-  flex-shrink: 0;
-  background: transparent;
-  transition: background .15s;
-}
-.chat-back:active { background: var(--border); }
-.chat-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(var(--brand-rgb), 0.14);
-  border: none;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; flex-shrink: 0;
-}
-.chat-name {
-  flex: 1; min-width: 0;
-  font-weight: 800; font-size: 16px; color: var(--text);
-  line-height: 1.2;
-}
-.chat-name small {
-  display: block;
-  font-weight: 500; font-size: 12px;
-  color: var(--text-2);
-  margin-top: 1px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.chat-menu-btn {
-  width: 38px; height: 38px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; color: var(--text-2);
-  position: relative;
-  border-radius: 50%;
-  transition: background .15s;
-}
-.chat-menu-btn:active { background: var(--border); }
-.chat-menu {
-  position: absolute; top: 48px; right: 4px;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 6px; min-width: 180px;
-  box-shadow: var(--shadow-lg);
-  display: none; z-index: 10;
-  color: var(--text);
-}
-.chat-menu.show { display: block; }
-.chat-menu button {
-  display: block; width: 100%; padding: 10px 14px; text-align: left;
-  font-size: 13.5px; border-radius: 8px; color: var(--text);
-  font-weight: 600;
-}
-.chat-menu button:hover { background: rgba(var(--brand-rgb), 0.08); }
-.chat-menu button.danger { color: var(--danger); }
-
-/* ---- Chat list ---- */
-.chat-list-scroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.chat-list-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
-  cursor: pointer;
-  transition: background .12s;
-  text-align: left;
-  width: 100%;
-}
-.chat-list-item:active { background: rgba(var(--brand-rgb), 0.06); }
-.chat-list-avatar {
-  width: 48px; height: 48px;
-  border-radius: 50%;
-  background: rgba(var(--brand-rgb), 0.14);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
-}
-.chat-list-body { flex: 1; min-width: 0; }
-.chat-list-title {
-  font-weight: 700; font-size: 15px;
-  color: var(--text);
-  margin-bottom: 3px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.chat-list-preview {
-  font-size: 13px;
-  color: var(--text-2);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.chat-list-meta {
-  display: flex; flex-direction: column;
-  align-items: flex-end; gap: 6px;
-  flex-shrink: 0;
-  margin-left: 8px;
-}
-.chat-list-time {
-  font-size: 11.5px;
-  color: var(--text-3);
-}
-.chat-list-unread {
-  min-width: 22px;
-  height: 22px;
-  padding: 0 6px;
-  border-radius: 11px;
-  background: var(--brand);
-  color: #fff;
-  font-size: 11.5px;
-  font-weight: 800;
-  line-height: 22px;
-  text-align: center;
-}
-.chat-list-count {
-  font-size: 11px;
-  color: var(--text-3);
-}
-
-.chat-list-empty {
-  flex: 1;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 60px 24px;
-  text-align: center;
-  gap: 14px;
-}
-.chat-list-empty-emoji { font-size: 56px; }
-.chat-list-empty-title { font-size: 18px; font-weight: 800; color: var(--text); }
-.chat-list-empty-sub { font-size: 14px; color: var(--text-2); max-width: 280px; line-height: 1.55; }
-
-.chat-fab {
-  position: absolute;
-  right: 18px;
-  bottom: calc(24px + var(--safe-bot));
-  width: 56px; height: 56px;
-  border-radius: 50%;
-  background: var(--brand);
-  color: #fff;
-  font-size: 28px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-  z-index: 5;
-  transition: transform .12s;
-}
-.chat-fab:active { transform: scale(.92); }
-
-/* ---- Messages ---- */
-.chat-scroll {
-  flex: 1 1 auto;
-  flex-shrink: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 16px 14px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  -webkit-overflow-scrolling: touch;
-  background: var(--bg);
-}
-.chat-daysep {
-  align-self: center;
-  margin: 12px 0;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: rgba(0,0,0,0.06);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-2);
-  text-transform: uppercase;
-  letter-spacing: .04em;
-}
-[data-theme="dark"] .chat-daysep { background: rgba(255,255,255,0.08); }
-
-.msg-row {
-  display: flex;
-  flex-direction: column;
-  max-width: 82%;
-  gap: 3px;
-  animation: msgIn .18s ease;
-}
-.msg-row.user { align-self: flex-end; align-items: flex-end; }
-.msg-row.bot  { align-self: flex-start; align-items: flex-start; }
-@keyframes msgIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.bubble {
-  padding: 10px 14px;
-  border-radius: 18px;
-  font-size: 14.5px;
-  line-height: 1.5;
-  word-wrap: break-word;
-  overflow-wrap: anywhere;
-  max-width: 100%;
-}
-.msg-row.bot  .bubble {
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-bottom-left-radius: 6px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
-.msg-row.user .bubble {
-  background: var(--brand);
-  color: #fff;
-  border-bottom-right-radius: 6px;
-  white-space: pre-wrap;
-}
-.msg-row.bot .bubble.is-error {
-  background: rgba(229,72,77,0.08);
-  border-color: rgba(229,72,77,0.35);
-  color: var(--danger);
-}
-.bubble p { margin: 0 0 8px 0; }
-.bubble p:last-child { margin-bottom: 0; }
-.bubble strong { color: inherit; font-weight: 700; }
-.msg-row.bot .bubble strong { color: var(--brand); }
-.bubble ul, .bubble ol { margin: 6px 0 8px; padding-left: 20px; }
-.bubble li { margin-bottom: 3px; }
-.bubble code {
-  background: rgba(0,0,0,0.06);
-  padding: 1px 5px; border-radius: 4px;
-  font-family: ui-monospace, Menlo, monospace; font-size: 13px;
-}
-.msg-row.user .bubble code { background: rgba(255,255,255,0.22); }
-
-.msg-meta {
-  display: flex; align-items: center; gap: 4px;
-  font-size: 10.5px;
-  color: var(--text-3);
-  padding: 0 4px;
-}
-.msg-meta .read-mark {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: -.02em;
-}
-.msg-row.user .msg-meta .read-mark.read { color: #4FC3F7; }
-
-.msg-row.typing .bubble {
-  display: flex; gap: 4px; padding: 14px 18px;
-}
-.msg-row.typing .bubble span {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--text-3);
-  animation: typingBounce 1.2s infinite;
-}
-.msg-row.typing .bubble span:nth-child(2) { animation-delay: .15s; }
-.msg-row.typing .bubble span:nth-child(3) { animation-delay: .3s; }
-@keyframes typingBounce {
-  0%,60%,100% { transform: translateY(0); opacity: .5; }
-  30% { transform: translateY(-5px); opacity: 1; }
-}
-
-.chat-empty {
-  flex: 1;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 40px 24px;
-  text-align: center;
-  color: var(--text-2);
-  gap: 10px;
-}
-.chat-empty-emoji { font-size: 56px; }
-.chat-empty-title { font-size: 18px; font-weight: 800; color: var(--text); }
-.chat-empty-sub { font-size: 14px; max-width: 280px; line-height: 1.55; }
-
-.scaffold-row {
-  flex-shrink: 0;
-  display: flex; gap: 8px;
-  padding: 8px 14px;
-  overflow-x: auto;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-  scrollbar-width: none;
-}
-.scaffold-row::-webkit-scrollbar { display: none; }
-.scaffold-chip {
-  padding: 8px 14px; border-radius: 999px;
-  background: var(--card); border: 1.5px solid var(--brand);
-  color: var(--brand); font-size: 13px; font-weight: 700;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.scaffold-chip:active { background: rgba(var(--brand-rgb), 0.08); }
-
-.chat-foot {
-  flex-shrink: 0;
-  display: flex; gap: 8px; align-items: flex-end;
-  padding: 10px 12px calc(10px + var(--safe-bot));
-  background: var(--card);
-  border-top: 1px solid var(--border);
-}
-.chat-input {
-  flex: 1; padding: 12px 16px; font-size: 16px;
-  border-radius: 22px; background: var(--bg-elev);
-  border: 1.5px solid var(--border); color: var(--text);
-  font-family: inherit; resize: none; max-height: 120px;
-  line-height: 1.4;
-  outline: none;
-}
-.chat-input:focus { border-color: var(--brand); }
-.chat-send {
-  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
-  background: var(--brand); color: #fff; display: flex;
-  align-items: center; justify-content: center; font-size: 18px;
-  transition: transform .08s, opacity .15s;
-}
-.chat-send:active { transform: scale(.94); }
-.chat-send:disabled { opacity: .4; }
-
-/* ---- REVIEW (Saved Words) ---- */
-.word-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 14px; border-radius: 12px;
-  background: var(--card); border: 1px solid var(--border);
-  margin-bottom: 8px;
-}
-.word-row-body { flex: 1; min-width: 0; }
-.word-row-term { font-weight: 800; font-size: 15px; color: var(--brand); }
-.word-row-pron { font-size: 11.5px; color: var(--text-3); margin-top: 1px; font-style: italic; }
-.word-row-trans { font-size: 13px; color: var(--text-2); margin-top: 2px; }
-.word-row-play { width: 36px; height: 36px; border-radius: 50%; background: rgba(var(--brand-rgb), 0.12); color: var(--brand); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-.word-row-play:active { background: var(--brand); color: #fff; }
-
-/* ---- SPEAK MODE ---- */
-.speak-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 32px 22px; text-align: center;
-  margin-bottom: 16px;
-}
-.speak-word { font-size: 34px; font-weight: 800; color: var(--brand); letter-spacing: -0.02em; line-height: 1.15; }
-.speak-pron { font-size: 14px; color: var(--text-3); margin-top: 8px; font-style: italic; }
-.speak-trans { font-size: 17px; margin-top: 14px; color: var(--text-2); }
-.mic-btn {
-  width: 84px; height: 84px; border-radius: 50%;
-  background: var(--brand); color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  margin: 20px auto 8px; font-size: 32px;
-  box-shadow: 0 4px 20px rgba(var(--brand-rgb), 0.35);
-  transition: transform .15s, background .2s;
-}
-.mic-btn:active { transform: scale(.94); }
-.mic-btn.recording { background: var(--danger); animation: micPulse 1.2s infinite; }
-@keyframes micPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(229,72,77,.4); } 50% { box-shadow: 0 0 0 16px rgba(229,72,77,0); } }
-.mic-hint { font-size: 12.5px; color: var(--text-3); text-align: center; margin-top: 6px; }
-.speak-result {
-  margin-top: 16px; padding: 14px 16px; border-radius: 12px;
-  font-size: 13.5px; line-height: 1.5; text-align: left;
-}
-.speak-result.info { background: rgba(var(--brand-rgb), 0.06); border: 1px solid rgba(var(--brand-rgb), 0.25); color: var(--text); }
-.speak-result.warn { background: rgba(var(--gold-rgb), 0.08); border: 1px solid rgba(var(--gold-rgb), 0.35); }
-
-/* ---- SITUATIONS ---- */
-.situation-card {
-  position: relative;
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px; border-radius: 12px;
-  background: var(--card); border: 1.5px solid var(--border);
-  margin-bottom: 10px; width: 100%; text-align: left;
-}
-.situation-card:active { border-color: var(--brand); background: rgba(var(--brand-rgb), 0.05); }
-.situation-icon { width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; background: rgba(var(--terracotta-rgb), 0.14); }
-.situation-body { flex: 1; min-width: 0; }
-.situation-title { font-weight: 800; font-size: 15px; }
-.situation-desc { font-size: 12.5px; color: var(--text-2); margin-top: 3px; }
-
-/* ---- BUTTONS ---- */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 12px 20px; border-radius: var(--radius-full);
-  font-weight: 700; font-size: 15px;
-  background: var(--brand); color: #fff;
-  min-height: 46px;
-  transition: transform .08s, opacity .15s;
-}
-.btn:active { transform: scale(.97); }
-.btn:disabled { opacity: .55; }
-.btn-ghost { background: transparent; color: var(--brand); border: 1.5px solid var(--brand); }
-.btn-secondary { background: var(--text); color: var(--bg); }
-.btn-block { width: 100%; margin-top: 12px; }
-
-/* ---- MISC ---- */
-.empty-note { color: var(--text-2); font-size: 14px; text-align: center; padding: 40px 16px; }
-.empty-note strong { color: var(--text); display: block; font-size: 16px; margin-bottom: 6px; }
-.skel { background: linear-gradient(90deg, var(--border) 0%, var(--border-strong) 50%, var(--border) 100%); background-size: 200% 100%; animation: skel 1.2s infinite; border-radius: 8px; }
-.skel-row { height: 14px; margin: 8px 0; }
-.skel-block { height: 66px; margin-top: 12px; }
-@keyframes skel { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-.spinner { width: 42px; height: 42px; border: 4px solid var(--border); border-top-color: var(--brand); border-radius: 50%; margin: 0 auto 14px; animation: spin .8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loader { text-align: center; padding: 30px 0; }
-.loader-txt { font-size: 14px; color: var(--text-2); }
-
-@media (max-width: 380px) {
-  .page-hero h1 { font-size: 21px; }
-  .speak-word { font-size: 28px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-}
+/* ===== TIMMY OVERLAY ===== */
+#timmy-view{position:fixed;inset:0;height:100dvh;z-index:9999;background:var(--bg);display:none;flex-direction:column;overflow:hidden}
+#timmy-view.active{display:flex}
+#timmy-list-view,#timmy-chat-view{flex:1 1 auto;min-height:0;width:100%;max-width:520px;margin:0 auto;flex-direction:column;position:relative;background:var(--bg);border-left:1px solid var(--border);border-right:1px solid var(--border)}
+.chat-topbar{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:calc(12px + var(--safe-top)) 14px 12px;background:var(--bg);border-bottom:1px solid var(--border);position:relative;z-index:2}
+.chat-back,.chat-menu-btn{width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--text-2);border-radius:50%}
+.chat-back:active,.chat-menu-btn:active{background:var(--border)}
+.chat-avatar{width:40px;height:40px;border-radius:50%;background:rgba(var(--brand-rgb),.14);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.chat-name{flex:1;min-width:0;font-weight:800;font-size:16px;line-height:1.2}
+.chat-name span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-name small{display:block;font-weight:500;font-size:12px;color:var(--text-2);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-menu-wrap{position:relative;flex-shrink:0}
+.chat-menu{position:absolute;top:44px;right:0;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:6px;min-width:190px;box-shadow:var(--shadow-lg);display:none;z-index:10}
+.chat-menu.show{display:block}
+.chat-menu button{display:block;width:100%;padding:10px 14px;text-align:left;font-size:13.5px;border-radius:8px;font-weight:600}
+.chat-menu button:hover{background:rgba(var(--brand-rgb),.08)}.chat-menu button.danger{color:var(--danger)}
+.chat-list-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;padding-bottom:96px}
+.chat-list-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);width:100%;text-align:left}
+.chat-list-item:active{background:rgba(var(--brand-rgb),.06)}
+.chat-list-avatar{width:48px;height:48px;border-radius:50%;background:rgba(var(--brand-rgb),.14);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.chat-list-body{flex:1;min-width:0}
+.chat-list-title{font-weight:700;font-size:15px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-list-preview{font-size:13px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-list-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;margin-left:8px}
+.chat-list-time,.chat-list-count{font-size:11.5px;color:var(--text-3)}
+.chat-list-unread{min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--brand);color:#fff;font-size:11.5px;font-weight:800;line-height:22px;text-align:center}
+.chat-list-empty,.chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;gap:12px}
+.chat-list-empty-emoji,.chat-empty-emoji{font-size:56px}.chat-list-empty-title,.chat-empty-title{font-size:18px;font-weight:800}
+.chat-list-empty-sub,.chat-empty-sub{font-size:14px;color:var(--text-2);max-width:280px}
+.chat-fab{position:absolute;right:18px;bottom:calc(24px + var(--safe-bot));width:56px;height:56px;border-radius:50%;background:var(--brand);color:#fff;font-size:28px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:5}
+.chat-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:16px 14px 20px;display:flex;flex-direction:column;gap:6px}
+.chat-daysep{align-self:center;margin:12px 0;padding:5px 12px;border-radius:999px;background:rgba(0,0,0,.06);font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase}
+.msg-row{display:flex;flex-direction:column;max-width:82%;gap:3px}
+.msg-row.user{align-self:flex-end;align-items:flex-end}.msg-row.bot{align-self:flex-start;align-items:flex-start}
+.bubble{padding:10px 14px;border-radius:18px;font-size:14.5px;line-height:1.5;overflow-wrap:anywhere;max-width:100%}
+.msg-row.bot .bubble{background:var(--card);border:1px solid var(--border);border-bottom-left-radius:6px}
+.msg-row.user .bubble{background:var(--brand);color:#fff;border-bottom-right-radius:6px;white-space:pre-wrap}
+.msg-row.bot .bubble.is-error{background:rgba(229,72,77,.08);border-color:rgba(229,72,77,.35);color:var(--danger)}
+.bubble p{margin:0 0 8px}.bubble p:last-child{margin:0}.msg-row.bot .bubble strong{color:var(--brand)}
+.bubble ul,.bubble ol{margin:6px 0 8px;padding-left:20px}
+.msg-meta{font-size:10.5px;color:var(--text-3);padding:0 4px}
+.msg-row.typing .bubble{display:flex;gap:4px;padding:14px 18px}
+.msg-row.typing .bubble span{width:7px;height:7px;border-radius:50%;background:var(--text-3);animation:tb 1.2s infinite}
+.msg-row.typing .bubble span:nth-child(2){animation-delay:.15s}.msg-row.typing .bubble span:nth-child(3){animation-delay:.3s}
+@keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+.scaffold-row{flex-shrink:0;display:flex;gap:8px;padding:8px 14px;overflow-x:auto;border-top:1px solid var(--border)}
+.scaffold-chip{padding:8px 14px;border-radius:999px;background:var(--card);border:1.5px solid var(--brand);color:var(--brand);font-size:13px;font-weight:700;white-space:nowrap}
+.chat-foot{flex-shrink:0;display:flex;gap:8px;align-items:flex-end;padding:10px 12px calc(10px + var(--safe-bot));background:var(--card);border-top:1px solid var(--border)}
+.chat-input{flex:1;padding:12px 16px;font-size:16px;border-radius:22px;background:var(--bg-elev);border:1.5px solid var(--border);color:var(--text);font-family:inherit;resize:none;max-height:120px;line-height:1.4;outline:none}
+.chat-input:focus{border-color:var(--brand)}
+.chat-send{width:46px;height:46px;border-radius:50%;flex-shrink:0;background:var(--brand);color:#fff;font-size:18px}
+.chat-send:disabled{opacity:.4}
+.btn:active{transform:scale(.97)}.btn:disabled{opacity:.55}
+.btn-ghost{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
+.btn-block{width:100%;margin-top:12px}
+.empty-note{color:var(--text-2);font-size:14px;text-align:center;padding:40px 16px}
+.empty-note strong{color:var(--text);display:block;font-size:16px;margin-bottom:6px}
+.word-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--card);border:1px solid var(--border);margin-bottom:8px}
+.word-row-body{flex:1;min-width:0}.word-row-term{font-weight:800;font-size:15px;color:var(--brand)}
+.word-row-pron{font-size:11.5px;color:var(--text-3);margin-top:1px;font-style:italic}.word-row-trans{font-size:13px;color:var(--text-2);margin-top:2px}
+.word-row-play{width:36px;height:36px;border-radius:50%;background:rgba(var(--brand-rgb),.12);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.word-row-play:active{background:var(--brand);color:#fff}
+.speak-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 22px;text-align:center;margin-bottom:16px}
+.speak-word{font-size:34px;font-weight:800;color:var(--brand);letter-spacing:-.02em;line-height:1.15}
+.speak-pron{font-size:14px;color:var(--text-3);margin-top:8px;font-style:italic}.speak-trans{font-size:17px;margin-top:14px;color:var(--text-2)}
+.mic-btn{width:84px;height:84px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;margin:20px auto 8px;font-size:32px;box-shadow:0 4px 20px rgba(var(--brand-rgb),.35)}
+.mic-btn:active{transform:scale(.94)}.mic-btn.recording{background:var(--danger);animation:mp 1.2s infinite}
+@keyframes mp{0%,100%{box-shadow:0 0 0 0 rgba(229,72,77,.4)}50%{box-shadow:0 0 0 16px rgba(229,72,77,0)}}
+.mic-hint{font-size:12.5px;color:var(--text-3);text-align:center;margin-top:6px}
+.speak-result{margin-top:16px;padding:14px 16px;border-radius:12px;font-size:13.5px;line-height:1.5;text-align:left}
+.speak-result.info{background:rgba(var(--brand-rgb),.06);border:1px solid rgba(var(--brand-rgb),.25)}
+.speak-result.warn{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.35)}
+.ex-opt{width:100%;text-align:left;padding:16px 18px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg-elev);font-weight:600;font-size:15px}
+.ex-opt:active{border-color:var(--brand)}.ex-opt:disabled{opacity:1;cursor:default}
 </style>
 </head>
 <body>
@@ -699,154 +115,67 @@ img, svg { display: block; max-width: 100%; }
 <header id="cw-header"></header>
 
 <main class="page">
-  <div class="page-hero">
-    <h1>Practice</h1>
-    <p>Talk, listen, and get comfortable with the sounds of the language.</p>
-  </div>
-
-  <div id="usage-bar" class="usage-bar" style="display:none;">
-    <span class="label">Timmy usage today</span>
-    <span class="count" id="usage-count">—</span>
-  </div>
+  <div class="page-hero"><h1>Practice</h1><p>Talk, listen, and get comfortable with the sounds of the language.</p></div>
+  <div id="usage-bar" class="usage-bar" style="display:none"><span class="label">Timmy usage today</span><span class="count" id="usage-count">—</span></div>
 
   <div class="section-h">Talk with Timmy</div>
-
-  <button class="method-card" data-section="practice" onclick="Practice.openSection('practice')">
-    <div class="method-icon">🤓</div>
-    <div class="method-body">
-      <div class="method-title">Practice with Timmy</div>
-      <div class="method-desc" data-lang-slot="practice">Chat about your latest lesson</div>
-    </div>
-    <div class="method-chev">›</div>
-  </button>
-
-  <button class="method-card tint-indigo" data-section="cultural" onclick="Practice.openSection('cultural')">
-    <div class="method-icon">🎭</div>
-    <div class="method-body">
-      <div class="method-title">Cultural advice</div>
-      <div class="method-desc">How and when to use words in real Nigerian contexts</div>
-    </div>
-    <div class="method-chev">›</div>
-  </button>
-
-  <button class="method-card tint-gold" data-section="quick" onclick="Practice.openSection('quick')">
-    <div class="method-icon">⚡</div>
-    <div class="method-body">
-      <div class="method-title">Quick translations</div>
-      <div class="method-desc">Fast translations with pronunciation help</div>
-    </div>
-    <div class="method-chev">›</div>
-  </button>
+  <button class="method-card" data-section="practice" onclick="Practice.openSection('practice')"><div class="method-icon">🤓</div><div class="method-body"><div class="method-title">Practice with Timmy</div><div class="method-desc" data-lang-slot="practice">Chat about your latest lesson</div></div><div class="method-chev">›</div></button>
+  <button class="method-card tint-indigo" data-section="cultural" onclick="Practice.openSection('cultural')"><div class="method-icon">🎭</div><div class="method-body"><div class="method-title">Cultural advice</div><div class="method-desc">How and when to use words in real Nigerian contexts</div></div><div class="method-chev">›</div></button>
+  <button class="method-card tint-gold" data-section="quick" onclick="Practice.openSection('quick')"><div class="method-icon">⚡</div><div class="method-body"><div class="method-title">Quick translations</div><div class="method-desc">Fast translations with pronunciation help</div></div><div class="method-chev">›</div></button>
 
   <div class="section-h">Speak</div>
-  <button class="method-card tint-terracotta" onclick="Practice.openSpeak()">
-    <div class="method-icon">🎤</div>
-    <div class="method-body">
-      <div class="method-title">Pronunciation practice</div>
-      <div class="method-desc">Listen, then repeat. Timmy explains where you can improve</div>
-    </div>
-    <div class="method-chev">›</div>
-  </button>
+  <button class="method-card tint-terracotta" onclick="Practice.openSpeak()"><div class="method-icon">🎤</div><div class="method-body"><div class="method-title">Pronunciation practice</div><div class="method-desc">Listen, then repeat. Timmy explains where you can improve</div></div><div class="method-chev">›</div></button>
 
   <div class="section-h">Review</div>
-  <button class="method-card" onclick="Practice.openReview()">
-    <div class="method-icon">⭐</div>
-    <div class="method-body">
-      <div class="method-title">Saved words</div>
-      <div class="method-desc" id="saved-count-text">Review words you've saved during lessons</div>
-    </div>
-    <div class="method-chev">›</div>
-  </button>
+  <button class="method-card" onclick="Practice.openReview()"><div class="method-icon">⭐</div><div class="method-body"><div class="method-title">Saved words</div><div class="method-desc" id="saved-count-text">Review words you've saved during lessons</div></div><div class="method-chev">›</div></button>
 
   <div class="section-h">Situations</div>
   <div id="situations-list"></div>
-
-  <div style="text-align: center; font-size: 12px; color: var(--text-3); padding: 24px 0 12px;">
-    Timmy resets at midnight local time
-  </div>
+  <div style="text-align:center;font-size:12px;color:var(--text-3);padding:24px 0 12px">Timmy resets at midnight local time</div>
 </main>
 
 <nav id="cw-bottom-nav">
-  <button class="tab" onclick="Nav.go('learn')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-    </svg>
-    <span>Learn</span>
-  </button>
-  <button class="tab active" onclick="Nav.go('practice')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
-      <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
-      <line x1="12" y1="19" x2="12" y2="23"></line>
-      <line x1="8" y1="23" x2="16" y2="23"></line>
-    </svg>
-    <span>Practice</span>
-  </button>
-  <button class="tab" onclick="Nav.go('community')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-      <circle cx="9" cy="7" r="4"></circle>
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-    </svg>
-    <span>Community</span>
-  </button>
-  <button class="tab" onclick="Nav.go('profile')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-      <circle cx="12" cy="7" r="4"></circle>
-    </svg>
-    <span>Profile</span>
-  </button>
+  <button class="tab" onclick="Nav.go('learn')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>Learn</span></button>
+  <button class="tab active" onclick="Nav.go('practice')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg><span>Practice</span></button>
+  <button class="tab" onclick="Nav.go('community')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Community</span></button>
+  <button class="tab" onclick="Nav.go('profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></button>
 </nav>
 
-<!-- ============================================================
-     TIMMY FULLSCREEN OVERLAY — list view + chat view
-     ============================================================ -->
+<!-- ===== TIMMY OVERLAY: list view (level 2) + chat view (level 3) ===== -->
 <div id="timmy-view">
 
-  <!-- LIST VIEW -->
-  <div id="timmy-list-view" style="display:none; flex-direction:column; height:100%; position:relative;">
+  <div id="timmy-list-view" style="display:none">
     <div class="chat-topbar">
-      <button class="chat-back" onclick="Practice.closeTimmy()" aria-label="Back">←</button>
+      <button class="chat-back" onclick="history.back()" aria-label="Back">←</button>
       <div class="chat-avatar" id="list-avatar">🤓</div>
-      <div class="chat-name" id="list-name">
-        <span id="list-title">Practice with Timmy</span>
-        <small id="list-sub">All chats</small>
-      </div>
-      <button class="chat-menu-btn" onclick="Practice.toggleListMenu(event)" aria-label="Menu">⋮
+      <div class="chat-name"><span id="list-title">Practice with Timmy</span><small id="list-sub">All chats</small></div>
+      <div class="chat-menu-wrap">
+        <button class="chat-menu-btn" onclick="Practice.toggleMenu(event,'list-menu')" aria-label="Menu">⋮</button>
         <div class="chat-menu" id="list-menu">
           <button onclick="Practice.markAllRead()">✅ Mark all as read</button>
           <button class="danger" onclick="Practice.deleteAllChats()">🗑️ Delete all chats</button>
         </div>
-      </button>
+      </div>
     </div>
-
     <div class="chat-list-scroll" id="timmy-chat-list"></div>
-
     <button class="chat-fab" onclick="Practice.startNewChat()" aria-label="New chat">+</button>
   </div>
 
-  <!-- CHAT VIEW -->
-  <div id="timmy-chat-view" style="display:none; flex-direction:column; height:100%;">
+  <div id="timmy-chat-view" style="display:none">
     <div class="chat-topbar">
-      <button class="chat-back" onclick="Practice.backToList()" aria-label="Back">←</button>
+      <button class="chat-back" onclick="history.back()" aria-label="Back">←</button>
       <div class="chat-avatar" id="timmy-avatar">🤓</div>
-      <div class="chat-name" id="timmy-name">
-        <span id="timmy-title">Timmy</span>
-        <small id="timmy-sub">Timmy AI · Yorùbá</small>
-      </div>
-      <button class="chat-menu-btn" onclick="Practice.toggleChatMenu(event)" aria-label="Menu">⋮
+      <div class="chat-name"><span id="timmy-title">Timmy</span><small id="timmy-sub">Timmy AI</small></div>
+      <div class="chat-menu-wrap">
+        <button class="chat-menu-btn" onclick="Practice.toggleMenu(event,'timmy-menu')" aria-label="Menu">⋮</button>
         <div class="chat-menu" id="timmy-menu">
           <button onclick="Practice.exportCurrentChat()">📤 Export chat</button>
           <button class="danger" onclick="Practice.deleteCurrentChat()">🗑️ Delete this chat</button>
         </div>
-      </button>
+      </div>
     </div>
-
     <div class="chat-scroll" id="timmy-scroll"></div>
-    <div class="scaffold-row" id="scaffold-row" style="display:none;"></div>
+    <div class="scaffold-row" id="scaffold-row" style="display:none"></div>
     <div class="chat-foot">
       <textarea class="chat-input" id="timmy-input" rows="1" placeholder="Message Timmy…" autocomplete="off"></textarea>
       <button class="chat-send" id="timmy-send" onclick="Practice.sendMessage()" aria-label="Send">➤</button>
@@ -857,821 +186,432 @@ img, svg { display: block; max-width: 100%; }
 
 <script src="shared.js"></script>
 <script>
-/* ============================================================
-   SECTION METADATA
-   ============================================================ */
+/* ---------- Section metadata (id, emoji, title, greeting, system prompt) ---------- */
 const SECTIONS = {
-  practice: {
-    id: 'practice', emoji: '🤓', title: 'Practice with Timmy',
-    headerSub: (lang) => `Practice conversation in ${lang}`,
-    greeting: (lang, name) => {
-      const greets = { yoruba: 'Ẹ káàbọ̀', igbo: 'Ndeewo', hausa: 'Sannu', pidgin: 'How you dey', urhobo: 'Mavọ', itsekiri: 'Mavọ' };
-      const g = greets[State.currentLanguage] || 'Hello';
-      return `${g} ${name}! Ready to practice ${lang}? We can start with something simple, or you can type whatever you like.`;
-    }
-  },
-  cultural: {
-    id: 'cultural', emoji: '🎭', title: 'Cultural advice',
-    headerSub: () => 'Ask about Nigerian customs and context',
-    greeting: (lang, name) => `Hi ${name}. I'm Timmy. Ask me anything about Nigerian culture — ${lang} traditions, food, family customs, respect, proverbs, or everyday life. I'll keep it real.`
-  },
-  quick: {
-    id: 'quick', emoji: '⚡', title: 'Quick translations',
-    headerSub: () => 'Fast translations and explanations',
-    greeting: (lang, name) => `Hi ${name}. Give me any word or phrase and I'll translate it into ${lang} with pronunciation. Or type a ${lang} word you heard and I'll break it down.`
-  },
-  greeting_parent: {
-    id: 'greeting_parent', emoji: '🏠', title: 'Greeting a parent',
-    headerSub: () => 'Respectful morning and evening greetings',
-    greeting: (lang, name) => `Hi ${name}. Let's practice greeting an older family member in ${lang}. You play the younger person, I'll play the elder.`
-  },
-  meeting_friend: {
-    id: 'meeting_friend', emoji: '👋', title: 'Meeting a friend',
-    headerSub: () => 'Casual, warm, and natural',
-    greeting: (lang, name) => `Alright ${name}! Let's do a casual, friendly greeting with a peer in ${lang}.`
-  },
-  market: {
-    id: 'market', emoji: '🛒', title: 'At the market',
-    headerSub: () => 'Asking prices and haggling politely',
-    greeting: (lang, name) => `Let's do a market scene in ${lang}, ${name}. You're the buyer, I'm the seller. Try to ask for the price of tomatoes.`
-  },
-  meal_sharing: {
-    id: 'meal_sharing', emoji: '🍲', title: 'Sharing a meal',
-    headerSub: () => 'Offering and accepting food',
-    greeting: (lang, name) => `Let's practice a Nigerian meal-sharing conversation in ${lang}. I'll offer food, you accept or politely decline.`
-  },
-  directions: {
-    id: 'directions', emoji: '🚗', title: 'Asking for directions',
-    headerSub: () => 'Finding your way without a phone',
-    greeting: (lang, name) => `Okay ${name}, you're lost in a Nigerian city and need to ask for directions in ${lang}. I'm a stranger on the street. Ask away.`
-  },
-  showing_respect: {
-    id: 'showing_respect', emoji: '🙏', title: 'Showing respect',
-    headerSub: () => 'The right words for elders',
-    greeting: (lang, name) => `Let's practice showing respect to an elder in ${lang}, ${name}. These phrases matter a lot.`
-  }
+  practice: { emoji:'🤓', title:'Practice with Timmy', sub:l=>`Practice conversation in ${l}`,
+    greeting:(l,n)=>`Hi ${n}! Ready to practice ${l}? Start simple, or type whatever you like.`,
+    prompt:'You are Timmy, a friendly tutor. Hold a simple conversation in the target language, correct mistakes gently, and give short English hints.' },
+  cultural: { emoji:'🎭', title:'Cultural advice', sub:()=>'Ask about Nigerian customs and context',
+    greeting:(l,n)=>`Hi ${n}. Ask me anything about Nigerian culture: ${l} traditions, food, family customs, respect, proverbs, everyday life.`,
+    prompt:'You are Timmy, a guide to Nigerian culture. Explain customs, etiquette, proverbs and when to use words. Be concise and practical.' },
+  quick: { emoji:'⚡', title:'Quick translations', sub:()=>'Fast translations and explanations',
+    greeting:(l,n)=>`Hi ${n}. Give me any word or phrase and I'll translate it into ${l} with pronunciation.`,
+    prompt:'You are Timmy doing quick translations. Give the translation, a pronunciation guide, and a one-line usage note. Keep replies short.' },
+  greeting_parent: { emoji:'🏠', title:'Greeting a parent', sub:()=>'Respectful morning and evening greetings',
+    greeting:(l,n)=>`Hi ${n}. Let's practice greeting an older family member in ${l}. You're the younger person, I'm the elder.`,
+    prompt:'Role-play an elder parent. The learner greets you in the target language. Reply in character, then briefly coach their respect and tone.' },
+  meeting_friend: { emoji:'👋', title:'Meeting a friend', sub:()=>'Casual, warm, and natural',
+    greeting:(l,n)=>`Alright ${n}! Let's do a casual, friendly greeting with a peer in ${l}.`,
+    prompt:'Role-play a friend meeting the learner. Keep it casual and natural, then give brief feedback.' },
+  market: { emoji:'🛒', title:'At the market', sub:()=>'Asking prices and haggling politely',
+    greeting:(l,n)=>`Market scene in ${l}, ${n}. You're the buyer, I'm the seller. Ask the price of tomatoes.`,
+    prompt:'Role-play a market seller. The learner is the buyer. Haggle politely, then give brief language feedback.' },
+  meal_sharing: { emoji:'🍲', title:'Sharing a meal', sub:()=>'Offering and accepting food',
+    greeting:(l,n)=>`Let's practice a meal-sharing conversation in ${l}. I'll offer food, you accept or politely decline.`,
+    prompt:'Role-play someone offering food. The learner accepts or declines politely. Coach phrasing afterwards.' },
+  directions: { emoji:'🚗', title:'Asking for directions', sub:()=>'Finding your way without a phone',
+    greeting:(l,n)=>`${n}, you're lost in a Nigerian city and need directions in ${l}. I'm a stranger on the street. Ask away.`,
+    prompt:'Role-play a stranger giving directions in a Nigerian city. Use simple target-language phrases with English help.' },
+  showing_respect: { emoji:'🙏', title:'Showing respect', sub:()=>'The right words for elders',
+    greeting:(l,n)=>`Let's practice showing respect to an elder in ${l}, ${n}. These phrases matter a lot.`,
+    prompt:'Teach and drill respectful phrases for elders, with correct honorifics and body-language notes.' }
 };
+const SITUATIONS = ['greeting_parent','meeting_friend','market','meal_sharing','directions','showing_respect'];
+const ROLEPLAY = ['practice', ...SITUATIONS];
+const $ = id => document.getElementById(id);
 
-/* ============================================================
-   PRACTICE CONTROLLER
-   ============================================================ */
 const Practice = {
-  user: null,
-  messages: [],
-  sending: false,
-  currentSection: null,
-  currentChatId: null,
-  _sectionsCache: {},
+  user:null, messages:[], sending:false, currentSection:null, currentChatId:null, _cache:{},
 
   async init() {
-    const ok = await cwBoot();
-    if (!ok) return;
+    if (!(await cwBoot())) return;
     Header.render('practice');
     this.user = State.user;
-
-    this.setupLangSlots();
-    this.renderSituations();
-    this.renderSavedCount();
-    this.loadUsage();
-    this.flushOfflineQueue().catch(() => {});
-    this.maybeImportLocalChats().catch(() => {});
-
+    this.setupLangSlots(); this.renderSituations(); this.renderSavedCount(); this.loadUsage();
+    this.flushOfflineQueue().catch(()=>{});
+    this.maybeImportLocalChats().catch(()=>{});
+    this.refreshSectionBadges();
     State.on('hydrated', () => { this.user = State.user; this.renderSavedCount(); });
-    State.on('language:changed', () => {
-      this.setupLangSlots();
-      this.renderSituations();
-      this._sectionsCache = {};
-      if (window.Badges) Badges.refresh();
-    });
-    State.on('unread:changed', () => {
-      if (window.Badges) Badges.renderTimmySectionBadges();
+    State.on('language:changed', () => { this.setupLangSlots(); this._cache = {}; this.refreshSectionBadges(); });
+    State.on('unread:changed', () => this.renderSectionBadges());
+    window.addEventListener('popstate', () => {
+      if (this.currentChatId) this.backToList();
+      else if (this.currentSection) this.closeTimmy();
     });
   },
 
   setupLangSlots() {
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
-    const slot = document.querySelector('[data-lang-slot="practice"]');
-    if (slot) slot.textContent = `Chat in ${langCfg.name} about your latest lesson`;
+    const el = document.querySelector('[data-lang-slot="practice"]');
+    if (el) el.textContent = `Chat in ${CW_CONFIG.LANGUAGES[State.currentLanguage].name} about your latest lesson`;
   },
 
   async loadUsage() {
+    const bar = $('usage-bar'), count = $('usage-count');
     try {
-      const u = await Backend.getAIUsage();
-      const bar = document.getElementById('usage-bar');
-      const count = document.getElementById('usage-count');
-      const label = bar?.querySelector('.label');
-      if (!bar || !count) return;
-      const chat = u?.chat || {};
-      const unlimited = chat.unlimited === true;
-      const used = chat.used ?? 0;
-      const limit = chat.limit ?? 200;
-      const remaining = unlimited ? Infinity : (chat.remaining ?? Math.max(0, limit - used));
-      bar.style.display = 'flex';
-      bar.classList.remove('warning', 'limit');
-      if (unlimited) {
-        count.textContent = '∞';
-        if (label) label.textContent = 'Unlimited Timmy messages';
-        return;
-      }
-      count.textContent = remaining + ' / ' + limit;
-      if (remaining === 0) bar.classList.add('limit');
-      else if (remaining <= limit * 0.15) bar.classList.add('warning');
-      if (label) {
-        label.textContent = remaining === 0 ? 'Daily limit reached — resets at midnight' : 'Timmy messages remaining today';
-      }
-    } catch {
-      const bar = document.getElementById('usage-bar');
-      if (bar) bar.style.display = 'none';
-    }
+      const c = (await Backend.getAIUsage())?.chat || {};
+      const label = bar.querySelector('.label');
+      bar.style.display = 'flex'; bar.classList.remove('warning','limit');
+      if (c.unlimited) { count.textContent = '∞'; label.textContent = 'Unlimited Timmy messages'; return; }
+      const limit = c.limit ?? 200, rem = c.remaining ?? Math.max(0, limit - (c.used ?? 0));
+      count.textContent = rem + ' / ' + limit;
+      if (rem === 0) bar.classList.add('limit'); else if (rem <= limit * .15) bar.classList.add('warning');
+      label.textContent = rem === 0 ? 'Daily limit reached — resets at midnight' : 'Timmy messages remaining today';
+    } catch { bar.style.display = 'none'; }
   },
 
   renderSavedCount() {
-    const el = document.getElementById('saved-count-text');
-    if (!el) return;
-    const words = (this.user && this.user.savedWords) || [];
-    el.textContent = words.length ? `${words.length} word${words.length === 1 ? '' : 's'} saved from your lessons` : "Review words you've saved during lessons";
+    const n = ((this.user && this.user.savedWords) || []).length;
+    $('saved-count-text').textContent = n ? `${n} word${n===1?'':'s'} saved from your lessons` : "Review words you've saved during lessons";
   },
 
   renderSituations() {
-    const container = document.getElementById('situations-list');
-    if (!container) return;
-    const items = [
-      { id: 'greeting_parent', icon: '🏠', title: 'Greeting a parent', desc: 'Respectful morning and evening greetings' },
-      { id: 'meeting_friend', icon: '👋', title: 'Meeting a friend', desc: 'Casual, warm, and natural' },
-      { id: 'market', icon: '🛒', title: 'At the market', desc: 'Asking prices and haggling politely' },
-      { id: 'meal_sharing', icon: '🍲', title: 'Sharing a meal', desc: 'Offering and accepting food' },
-      { id: 'directions', icon: '🚗', title: 'Asking for directions', desc: 'Finding your way without a phone' },
-      { id: 'showing_respect', icon: '🙏', title: 'Showing respect', desc: 'The right words for elders' }
-    ];
-    container.innerHTML = items.map(s => `
-      <button class="situation-card" data-section="${s.id}" onclick="Practice.openSection('${s.id}')">
-        <div class="situation-icon">${s.icon}</div>
-        <div class="situation-body">
-          <div class="situation-title">${esc(s.title)}</div>
-          <div class="situation-desc">${esc(s.desc)}</div>
-        </div>
-        <div class="method-chev">›</div>
-      </button>`).join('');
+    $('situations-list').innerHTML = SITUATIONS.map(id => { const s = SECTIONS[id]; return `
+      <button class="situation-card" data-section="${id}" onclick="Practice.openSection('${id}')">
+        <div class="situation-icon">${s.emoji}</div>
+        <div class="situation-body"><div class="situation-title">${esc(s.title)}</div><div class="situation-desc">${esc(s.sub())}</div></div>
+        <div class="method-chev">›</div></button>`; }).join('');
+    this.renderSectionBadges();
   },
 
-  /* ============================================================
-     STORAGE
-     ============================================================ */
-  _localSectionsKey(lang) { return 'cw_timmy_cache_sections_' + (lang || State.currentLanguage); },
-  _localChatKey(lang, sid, cid) { return `cw_timmy_chat_full_${lang || State.currentLanguage}_${sid}_${cid}`; },
-  _offlineQueueKey() { return 'cw_timmy_offline_queue_v2'; },
-  _migrationFlagKey(lang) { return 'cw_timmy_migrated_v2_' + (lang || State.currentLanguage); },
-
-  async loadSectionChats(sectionId, { force = false } = {}) {
-    const lang = State.currentLanguage;
-    if (!force && this._sectionsCache[sectionId]) return this._sectionsCache[sectionId];
-    try {
-      const res = await Backend.listTimmyChats(sectionId, lang);
-      const chats = {};
-      for (const c of (res.chats || [])) {
-        chats[c.chatId] = {
-          id: c.chatId,
-          title: c.title,
-          unreadCount: c.unreadCount || 0,
-          lastMessageAt: c.lastMessageAt ? new Date(c.lastMessageAt).getTime() : 0,
-          messageCount: c.messageCount || 0,
-          lastMessage: c.lastMessage || null,
-          messages: null
-        };
-      }
-      this._sectionsCache[sectionId] = chats;
-      try {
-        const all = JSON.parse(localStorage.getItem(this._localSectionsKey(lang)) || '{}');
-        all[sectionId] = chats;
-        localStorage.setItem(this._localSectionsKey(lang), JSON.stringify(all));
-      } catch {}
-      return chats;
-    } catch (e) {
-      console.warn('loadSectionChats failed:', e.message);
-      try {
-        const all = JSON.parse(localStorage.getItem(this._localSectionsKey(lang)) || '{}');
-        this._sectionsCache[sectionId] = all[sectionId] || {};
-        return this._sectionsCache[sectionId];
-      } catch { return {}; }
+  /* ---------- unread badges: sum of unread across every chat in a section ---------- */
+  async refreshSectionBadges() {
+    await Promise.all(Object.keys(SECTIONS).map(id => this.loadSectionChats(id, { force:true }).catch(()=>{})));
+    this.renderSectionBadges();
+  },
+  renderSectionBadges() {
+    for (const id of Object.keys(SECTIONS)) {
+      const n = Object.values(this._cache[id] || {}).reduce((s,c) => s + (c.unreadCount || 0), 0);
+      const card = document.querySelector(`[data-section="${id}"]`); if (!card) continue;
+      let b = card.querySelector('.method-badge');
+      if (n > 0) { if (!b) { b = document.createElement('div'); b.className = 'method-badge'; card.appendChild(b); } b.textContent = n > 99 ? '99+' : n; }
+      else if (b) b.remove();
     }
   },
 
-  async loadChat(sectionId, chatId) {
-    const lang = State.currentLanguage;
-    const key = this._localChatKey(lang, sectionId, chatId);
-    let cached = null;
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw) cached = JSON.parse(raw);
-    } catch {}
+  /* ---------- storage: _cache[sectionId][chatId] ---------- */
+  _chatKey(sid, cid) { return `cw_timmy_chat_full_${State.currentLanguage}_${sid}_${cid}`; },
+  _queueKey() { return 'cw_timmy_offline_queue_v2'; },
 
+  async loadSectionChats(sid, { force = false } = {}) {
+    if (!force && this._cache[sid]) return this._cache[sid];
+    try {
+      const res = await Backend.listTimmyChats(sid, State.currentLanguage), chats = {};
+      for (const c of (res.chats || [])) chats[c.chatId] = {
+        id:c.chatId, title:c.title, unreadCount:c.unreadCount || 0,
+        lastMessageAt:c.lastMessageAt ? new Date(c.lastMessageAt).getTime() : 0,
+        messageCount:c.messageCount || 0, lastMessage:c.lastMessage || null, messages:null };
+      for (const [id, c] of Object.entries(this._cache[sid] || {}))   // keep chats the server hasn't accepted yet
+        if (c.unsynced && !chats[id]) { chats[id] = c; this.retryCreate(sid, c); }
+      return (this._cache[sid] = chats);
+    } catch (e) { console.warn('loadSectionChats', e.message); return (this._cache[sid] = this._cache[sid] || {}); }
+  },
+
+  async retryCreate(sid, c) {
+    try {
+      await Backend.createTimmyChat({ sectionId:sid, language:State.currentLanguage, chatId:c.id, title:c.title, greeting:c.messages?.[0]?.content || '' });
+      delete c.unsynced;
+    } catch (e) { console.warn('retryCreate', e.message); }
+  },
+
+  async loadChat(sid, cid) {
+    const key = this._chatKey(sid, cid); let cached = null;
+    try { cached = JSON.parse(localStorage.getItem(key) || 'null'); } catch {}
     const refresh = async () => {
       try {
-        const res = await Backend.getTimmyChat(sectionId, chatId);
-        const chat = res.chat;
-        const messages = (chat.messages || []).map(m => ({
-          id: m._id,
-          role: m.role,
-          content: m.content,
-          ts: new Date(m.ts).getTime(),
-          isError: !!m.isError
-        }));
+        const chat = (await Backend.getTimmyChat(sid, cid)).chat;
+        const messages = (chat.messages || []).map(m => ({ id:m._id, role:m.role, content:m.content, ts:new Date(m.ts).getTime(), isError:!!m.isError }));
         try { localStorage.setItem(key, JSON.stringify({ chat, messages })); } catch {}
-        if (!this._sectionsCache[sectionId]) this._sectionsCache[sectionId] = {};
-        const existing = this._sectionsCache[sectionId][chatId] || {};
-        this._sectionsCache[sectionId][chatId] = {
-          ...existing,
-          id: chatId,
-          title: chat.title,
-          unreadCount: 0,
-          lastMessageAt: chat.lastMessageAt ? new Date(chat.lastMessageAt).getTime() : 0,
-          messageCount: chat.messageCount || messages.length,
-          lastMessage: messages.length ? { role: messages[messages.length - 1].role, content: messages[messages.length - 1].content, ts: messages[messages.length - 1].ts } : null,
-          messages
-        };
-        if (this.currentChatId === chatId && messages.length >= this.messages.length) {
-          this.messages = messages;
-          this.renderChat();
-          this.scrollToBottom();
-        }
+        const last = messages[messages.length - 1];
+        this._cache[sid] = this._cache[sid] || {};
+        this._cache[sid][cid] = { ...(this._cache[sid][cid] || {}), id:cid, title:chat.title, unreadCount:0,
+          lastMessageAt:chat.lastMessageAt ? new Date(chat.lastMessageAt).getTime() : 0,
+          messageCount:chat.messageCount || messages.length,
+          lastMessage:last ? { role:last.role, content:last.content, ts:last.ts } : null, messages };
+        if (this.currentChatId === cid && messages.length >= this.messages.length) { this.messages = messages; this.renderChat(); this.scrollToBottom(); }
         return { chat, messages };
-      } catch (e) {
-        console.warn('loadChat refresh failed:', e.message);
-        return null;
-      }
+      } catch (e) { console.warn('loadChat', e.message); return null; }
     };
-
-    if (cached && cached.messages) {
-      refresh().then(() => this.renderScaffold());
-      return cached;
-    }
+    if (cached && cached.messages) { refresh().then(() => this.renderScaffold()); return cached; }
     return await refresh();
   },
 
   queueOffline(item) {
-    try {
-      const raw = localStorage.getItem(this._offlineQueueKey());
-      const queue = raw ? JSON.parse(raw) : [];
-      queue.push({ ...item, ts: Date.now() });
-      localStorage.setItem(this._offlineQueueKey(), JSON.stringify(queue.slice(-200)));
-    } catch {}
+    try { const q = JSON.parse(localStorage.getItem(this._queueKey()) || '[]'); q.push({ ...item, ts:Date.now() }); localStorage.setItem(this._queueKey(), JSON.stringify(q.slice(-200))); } catch {}
   },
-
   async flushOfflineQueue() {
-    let queue = [];
-    try {
-      const raw = localStorage.getItem(this._offlineQueueKey());
-      queue = raw ? JSON.parse(raw) : [];
-    } catch {}
-    if (!queue.length) return;
-    const remaining = [];
-    for (const item of queue) {
-      try {
-        await Backend.appendTimmyChatMessage(item.sectionId, item.chatId, item.role, item.content, item.isError);
-      } catch { remaining.push(item); }
-    }
-    try {
-      if (remaining.length) localStorage.setItem(this._offlineQueueKey(), JSON.stringify(remaining));
-      else localStorage.removeItem(this._offlineQueueKey());
-    } catch {}
+    let q = []; try { q = JSON.parse(localStorage.getItem(this._queueKey()) || '[]'); } catch {}
+    const left = [];
+    for (const i of q) { try { await Backend.appendTimmyChatMessage(i.sectionId, i.chatId, i.role, i.content, i.isError); } catch { left.push(i); } }
+    try { left.length ? localStorage.setItem(this._queueKey(), JSON.stringify(left)) : localStorage.removeItem(this._queueKey()); } catch {}
+  },
+  async markChatReadServer(sid, cid) {
+    try { await Backend.markTimmyChatRead(sid, cid); if (this._cache[sid]?.[cid]) this._cache[sid][cid].unreadCount = 0; State.emit('timmy:chat-read', { sectionId:sid, chatId:cid }); }
+    catch (e) { console.warn('markChatRead', e.message); }
   },
 
-  async maybeImportLocalChats() {
-    const lang = State.currentLanguage;
-    if (localStorage.getItem(this._migrationFlagKey(lang))) return;
-    try {
-      const legacy = JSON.parse(localStorage.getItem('cw_timmy_sections_' + lang) || '{}');
-      const threads = [];
-      for (const [sid, s] of Object.entries(legacy)) {
-        if (!SECTIONS[sid]) continue;
-        for (const [cid, c] of Object.entries(s.chats || {})) {
-          if (Array.isArray(c.messages) && c.messages.length) {
-            threads.push({ sectionId: sid, chatId: cid, title: c.title || SECTIONS[sid].title, messages: c.messages });
-          }
-        }
-      }
-      const oldKeys = ['cw_timmy_chat_' + lang, 'cw_timmy_cache_' + lang, 'cw_chat_practice_' + lang, 'cw_chat_cultural_' + lang, 'cw_chat_quick_' + lang];
-      for (const k of oldKeys) {
-        try {
-          const raw = localStorage.getItem(k);
-          if (!raw) continue;
-          const arr = JSON.parse(raw);
-          if (!Array.isArray(arr) || !arr.length) continue;
-          let sid = 'practice';
-          if (k.includes('cultural')) sid = 'cultural';
-          else if (k.includes('quick')) sid = 'quick';
-          threads.push({ sectionId: sid, chatId: 'migrated_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6), title: SECTIONS[sid]?.title || 'Chat', messages: arr });
-          localStorage.removeItem(k);
-        } catch {}
-      }
-      if (threads.length) {
-        await Backend.importTimmyChats(lang, threads);
-      }
-      localStorage.setItem(this._migrationFlagKey(lang), '1');
-    } catch (e) {
-      console.warn('maybeImportLocalChats failed:', e.message);
-    }
-  },
-
-  async markChatReadServer(sectionId, chatId) {
-    try {
-      await Backend.markTimmyChatRead(sectionId, chatId);
-      if (this._sectionsCache[sectionId]?.[chatId]) this._sectionsCache[sectionId][chatId].unreadCount = 0;
-      State.emit('timmy:chat-read', { sectionId, chatId });
-    } catch (e) {
-      console.warn('markChatReadServer failed:', e.message);
-    }
-  },
-
-  /* ============================================================
-     NAVIGATION
-     ============================================================ */
-  async openSection(sectionId) {
-    const section = SECTIONS[sectionId];
-    if (!section) return;
-    this.currentSection = sectionId;
-    this.currentChatId = null;
-
+  /* ---------- navigation: Practice tab → chat list → chat ---------- */
+  async openSection(sid) {
+    const s = SECTIONS[sid]; if (!s) return;
+    this.currentSection = sid; this.currentChatId = null;
     this.showOverlay();
-    document.getElementById('timmy-list-view').style.display = 'flex';
-    document.getElementById('timmy-chat-view').style.display = 'none';
-
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
-    document.getElementById('list-avatar').textContent = section.emoji;
-    document.getElementById('list-title').textContent = section.title;
-    document.getElementById('list-sub').textContent = section.headerSub ? section.headerSub(langCfg.name) : 'All chats';
-
-    const host = document.getElementById('timmy-chat-list');
-    host.innerHTML = '<div class="modal-loading">Loading chats…</div>';
-
-    await this.loadSectionChats(sectionId, { force: true });
-    this.renderChatList(sectionId);
+    $('timmy-list-view').style.display = 'flex'; $('timmy-chat-view').style.display = 'none';
+    $('list-avatar').textContent = s.emoji; $('list-title').textContent = s.title;
+    $('list-sub').textContent = s.sub(CW_CONFIG.LANGUAGES[State.currentLanguage].name);
+    $('timmy-chat-list').innerHTML = '<div class="modal-loading">Loading chats…</div>';
+    await this.loadSectionChats(sid, { force:true });
+    if (this.currentSection === sid && !this.currentChatId) this.renderChatList(sid);
   },
 
-  renderChatList(sectionId) {
-    const host = document.getElementById('timmy-chat-list');
-    if (!host) return;
-    const chatsObj = this._sectionsCache[sectionId] || {};
-    const chats = Object.values(chatsObj).sort((a, b) => (b.lastMessageAt || 0) - (a.lastMessageAt || 0));
-
+  renderChatList(sid) {
+    const host = $('timmy-chat-list'); if (!host) return;
+    const chats = Object.values(this._cache[sid] || {}).sort((a,b) => (b.lastMessageAt||0) - (a.lastMessageAt||0));
     if (!chats.length) {
-      host.innerHTML = `
-        <div class="chat-list-empty">
-          <div class="chat-list-empty-emoji">💬</div>
-          <div class="chat-list-empty-title">No chats yet</div>
-          <div class="chat-list-empty-sub">Tap + to start a new conversation.</div>
-        </div>`;
+      host.innerHTML = `<div class="chat-list-empty"><div class="chat-list-empty-emoji">💬</div>
+        <div class="chat-list-empty-title">No chats yet</div>
+        <div class="chat-list-empty-sub">Start one to begin practicing.</div>
+        <button class="btn" onclick="Practice.startNewChat()">+ New chat</button></div>`;
       return;
     }
-
     host.innerHTML = chats.map(c => {
-      let preview = 'No messages yet';
-      if (c.lastMessage?.content) {
-        preview = String(c.lastMessage.content).replace(/<[^>]+>/g, '').trim();
-        if (c.lastMessage.role === 'assistant') preview = 'T: ' + preview;
-      } else if (Array.isArray(c.messages) && c.messages.length) {
-        const m = c.messages[c.messages.length - 1];
-        preview = String(m.content || '').replace(/<[^>]+>/g, '').trim();
-        if (m.role === 'assistant') preview = 'T: ' + preview;
-      }
+      const lm = c.lastMessage || (c.messages && c.messages[c.messages.length - 1]);
+      let preview = lm ? String(lm.content || '').replace(/<[^>]+>/g, '').trim() : 'No messages yet';
+      if (lm && lm.role === 'assistant') preview = 'T: ' + preview;
       if (preview.length > 60) preview = preview.slice(0, 60) + '…';
-
-      const time = this.shortTime(c.lastMessageAt);
-      const unread = c.unreadCount || 0;
-      const count = c.messageCount || (c.messages?.length || 0);
-
-      return `
-        <button class="chat-list-item" onclick="Practice.openChat('${c.id}')">
-          <div class="chat-list-avatar">${SECTIONS[sectionId].emoji}</div>
-          <div class="chat-list-body">
-            <div class="chat-list-title">${esc(c.title || 'New chat')}</div>
-            <div class="chat-list-preview">${esc(preview)}</div>
-          </div>
-          <div class="chat-list-meta">
-            <div class="chat-list-time">${esc(time)}</div>
-            ${unread > 0 ? `<div class="chat-list-unread">${unread > 99 ? '99+' : unread}</div>` : `<div class="chat-list-count">${count} msg${count === 1 ? '' : 's'}</div>`}
-          </div>
-        </button>`;
+      const u = c.unreadCount || 0, n = c.messageCount || (c.messages?.length || 0);
+      return `<button class="chat-list-item" onclick="Practice.openChat('${c.id}')">
+        <div class="chat-list-avatar">${SECTIONS[sid].emoji}</div>
+        <div class="chat-list-body"><div class="chat-list-title">${esc(c.title || 'New chat')}</div><div class="chat-list-preview">${esc(preview)}</div></div>
+        <div class="chat-list-meta"><div class="chat-list-time">${esc(this.shortTime(c.lastMessageAt))}</div>
+        ${u > 0 ? `<div class="chat-list-unread">${u > 99 ? '99+' : u}</div>` : `<div class="chat-list-count">${n} msg${n===1?'':'s'}</div>`}</div></button>`;
     }).join('');
   },
 
   shortTime(ts) {
     if (!ts) return '';
-    const d = new Date(ts);
-    const now = new Date();
-    const sameDay = d.toDateString() === now.toDateString();
-    const diffMs = now - d;
-    const diffMin = Math.floor(diffMs / 60000);
-    if (diffMin < 1) return 'now';
-    if (diffMin < 60) return diffMin + 'm';
-    if (sameDay) return d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
-    const yesterday = new Date(); yesterday.setDate(now.getDate() - 1);
-    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
-    const diffDays = Math.floor(diffMs / 86400000);
-    if (diffDays < 7) return diffDays + 'd';
-    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    const d = new Date(ts), now = new Date(), min = Math.floor((now - d) / 60000);
+    if (min < 1) return 'now'; if (min < 60) return min + 'm';
+    if (d.toDateString() === now.toDateString()) return d.toLocaleTimeString(undefined, { hour:'numeric', minute:'2-digit' });
+    const y = new Date(); y.setDate(now.getDate() - 1);
+    if (d.toDateString() === y.toDateString()) return 'Yesterday';
+    const days = Math.floor((now - d) / 86400000);
+    return days < 7 ? days + 'd' : d.toLocaleDateString(undefined, { month:'short', day:'numeric' });
   },
 
   async startNewChat() {
-    if (!this.currentSection) return;
-    const sectionId = this.currentSection;
-    const section = SECTIONS[sectionId];
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
-    const firstName = (this.user?.fullName || 'friend').split(' ')[0];
-
-    const chatId = 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
-    const greeting = section.greeting ? section.greeting(langCfg.name, firstName) : `Hi ${firstName}! Let's start.`;
-
-    if (!this._sectionsCache[sectionId]) this._sectionsCache[sectionId] = {};
-    this._sectionsCache[sectionId][chatId] = {
-      id: chatId,
-      title: section.title,
-      unreadCount: 0,
-      lastMessageAt: Date.now(),
-      messageCount: 1,
-      lastMessage: { role: 'assistant', content: greeting, ts: Date.now() },
-      messages: [{ id: 'a_' + Date.now(), role: 'assistant', content: greeting, ts: Date.now() }]
-    };
-
-    try {
-      await Backend.createTimmyChat({ sectionId, language: State.currentLanguage, chatId, title: section.title, greeting });
-    } catch (e) {
-      console.warn('createTimmyChat failed:', e.message);
-      showToast('Could not sync new chat. It will retry.', 'error');
+    const sid = this.currentSection; if (!sid) return;
+    const s = SECTIONS[sid], lang = CW_CONFIG.LANGUAGES[State.currentLanguage].name;
+    const first = (this.user?.fullName || 'friend').split(' ')[0];
+    const cid = 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+    const greeting = s.greeting(lang, first), now = Date.now();
+    const messages = [{ id:'a_' + now, role:'assistant', content:greeting, ts:now }];
+    this._cache[sid] = this._cache[sid] || {};
+    this._cache[sid][cid] = { id:cid, title:s.title, unreadCount:0, lastMessageAt:now, messageCount:1, lastMessage:{ role:'assistant', content:greeting, ts:now }, messages };
+    try { localStorage.setItem(this._chatKey(sid, cid), JSON.stringify({ chat:{ title:s.title }, messages })); } catch {}
+    try { await Backend.createTimmyChat({ sectionId:sid, language:State.currentLanguage, chatId:cid, title:s.title, greeting }); }
+    catch (e) {
+      console.error('createTimmyChat failed', e);
+      this._cache[sid][cid].unsynced = true;   // kept locally and retried on next list load
+      showToast('Chat not saved to server: ' + (e && (e.message || e.code) || 'unknown error'), 'error');
     }
-
-    this.openChat(chatId);
+    this.openChat(cid);
   },
 
-  async openChat(chatId) {
-    const sectionId = this.currentSection;
-    if (!sectionId) return;
-    this.currentChatId = chatId;
-
-    const section = SECTIONS[sectionId];
-    const meta = this._sectionsCache[sectionId]?.[chatId] || { title: section.title };
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
-
-    document.getElementById('timmy-avatar').textContent = section.emoji;
-    document.getElementById('timmy-title').textContent = meta.title || section.title;
-    document.getElementById('timmy-sub').textContent = section.headerSub ? section.headerSub(langCfg.name) : `${section.title} · ${langCfg.name}`;
-    document.getElementById('timmy-input').placeholder = `Message Timmy in ${langCfg.name}…`;
-
-    document.getElementById('timmy-list-view').style.display = 'none';
-    document.getElementById('timmy-chat-view').style.display = 'flex';
-    document.getElementById('timmy-scroll').innerHTML = '<div class="modal-loading">Loading messages…</div>';
-
-    const result = await this.loadChat(sectionId, chatId);
-    this.messages = result?.messages || [];
-    this.renderChat();
-    this.scrollToBottom();
-    this.renderScaffold();
-
-    await this.markChatReadServer(sectionId, chatId);
-    if (window.Badges) Badges.refresh();
-
-    setTimeout(() => {
-      const inp = document.getElementById('timmy-input');
-      if (inp) inp.focus();
-    }, 250);
+  async openChat(cid) {
+    const sid = this.currentSection; if (!sid) return;
+    const s = SECTIONS[sid], meta = this._cache[sid]?.[cid] || { title:s.title };
+    this.currentChatId = cid;
+    history.pushState({ t:'chat' }, '');
+    $('timmy-avatar').textContent = s.emoji; $('timmy-title').textContent = meta.title || s.title;
+    const lang = CW_CONFIG.LANGUAGES[State.currentLanguage].name;
+    $('timmy-sub').textContent = s.sub(lang); $('timmy-input').placeholder = `Message Timmy in ${lang}…`;
+    $('timmy-list-view').style.display = 'none'; $('timmy-chat-view').style.display = 'flex';
+    $('timmy-scroll').innerHTML = '<div class="modal-loading">Loading messages…</div>';
+    const r = await this.loadChat(sid, cid);
+    this.messages = r?.messages || this._cache[sid]?.[cid]?.messages || [];
+    this.renderChat(); this.scrollToBottom(); this.renderScaffold();
+    await this.markChatReadServer(sid, cid);
+    this.renderSectionBadges(); window.Badges && Badges.refresh();
+    setTimeout(() => $('timmy-input')?.focus(), 250);
   },
 
-  backToList() {
-    if (!this.currentSection) { this.closeTimmy(); return; }
-    this.currentChatId = null;
-    this.messages = [];
-    document.getElementById('timmy-chat-view').style.display = 'none';
-    document.getElementById('timmy-list-view').style.display = 'flex';
-    this.renderChatList(this.currentSection);
-    if (window.Badges) Badges.refresh();
+  backToList() {   // chat → list (called from popstate)
+    if (!this.currentSection) return this.closeTimmy();
+    this.currentChatId = null; this.messages = [];
+    $('timmy-chat-view').style.display = 'none'; $('timmy-list-view').style.display = 'flex';
+    this.renderChatList(this.currentSection); this.renderSectionBadges(); window.Badges && Badges.refresh();
   },
 
-  closeTimmy() {
-    this.currentSection = null;
-    this.currentChatId = null;
-    const view = document.getElementById('timmy-view');
-    view.classList.remove('active');
-    view.style.display = 'none';
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.width = '';
-    document.body.style.height = '';
-    this.loadUsage();
-    if (window.Badges) Badges.refresh();
+  closeTimmy() {   // list → Practice tab (called from popstate)
+    this.currentSection = null; this.currentChatId = null;
+    const v = $('timmy-view'); v.classList.remove('active'); v.style.display = 'none';
+    document.documentElement.style.overflow = ''; document.body.style.cssText = '';
+    this.loadUsage(); this.renderSectionBadges(); window.Badges && Badges.refresh();
   },
 
   showOverlay() {
-    const view = document.getElementById('timmy-view');
-    view.classList.add('active');
-    view.style.display = 'flex';
+    const v = $('timmy-view'); v.classList.add('active'); v.style.display = 'flex';
     document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = '0';
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
-    document.body.style.height = '100%';
+    document.body.style.cssText = 'overflow:hidden;position:fixed;top:0;left:0;right:0;width:100%;height:100%';
+    history.pushState({ t:'list' }, '');
   },
 
-  /* ============================================================
-     MENUS
-     ============================================================ */
-  toggleListMenu(e) {
-    e.stopPropagation();
-    document.getElementById('list-menu')?.classList.toggle('show');
-  },
-
-  toggleChatMenu(e) {
-    e.stopPropagation();
-    document.getElementById('timmy-menu')?.classList.toggle('show');
-  },
+  /* ---------- menus ---------- */
+  toggleMenu(e, id) { e.stopPropagation(); const m = $(id), open = m.classList.contains('show'); document.querySelectorAll('.chat-menu.show').forEach(x => x.classList.remove('show')); if (!open) m.classList.add('show'); },
 
   async markAllRead() {
-    if (!this.currentSection) return;
-    const sectionId = this.currentSection;
+    const sid = this.currentSection; if (!sid) return;
     try {
-      await Backend.markTimmySectionRead(sectionId);
-      if (this._sectionsCache[sectionId]) {
-        for (const c of Object.values(this._sectionsCache[sectionId])) c.unreadCount = 0;
-      }
-      document.getElementById('list-menu')?.classList.remove('show');
-      this.renderChatList(sectionId);
-      State.emit('timmy:section-cleared', { sectionId });
-      if (window.Badges) Badges.refresh();
-      showToast('Marked all as read', 'success');
-    } catch (e) {
-      showToast(e.message || 'Could not mark as read', 'error');
-    }
+      await Backend.markTimmySectionRead(sid);
+      Object.values(this._cache[sid] || {}).forEach(c => c.unreadCount = 0);
+      $('list-menu').classList.remove('show'); this.renderChatList(sid); this.renderSectionBadges();
+      State.emit('timmy:section-cleared', { sectionId:sid }); window.Badges && Badges.refresh(); showToast('Marked all as read', 'success');
+    } catch (e) { showToast(e.message || 'Could not mark as read', 'error'); }
   },
-
   async deleteAllChats() {
-    if (!this.currentSection) return;
-    const sectionId = this.currentSection;
-    const section = SECTIONS[sectionId];
-    if (!confirm(`Delete ALL chats in "${section.title}"? This cannot be undone.`)) return;
-    this._sectionsCache[sectionId] = {};
-    try { await Backend.deleteTimmySection(sectionId); } catch (e) { console.warn(e); }
-    document.getElementById('list-menu')?.classList.remove('show');
-    this.renderChatList(sectionId);
-    State.emit('timmy:section-cleared', { sectionId });
-    if (window.Badges) Badges.refresh();
-    showToast('All chats deleted', 'info');
+    const sid = this.currentSection; if (!sid) return;
+    if (!confirm(`Delete ALL chats in "${SECTIONS[sid].title}"? This cannot be undone.`)) return;
+    this._cache[sid] = {};
+    try { await Backend.deleteTimmySection(sid); } catch (e) { console.warn(e); }
+    $('list-menu').classList.remove('show'); this.renderChatList(sid); this.renderSectionBadges();
+    State.emit('timmy:section-cleared', { sectionId:sid }); window.Badges && Badges.refresh(); showToast('All chats deleted', 'info');
   },
-
   exportCurrentChat() {
-    if (!this.currentChatId || !this.currentSection) return;
-    const lines = this.messages.map(m => `[${m.role.toUpperCase()}] ${m.content}`);
-    const text = `ClearWords chat export\nSection: ${SECTIONS[this.currentSection].title}\nLanguage: ${State.currentLanguage}\nDate: ${new Date().toISOString()}\n\n${lines.join('\n\n')}`;
-    const blob = new Blob([text], { type: 'text/plain' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'timmy-chat-' + new Date().toISOString().slice(0, 10) + '.txt';
-    a.click();
-    URL.revokeObjectURL(a.href);
-    showToast('Chat exported', 'success');
-    document.getElementById('timmy-menu')?.classList.remove('show');
+    if (!this.currentChatId) return;
+    const text = `ClearWords chat export\nSection: ${SECTIONS[this.currentSection].title}\nLanguage: ${State.currentLanguage}\nDate: ${new Date().toISOString()}\n\n` + this.messages.map(m => `[${m.role.toUpperCase()}] ${m.content}`).join('\n\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type:'text/plain' }));
+    a.download = 'timmy-chat-' + new Date().toISOString().slice(0, 10) + '.txt'; a.click(); URL.revokeObjectURL(a.href);
+    $('timmy-menu').classList.remove('show'); showToast('Chat exported', 'success');
   },
-
   async deleteCurrentChat() {
-    if (!this.currentChatId || !this.currentSection) return;
-    if (!confirm('Delete this chat permanently?')) return;
-    const sectionId = this.currentSection;
-    const chatId = this.currentChatId;
-    if (this._sectionsCache[sectionId]?.[chatId]) delete this._sectionsCache[sectionId][chatId];
-    try { await Backend.deleteTimmyChat(sectionId, chatId); } catch (e) { console.warn(e); }
-    try { localStorage.removeItem(this._localChatKey(State.currentLanguage, sectionId, chatId)); } catch {}
-    document.getElementById('timmy-menu')?.classList.remove('show');
-    State.emit('timmy:chat-read', { sectionId, chatId });
-    if (window.Badges) Badges.refresh();
-    showToast('Chat deleted', 'info');
-    this.backToList();
+    if (!this.currentChatId || !confirm('Delete this chat permanently?')) return;
+    const sid = this.currentSection, cid = this.currentChatId;
+    if (this._cache[sid]) delete this._cache[sid][cid];
+    try { await Backend.deleteTimmyChat(sid, cid); } catch (e) { console.warn(e); }
+    try { localStorage.removeItem(this._chatKey(sid, cid)); } catch {}
+    $('timmy-menu').classList.remove('show'); showToast('Chat deleted', 'info');
+    history.back();   // popstate → backToList()
   },
 
-  /* ============================================================
-     CHAT RENDERING
-     ============================================================ */
+  /* ---------- chat rendering ---------- */
   renderChat() {
-    const scroll = document.getElementById('timmy-scroll');
-    if (!scroll) return;
-    if (!this.messages.length) {
-      scroll.innerHTML = `
-        <div class="chat-empty">
-          <div class="chat-empty-emoji">${SECTIONS[this.currentSection]?.emoji || '💬'}</div>
-          <div class="chat-empty-title">Say something to start</div>
-          <div class="chat-empty-sub">Type a message below and Timmy will reply.</div>
-        </div>`;
-      return;
-    }
-
-    let lastDayKey = '';
-    let lastUserMsgIndex = -1;
-    for (let i = this.messages.length - 1; i >= 0; i--) {
-      if (this.messages[i].role === 'user') { lastUserMsgIndex = i; break; }
-    }
-
-    const html = this.messages.map((m, i) => {
-      const dayKey = new Date(m.ts || Date.now()).toDateString();
-      const showDaySep = dayKey !== lastDayKey;
-      lastDayKey = dayKey;
-      const daySep = showDaySep ? `<div class="chat-daysep">${this.formatDayLabel(m.ts)}</div>` : '';
-      const cls = m.role === 'user' ? 'user' : 'bot';
-      const body = m.role === 'user'
-        ? `<div class="bubble">${esc(m.content)}</div>`
-        : `<div class="bubble ${m.isError ? 'is-error' : ''}">${this.formatBotHTML(m.content)}</div>`;
-      const meta = m.role === 'user'
-        ? `<div class="msg-meta"><span>${this.formatTime(m.ts)}</span>${i === lastUserMsgIndex ? `<span class="read-mark">· Read</span>` : ''}</div>`
-        : `<div class="msg-meta"><span>${this.formatTime(m.ts)}</span></div>`;
-      return `${daySep}<div class="msg-row ${cls}">${body}${meta}</div>`;
+    const el = $('timmy-scroll'); if (!el) return;
+    if (!this.messages.length) { el.innerHTML = `<div class="chat-empty"><div class="chat-empty-emoji">${SECTIONS[this.currentSection]?.emoji || '💬'}</div><div class="chat-empty-title">Say something to start</div><div class="chat-empty-sub">Type a message below and Timmy will reply.</div></div>`; return; }
+    let lastDay = '', lastUser = -1;
+    this.messages.forEach((m, i) => { if (m.role === 'user') lastUser = i; });
+    el.innerHTML = this.messages.map((m, i) => {
+      const day = new Date(m.ts || Date.now()).toDateString(), sep = day !== lastDay ? `<div class="chat-daysep">${this.dayLabel(m.ts)}</div>` : ''; lastDay = day;
+      const user = m.role === 'user';
+      const body = user ? `<div class="bubble">${esc(m.content)}</div>` : `<div class="bubble ${m.isError ? 'is-error' : ''}">${this.formatBotHTML(m.content)}</div>`;
+      return `${sep}<div class="msg-row ${user ? 'user' : 'bot'}">${body}<div class="msg-meta">${this.fmtTime(m.ts)}${user && i === lastUser ? ' · Read' : ''}</div></div>`;
     }).join('');
-
-    scroll.innerHTML = html;
   },
-
-  formatDayLabel(ts) {
-    const d = new Date(ts || Date.now());
-    const today = new Date();
-    const yesterday = new Date(); yesterday.setDate(today.getDate() - 1);
-    if (d.toDateString() === today.toDateString()) return 'Today';
-    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
-    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  dayLabel(ts) {
+    const d = new Date(ts || Date.now()), t = new Date(), y = new Date(); y.setDate(t.getDate() - 1);
+    return d.toDateString() === t.toDateString() ? 'Today' : d.toDateString() === y.toDateString() ? 'Yesterday' : d.toLocaleDateString(undefined, { month:'short', day:'numeric' });
   },
-
-  formatTime(ts) {
-    if (!ts) return '';
-    const d = new Date(ts);
-    let h = d.getHours();
-    const m = d.getMinutes();
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    h = h % 12; if (h === 0) h = 12;
-    return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
-  },
-
+  fmtTime(ts) { if (!ts) return ''; const d = new Date(ts); let h = d.getHours(); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return `${h}:${String(d.getMinutes()).padStart(2, '0')} ${ap}`; },
   formatBotHTML(text) {
-    if (text == null) return '';
-    const str = String(text).trim();
-    if (!str) return '';
-    const hasTags = /<(p|br|strong|b|em|i|ul|ol|li|h[1-6]|code|pre|blockquote)\b/i.test(str);
-    if (hasTags) {
-      let cleaned = str
-        .replace(/<script[\s\S]*?<\/script>/gi, '')
-        .replace(/<style[\s\S]*?<\/style>/gi, '')
-        .replace(/\son\w+="[^"]*"/gi, '')
-        .replace(/\son\w+='[^']*'/gi, '');
-      if (!/<p\b/i.test(cleaned)) {
-        cleaned = cleaned.split(/\n{2,}/).map(block => `<p>${block.replace(/\n/g, '<br>')}</p>`).join('');
-      }
-      return cleaned;
+    const str = String(text ?? '').trim(); if (!str) return '';
+    if (/<(p|br|strong|b|em|i|ul|ol|li|h[1-6]|code|pre|blockquote)\b/i.test(str)) {
+      let c = str.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '')
+        .replace(/<(iframe|object|embed)[\s\S]*?(<\/\1>|>)/gi, '')
+        .replace(/\son\w+="[^"]*"/gi, '').replace(/\son\w+='[^']*'/gi, '')
+        .replace(/href\s*=\s*(["'])\s*javascript:[^"']*\1/gi, 'href="#"');
+      if (!/<p\b/i.test(c)) c = c.split(/\n{2,}/).map(b => `<p>${b.replace(/\n/g, '<br>')}</p>`).join('');
+      return c;
     }
     return str.split(/\n{2,}/).map(p => `<p>${esc(p).replace(/\n/g, '<br>')}</p>`).join('');
   },
-
   renderScaffold() {
-    const row = document.getElementById('scaffold-row');
-    if (!row) return;
-    const practiceLike = ['practice', 'greeting_parent', 'meeting_friend', 'market', 'meal_sharing', 'directions', 'showing_respect'];
-    if (!practiceLike.includes(this.currentSection)) { row.style.display = 'none'; return; }
-    const userTurns = this.messages.filter(m => m.role === 'user').length;
-    if (userTurns >= 1) { row.style.display = 'none'; return; }
-    const samples = {
-      yoruba: ["Ẹ káàrọ̀", "Báwo ni?", "Mo wà dáadáa"],
-      igbo: ["Ndeewo", "Kedu?", "Ọ dị mma"],
-      hausa: ["Sannu", "Yaya kake?", "Lafiya lau"],
-      pidgin: ["How you dey?", "I dey fine", "Wetin dey happen?"]
-    }[State.currentLanguage] || ["Hello", "How are you?", "I'm fine"];
+    const row = $('scaffold-row'); if (!row) return;
+    if (!ROLEPLAY.includes(this.currentSection) || this.messages.some(m => m.role === 'user')) { row.style.display = 'none'; return; }
+    const samples = { yoruba:['Ẹ káàrọ̀','Báwo ni?','Mo wà dáadáa'], igbo:['Ndeewo','Kedu?','Ọ dị mma'], hausa:['Sannu','Yaya kake?','Lafiya lau'], pidgin:['How you dey?','I dey fine','Wetin dey happen?'] }[State.currentLanguage] || ['Hello','How are you?',"I'm fine"];
     row.innerHTML = samples.map(s => `<button class="scaffold-chip" onclick="Practice.useScaffold(${JSON.stringify(s).replace(/"/g, '&quot;')})">${esc(s)}</button>`).join('');
     row.style.display = 'flex';
   },
+  useScaffold(t) { $('timmy-input').value = t; this.sendMessage(); },
+  scrollToBottom() { const s = $('timmy-scroll'); if (s) requestAnimationFrame(() => s.scrollTop = s.scrollHeight); },
 
-  useScaffold(text) {
-    const inp = document.getElementById('timmy-input');
-    if (!inp) return;
-    inp.value = text;
-    this.sendMessage();
-  },
-
-  scrollToBottom() {
-    const scroll = document.getElementById('timmy-scroll');
-    if (scroll) requestAnimationFrame(() => { scroll.scrollTop = scroll.scrollHeight; });
-  },
-
-  /* ============================================================
-     SENDING
-     ============================================================ */
+  /* ---------- sending ---------- */
   async sendMessage() {
     if (this.sending) return;
-    const inp = document.getElementById('timmy-input');
-    if (!inp) return;
-    const text = inp.value.trim();
-    if (!text) return;
-    if (!this.currentSection || !this.currentChatId) return;
+    const inp = $('timmy-input'), text = inp?.value.trim();
+    if (!text || !this.currentSection || !this.currentChatId) return;
+    const sid = this.currentSection, cid = this.currentChatId;
+    this.sending = true; inp.value = ''; inp.style.height = 'auto'; $('scaffold-row').style.display = 'none';
+    this.messages.push({ id:'u_' + Date.now(), role:'user', content:text, ts:Date.now() });
+    this.renderChat(); this.scrollToBottom();
 
-    this.sending = true;
-    inp.value = '';
-    inp.style.height = 'auto';
-    document.getElementById('scaffold-row').style.display = 'none';
+    Backend.appendTimmyChatMessage(sid, cid, 'user', text, false).then(res => {
+      const c = this._cache[sid]?.[cid];
+      if (c) { c.lastMessageAt = Date.now(); c.messageCount = res.messageCount || c.messageCount; if (res.title) c.title = res.title; c.lastMessage = { role:'user', content:text, ts:Date.now() }; if (this.currentChatId === cid) $('timmy-title').textContent = c.title; }
+    }).catch(() => this.queueOffline({ sectionId:sid, chatId:cid, role:'user', content:text, isError:false }));
 
-    const userMsg = { id: 'u_' + Date.now(), role: 'user', content: text, ts: Date.now() };
-    this.messages.push(userMsg);
-    this.renderChat();
-    this.scrollToBottom();
-
-    Backend.appendTimmyChatMessage(this.currentSection, this.currentChatId, 'user', text, false)
-      .then(res => {
-        const cache = this._sectionsCache[this.currentSection]?.[this.currentChatId];
-        if (cache) {
-          cache.lastMessageAt = Date.now();
-          cache.messageCount = res.messageCount || cache.messageCount;
-          if (res.title) cache.title = res.title;
-          cache.lastMessage = { role: 'user', content: text, ts: Date.now() };
-          document.getElementById('timmy-title').textContent = cache.title;
-        }
-      })
-      .catch(() => {
-        this.queueOffline({ sectionId: this.currentSection, chatId: this.currentChatId, role: 'user', content: text, isError: false });
-      });
-
-    const scroll = document.getElementById('timmy-scroll');
     const typing = document.createElement('div');
-    typing.className = 'msg-row bot typing';
-    typing.id = 'typing';
-    typing.innerHTML = '<div class="bubble"><span></span><span></span><span></span></div>';
-    scroll.appendChild(typing);
-    this.scrollToBottom();
-
-    const sendBtn = document.getElementById('timmy-send');
-    if (sendBtn) sendBtn.disabled = true;
+    typing.className = 'msg-row bot typing'; typing.id = 'typing'; typing.innerHTML = '<div class="bubble"><span></span><span></span><span></span></div>';
+    $('timmy-scroll').appendChild(typing); this.scrollToBottom();
+    const sendBtn = $('timmy-send'); sendBtn.disabled = true;
 
     try {
-      const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
-      const user = State.user || {};
-      const context = [
-        `Language: ${langCfg.name} (${State.currentLanguage})`,
-        `Learner: ${user.fullName || 'learner'}`,
-        `Level: ${(State.progress && State.progress.currentLevel) || user.currentLevel || 1}`,
-        `Section: ${SECTIONS[this.currentSection]?.title || 'Practice'}`
-      ].join(' | ');
-
+      const lang = CW_CONFIG.LANGUAGES[State.currentLanguage], user = State.user || {}, s = SECTIONS[sid];
+      const history_ = this.messages.slice(-13, -1).filter(m => !m.isError)
+        .map(m => `${m.role === 'user' ? 'Learner' : 'Timmy'}: ${String(m.content).replace(/<[^>]+>/g, '')}`).join('\n');
+      const context = [`Language: ${lang.name} (${State.currentLanguage})`, `Learner: ${user.fullName || 'learner'}`,
+        `Level: ${(State.progress && State.progress.currentLevel) || user.currentLevel || 1}`, `Section: ${s.title}`].join(' | ')
+        + `\nInstructions: ${s.prompt}` + (history_ ? `\nConversation so far:\n${history_}` : '');
       const res = await Backend.aiChat(text, context);
       const reply = res.data || res.reply || res.message || "Sorry — I didn't catch that.";
-
-      document.getElementById('typing')?.remove();
-      this.messages.push({ id: 'a_' + Date.now(), role: 'assistant', content: reply, ts: Date.now() });
-      this.renderChat();
-      this.scrollToBottom();
+      $('typing')?.remove();
+      if (this.currentChatId === cid) { this.messages.push({ id:'a_' + Date.now(), role:'assistant', content:reply, ts:Date.now() }); this.renderChat(); this.scrollToBottom(); }
       this.loadUsage();
-
-      Backend.appendTimmyChatMessage(this.currentSection, this.currentChatId, 'assistant', reply, false)
-        .then(() => {
-          const cache = this._sectionsCache[this.currentSection]?.[this.currentChatId];
-          if (cache) {
-            cache.lastMessageAt = Date.now();
-            cache.lastMessage = { role: 'assistant', content: reply, ts: Date.now() };
-          }
-          State.emit('timmy:chat-updated', { sectionId: this.currentSection, chatId: this.currentChatId });
-        })
-        .catch(() => {
-          this.queueOffline({ sectionId: this.currentSection, chatId: this.currentChatId, role: 'assistant', content: reply, isError: false });
-        });
+      Backend.appendTimmyChatMessage(sid, cid, 'assistant', reply, false).then(() => {
+        const c = this._cache[sid]?.[cid]; if (c) { c.lastMessageAt = Date.now(); c.lastMessage = { role:'assistant', content:reply, ts:Date.now() }; }
+        State.emit('timmy:chat-updated', { sectionId:sid, chatId:cid });
+      }).catch(() => this.queueOffline({ sectionId:sid, chatId:cid, role:'assistant', content:reply, isError:false }));
     } catch (e) {
-      document.getElementById('typing')?.remove();
-      if (Paywall.fromError(e)) {
-        this.sending = false;
-        if (sendBtn) sendBtn.disabled = false;
-        return;
-      }
-      let msg = "Couldn't reach Timmy.";
-      if (e.code === 'timeout') msg = "Timmy is waking up — this can take 20–30 seconds. Try again.";
-      else if (e.message) msg = e.message;
-      this.messages.push({ id: 'a_' + Date.now(), role: 'assistant', content: msg, ts: Date.now(), isError: true });
-      this.renderChat();
-      this.scrollToBottom();
-    } finally {
-      this.sending = false;
-      if (sendBtn) sendBtn.disabled = false;
-    }
+      $('typing')?.remove();
+      if (Paywall.fromError(e)) return;
+      const msg = e.code === 'timeout' ? 'Timmy is waking up — this can take 20–30 seconds. Try again.' : (e.message || "Couldn't reach Timmy.");
+      this.messages.push({ id:'a_' + Date.now(), role:'assistant', content:msg, ts:Date.now(), isError:true });
+      this.renderChat(); this.scrollToBottom();
+    } finally { this.sending = false; sendBtn.disabled = false; }
   },
 
-  /* ============================================================
-     SPEAK MODE
-     ============================================================ */
+  /* ---------- one-time import of legacy local chats ---------- */
+  async maybeImportLocalChats() {
+    const lang = State.currentLanguage, flag = 'cw_timmy_migrated_v2_' + lang;
+    if (localStorage.getItem(flag)) return;
+    try {
+      const threads = [], legacy = JSON.parse(localStorage.getItem('cw_timmy_sections_' + lang) || '{}');
+      for (const [sid, s] of Object.entries(legacy)) {
+        if (!SECTIONS[sid]) continue;
+        for (const [cid, c] of Object.entries(s.chats || {}))
+          if (Array.isArray(c.messages) && c.messages.length) threads.push({ sectionId:sid, chatId:cid, title:c.title || SECTIONS[sid].title, messages:c.messages });
+      }
+      for (const k of ['cw_timmy_chat_' + lang, 'cw_timmy_cache_' + lang, 'cw_chat_practice_' + lang, 'cw_chat_cultural_' + lang, 'cw_chat_quick_' + lang]) {
+        try {
+          const arr = JSON.parse(localStorage.getItem(k) || 'null');
+          if (!Array.isArray(arr) || !arr.length) continue;
+          const sid = k.includes('cultural') ? 'cultural' : k.includes('quick') ? 'quick' : 'practice';
+          threads.push({ sectionId:sid, chatId:'migrated_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6), title:SECTIONS[sid].title, messages:arr });
+          localStorage.removeItem(k);
+        } catch {}
+      }
+      if (threads.length) await Backend.importTimmyChats(lang, threads);
+      localStorage.setItem(flag, '1');
+    } catch (e) { console.warn('maybeImportLocalChats', e.message); }
+  },
+
+  /* ---------- SPEAK MODE ---------- */
   async openSpeak() {
     const saved = (State.user && State.user.savedWords) || [];
     const curriculum = State.curriculumCache[State.currentLanguage] || await State.loadCurriculum(State.currentLanguage);
     let pool = saved.slice();
-    if (!pool.length && curriculum) {
-      const lessons = Curriculum.allLessons(curriculum);
-      pool = lessons.flatMap(l => l.vocabulary || []).slice(0, 20);
-    }
+    if (!pool.length && curriculum) pool = Curriculum.allLessons(curriculum).flatMap(l => l.vocabulary || []).slice(0, 20);
     if (!pool.length) { showToast('Complete a lesson first to practice pronunciation.', 'info'); return; }
-    Header._modal('Pronunciation practice', this.speakBody(pool[0], 0, pool));
     this._speakList = pool;
+    Header._modal('Pronunciation practice', this.speakBody(pool[0], 0, pool));
   },
-
   speakBody(word, index, pool) {
     const supported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
     const note = supported
@@ -1682,96 +622,63 @@ const Practice = {
         <div class="speak-word">${esc(word.word)}</div>
         ${word.pronunciation ? `<div class="speak-pron">/${esc(word.pronunciation)}/</div>` : ''}
         <div class="speak-trans">${esc(word.translation || '')}</div>
-        <button class="btn btn-ghost" onclick="Practice.playSpeakWord(${index})" style="margin-top: 18px;">🔊 Listen</button>
+        <button class="btn btn-ghost" onclick="Practice.playSpeakWord(${index})" style="margin-top:18px">🔊 Listen</button>
       </div>
       ${supported ? `<button class="mic-btn" id="mic-btn" onclick="Practice.recordSpeak(${index})">🎤</button>` : ''}
       ${note}
       <div id="speak-result"></div>
-      <div style="display: flex; gap: 10px; margin-top: 18px;">
-        <button class="btn btn-ghost" style="flex: 1;" onclick="Practice.speakPrev(${index})" ${index === 0 ? 'disabled' : ''}>← Prev</button>
-        <button class="btn" style="flex: 1;" onclick="Practice.speakNext(${index}, ${pool.length})" ${index === pool.length - 1 ? 'disabled' : ''}>Next →</button>
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <button class="btn btn-ghost" style="flex:1" onclick="Practice.speakPrev(${index})" ${index === 0 ? 'disabled' : ''}>← Prev</button>
+        <button class="btn" style="flex:1" onclick="Practice.speakNext(${index}, ${pool.length})" ${index === pool.length - 1 ? 'disabled' : ''}>Next →</button>
       </div>`;
   },
-
   async playSpeakWord(index) {
-    const w = this._speakList[index];
-    if (!w) return;
+    const w = this._speakList[index]; if (!w) return;
     try { await AudioMgr.play(w.word, State.currentLanguage); }
     catch (e) { if (!Paywall.fromError(e)) showToast('Audio unavailable right now.', 'error'); }
   },
-
-  speakPrev(index) {
-    if (index <= 0) return;
-    Header._modal('Pronunciation practice', this.speakBody(this._speakList[index - 1], index - 1, this._speakList));
-  },
-
-  speakNext(index, total) {
-    if (index >= total - 1) return;
-    Header._modal('Pronunciation practice', this.speakBody(this._speakList[index + 1], index + 1, this._speakList));
-  },
-
+  speakPrev(i) { if (i > 0) Header._modal('Pronunciation practice', this.speakBody(this._speakList[i - 1], i - 1, this._speakList)); },
+  speakNext(i, total) { if (i < total - 1) Header._modal('Pronunciation practice', this.speakBody(this._speakList[i + 1], i + 1, this._speakList)); },
   recordSpeak(index) {
-    const w = this._speakList[index];
-    if (!w) return;
+    const w = this._speakList[index]; if (!w) return;
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { showToast('Speech recognition not supported here.', 'info'); return; }
-    const btn = document.getElementById('mic-btn');
-    const result = document.getElementById('speak-result');
-    const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
+    const btn = $('mic-btn'), result = $('speak-result');
     const rec = new SR();
-    rec.lang = langCfg.ttsLang || 'en-NG';
-    rec.interimResults = false;
-    rec.maxAlternatives = 1;
+    rec.lang = CW_CONFIG.LANGUAGES[State.currentLanguage].ttsLang || 'en-NG';
+    rec.interimResults = false; rec.maxAlternatives = 1;
+    const reset = () => { if (btn) { btn.classList.remove('recording'); btn.textContent = '🎤'; } };
     if (btn) { btn.classList.add('recording'); btn.textContent = '⏹'; }
     if (result) result.innerHTML = '<div class="speak-result info">Listening… speak now.</div>';
-    rec.onresult = (e) => {
+    rec.onresult = e => {
       const said = (e.results[0][0].transcript || '').trim();
-      const target = String(w.word).toLowerCase().trim();
-      const got = said.toLowerCase().trim();
+      const target = String(w.word).toLowerCase().trim(), got = said.toLowerCase().trim();
       const exact = got === target;
       const close = !exact && this.levenshtein(got, target) <= Math.max(2, Math.floor(target.length / 3));
-      if (result) {
-        if (exact) {
-          result.innerHTML = `<div class="speak-result info"><strong>Nice — match!</strong><br>You said: <em>${esc(said)}</em></div>`;
-          showToast('Perfect match! 🎉', 'success');
-        } else if (close) {
-          result.innerHTML = `<div class="speak-result info"><strong>Close.</strong><br>You said: <em>${esc(said)}</em><br>Target: <em>${esc(w.word)}</em></div>`;
-        } else {
-          result.innerHTML = `<div class="speak-result warn"><strong>Different sound.</strong><br>You said: <em>${esc(said)}</em><br>Target: <em>${esc(w.word)}</em></div>`;
-        }
-      }
+      if (!result) return;
+      if (exact) { result.innerHTML = `<div class="speak-result info"><strong>Nice — match!</strong><br>You said: <em>${esc(said)}</em></div>`; showToast('Perfect match! 🎉', 'success'); }
+      else if (close) result.innerHTML = `<div class="speak-result info"><strong>Close.</strong><br>You said: <em>${esc(said)}</em><br>Target: <em>${esc(w.word)}</em></div>`;
+      else result.innerHTML = `<div class="speak-result warn"><strong>Different sound.</strong><br>You said: <em>${esc(said)}</em><br>Target: <em>${esc(w.word)}</em></div>`;
     };
-    rec.onerror = (e) => { if (result) result.innerHTML = `<div class="speak-result warn">Couldn't capture audio (${e.error || 'unknown'}).</div>`; };
-    rec.onend = () => { if (btn) { btn.classList.remove('recording'); btn.textContent = '🎤'; } };
-    try { rec.start(); } catch { if (btn) { btn.classList.remove('recording'); btn.textContent = '🎤'; } showToast('Could not start microphone.', 'error'); }
+    rec.onerror = e => { if (result) result.innerHTML = `<div class="speak-result warn">Couldn't capture audio (${e.error || 'unknown'}).</div>`; };
+    rec.onend = reset;
+    try { rec.start(); } catch { reset(); showToast('Could not start microphone.', 'error'); }
   },
-
   levenshtein(a, b) {
     if (a === b) return 0;
-    const m = a.length, n = b.length;
-    if (!m) return n;
-    if (!n) return m;
-    const d = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+    const m = a.length, n = b.length; if (!m) return n; if (!n) return m;
+    const d = Array.from({ length:m + 1 }, () => new Array(n + 1).fill(0));
     for (let i = 0; i <= m; i++) d[i][0] = i;
     for (let j = 0; j <= n; j++) d[0][j] = j;
-    for (let i = 1; i <= m; i++) {
-      for (let j = 1; j <= n; j++) {
-        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
-      }
-    }
+    for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++)
+      d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
     return d[m][n];
   },
 
-  /* ============================================================
-     REVIEW
-     ============================================================ */
+  /* ---------- REVIEW (saved words + quiz) ---------- */
   async openReview() {
     const saved = (State.user && State.user.savedWords) || [];
-    if (!saved.length) {
-      Header._modal('Saved words', `<div class="empty-note"><strong>No saved words yet</strong>In any lesson, tap ☆ Save next to a word to keep it here for review.</div>`);
-      return;
-    }
+    if (!saved.length) { Header._modal('Saved words', `<div class="empty-note"><strong>No saved words yet</strong>In any lesson, tap ☆ Save next to a word to keep it here for review.</div>`); return; }
     const list = saved.map((w, i) => `
       <div class="word-row">
         <div class="word-row-body">
@@ -1781,107 +688,65 @@ const Practice = {
         </div>
         <button class="word-row-play" onclick="Practice.playSaved(${i})">🔊</button>
       </div>`).join('');
-    Header._modal('Saved words', list + `<button class="btn btn-ghost btn-block" onclick="Practice.startReviewQuiz()" style="margin-top: 14px;">Quiz me on these ${saved.length} word${saved.length === 1 ? '' : 's'} →</button>`);
     this._saved = saved;
+    Header._modal('Saved words', list + `<button class="btn btn-ghost btn-block" onclick="Practice.startReviewQuiz()" style="margin-top:14px">Quiz me on these ${saved.length} word${saved.length === 1 ? '' : 's'} →</button>`);
   },
-
   async playSaved(i) {
-    const w = this._saved[i];
-    if (!w) return;
+    const w = this._saved[i]; if (!w) return;
     try { await AudioMgr.play(w.word, w.language || State.currentLanguage); }
     catch (e) { if (!Paywall.fromError(e)) showToast('Audio unavailable right now.', 'error'); }
   },
-
-  async startReviewQuiz() {
+  startReviewQuiz() {
     const saved = this._saved || [];
     if (saved.length < 4) { showToast('Save at least 4 words to build a quiz.', 'info'); return; }
     closeModal('cw-generic-modal');
-    const questions = saved.slice(0, Math.min(8, saved.length)).map(w => {
-      const wrong = saved.filter(x => x.word !== w.word).sort(() => Math.random() - 0.5).slice(0, 3);
-      const options = [w.translation, ...wrong.map(x => x.translation)].sort(() => Math.random() - 0.5);
-      return { word: w.word, correctIndex: options.indexOf(w.translation), options };
+    this._quiz = saved.slice(0, Math.min(8, saved.length)).map(w => {
+      const wrong = saved.filter(x => x.word !== w.word).sort(() => Math.random() - .5).slice(0, 3);
+      const options = [w.translation, ...wrong.map(x => x.translation)].sort(() => Math.random() - .5);
+      return { word:w.word, correctIndex:options.indexOf(w.translation), options };
     });
-    this._quiz = questions; this._quizIndex = 0; this._quizCorrect = 0;
+    this._quizIndex = 0; this._quizCorrect = 0;
     this.renderQuizQuestion();
   },
-
   renderQuizQuestion() {
-    const q = this._quiz[this._quizIndex];
-    const total = this._quiz.length;
-    const pct = Math.round((this._quizIndex / total) * 100);
+    const q = this._quiz[this._quizIndex], total = this._quiz.length, pct = Math.round(this._quizIndex / total * 100);
     Header._modal('Review quiz', `
-      <div style="font-size: 12px; color: var(--text-3); font-weight: 800; letter-spacing: .08em; text-transform: uppercase;">Question ${this._quizIndex + 1} of ${total}</div>
-      <div style="height: 6px; background: var(--border); border-radius: 3px; margin: 8px 0 22px; overflow: hidden;">
-        <div style="height: 100%; width: ${pct}%; background: var(--brand); border-radius: 3px;"></div>
+      <div style="font-size:12px;color:var(--text-3);font-weight:800;letter-spacing:.08em;text-transform:uppercase">Question ${this._quizIndex + 1} of ${total}</div>
+      <div style="height:6px;background:var(--border);border-radius:3px;margin:8px 0 22px;overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--brand);border-radius:3px"></div></div>
+      <div style="font-size:26px;font-weight:800;color:var(--brand);text-align:center;padding:20px 0">${esc(q.word)}</div>
+      <div style="text-align:center;color:var(--text-2);font-size:14px;margin-bottom:18px">What does this mean?</div>
+      <div style="display:flex;flex-direction:column;gap:10px" id="quiz-opts">
+        ${q.options.map((o, i) => `<button class="ex-opt" onclick="Practice.answerQuiz(${i})">${esc(o)}</button>`).join('')}
       </div>
-      <div style="font-size: 26px; font-weight: 800; color: var(--brand); text-align: center; padding: 20px 0;">${esc(q.word)}</div>
-      <div style="text-align: center; color: var(--text-2); font-size: 14px; margin-bottom: 18px;">What does this mean?</div>
-      <div style="display: flex; flex-direction: column; gap: 10px;" id="quiz-opts">
-        ${q.options.map((opt, i) => `<button class="ex-opt" onclick="Practice.answerQuiz(${i})" id="quiz-opt-${i}">${esc(opt)}</button>`).join('')}
-      </div>
-      <div id="quiz-feedback" style="margin-top: 14px;"></div>
-    `);
+      <div id="quiz-feedback" style="margin-top:14px"></div>`);
   },
-
   answerQuiz(index) {
-    const q = this._quiz[this._quizIndex];
-    const correct = q.correctIndex;
+    const q = this._quiz[this._quizIndex], correct = q.correctIndex;
     document.querySelectorAll('#quiz-opts .ex-opt').forEach((b, i) => {
       b.disabled = true;
-      b.style.padding = '16px 18px';
-      b.style.borderRadius = '12px';
-      b.style.fontWeight = '600';
-      b.style.fontSize = '15px';
-      if (i === correct) { b.style.borderColor = 'var(--brand)'; b.style.background = 'rgba(46,139,87,0.10)'; b.style.color = 'var(--brand)'; }
-      else if (i === index) { b.style.borderColor = 'var(--danger)'; b.style.background = 'rgba(229,72,77,0.08)'; b.style.color = 'var(--danger)'; }
+      if (i === correct) { b.style.borderColor = 'var(--brand)'; b.style.background = 'rgba(46,139,87,.10)'; b.style.color = 'var(--brand)'; }
+      else if (i === index) { b.style.borderColor = 'var(--danger)'; b.style.background = 'rgba(229,72,77,.08)'; b.style.color = 'var(--danger)'; }
     });
     if (index === correct) this._quizCorrect++;
-    const fb = document.getElementById('quiz-feedback');
-    if (fb) fb.innerHTML = `<button class="btn btn-block" onclick="Practice.nextQuizQuestion()">${this._quizIndex === this._quiz.length - 1 ? 'See results →' : 'Next question →'}</button>`;
+    $('quiz-feedback').innerHTML = `<button class="btn btn-block" onclick="Practice.nextQuizQuestion()">${this._quizIndex === this._quiz.length - 1 ? 'See results →' : 'Next question →'}</button>`;
   },
-
   nextQuizQuestion() {
-    if (this._quizIndex < this._quiz.length - 1) {
-      this._quizIndex++;
-      this.renderQuizQuestion();
-    } else {
-      const score = this._quizCorrect;
-      const total = this._quiz.length;
-      const pct = Math.round((score / total) * 100);
-      const msg = pct === 100 ? 'Perfect!' : pct >= 80 ? 'Great work!' : pct >= 50 ? 'Solid start.' : 'Keep practicing.';
-      Header._modal('Review quiz', `
-        <div style="text-align: center; padding: 16px 0;">
-          <div style="font-size: 64px;">${pct >= 80 ? '🎉' : '💪'}</div>
-          <div style="font-size: 26px; font-weight: 800; margin-top: 8px;">${msg}</div>
-          <div style="font-size: 15px; color: var(--text-2); margin-top: 6px;">You scored ${score}/${total} (${pct}%)</div>
-          <button class="btn btn-block" onclick="closeModal('cw-generic-modal')" style="margin-top: 22px;">Done</button>
-        </div>`);
-    }
-  }
+    if (this._quizIndex < this._quiz.length - 1) { this._quizIndex++; this.renderQuizQuestion(); return; }
+    const score = this._quizCorrect, total = this._quiz.length, pct = Math.round(score / total * 100);
+    const msg = pct === 100 ? 'Perfect!' : pct >= 80 ? 'Great work!' : pct >= 50 ? 'Solid start.' : 'Keep practicing.';
+    Header._modal('Review quiz', `
+      <div style="text-align:center;padding:16px 0">
+        <div style="font-size:64px">${pct >= 80 ? '🎉' : '💪'}</div>
+        <div style="font-size:26px;font-weight:800;margin-top:8px">${msg}</div>
+        <div style="font-size:15px;color:var(--text-2);margin-top:6px">You scored ${score}/${total} (${pct}%)</div>
+        <button class="btn btn-block" onclick="closeModal('cw-generic-modal')" style="margin-top:22px">Done</button>
+      </div>`);
+  },
 };
 
-/* ============================================================
-   INPUT
-   ============================================================ */
-document.addEventListener('input', (e) => {
-  if (e.target.id === 'timmy-input') {
-    e.target.style.height = 'auto';
-    e.target.style.height = Math.min(120, e.target.scrollHeight) + 'px';
-  }
-});
-document.addEventListener('keydown', (e) => {
-  if (e.target.id === 'timmy-input' && e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    Practice.sendMessage();
-  }
-});
-document.addEventListener('click', (e) => {
-  const m1 = document.getElementById('timmy-menu');
-  if (m1?.classList.contains('show') && !e.target.closest('.chat-menu-btn') && !m1.contains(e.target)) m1.classList.remove('show');
-  const m2 = document.getElementById('list-menu');
-  if (m2?.classList.contains('show') && !e.target.closest('.chat-menu-btn') && !m2.contains(e.target)) m2.classList.remove('show');
-});
-
+document.addEventListener('input', e => { if (e.target.id === 'timmy-input') { e.target.style.height = 'auto'; e.target.style.height = Math.min(120, e.target.scrollHeight) + 'px'; } });
+document.addEventListener('keydown', e => { if (e.target.id === 'timmy-input' && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); Practice.sendMessage(); } });
+document.addEventListener('click', e => { if (!e.target.closest('.chat-menu-wrap')) document.querySelectorAll('.chat-menu.show').forEach(m => m.classList.remove('show')); });
 document.addEventListener('DOMContentLoaded', () => Practice.init());
 window.Practice = Practice;
 </script>
