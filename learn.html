@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#2E8B57">
 <title>ClearWords — Learn</title>
+  <!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- Theme color (browser chrome tint on mobile) -->
+<meta name="theme-color" content="#2E8B57">
+
+<!-- iOS: full-screen web app when added to home screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ClearWords">
+<link rel="apple-touch-icon" href="/logo.png">
+
+<!-- Android: enables install prompt -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="ClearWords">
+<meta name="msapplication-TileColor" content="#2E8B57">
+<meta name="msapplication-TileImage" content="/logo.png">
 <style>
 /* ============ DESIGN TOKENS ============ */
 :root {
@@ -1401,6 +1418,15 @@ Learn.startLesson = function (lessonId) {
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => Learn.init());
 window.Learn = Learn;
+
+  // Register the service worker for offline + installability
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('[PWA] SW registered:', reg.scope))
+        .catch(err => console.warn('[PWA] SW registration failed:', err));
+    });
+  }
 </script>
 </body>
 </html>
