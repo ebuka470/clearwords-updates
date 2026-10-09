@@ -20,6 +20,7 @@
   --bg: #FAF7F2;
   --bg-elev: #FFFFFF;
   --card: #FFFFFF;
+  --chat-bg: #F3EFE6;
   --text: #1C1E21;
   --text-2: #6B6F76;
   --text-3: #9AA0A6;
@@ -37,6 +38,7 @@
   --bg: #0F1114;
   --bg-elev: #16191D;
   --card: #1A1D21;
+  --chat-bg: #0C0E10;
   --text: #F2EFE9;
   --text-2: #9AA0A6;
   --text-3: #6B6F76;
@@ -61,6 +63,7 @@ body {
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 input, textarea { font-family: inherit; }
 ::-webkit-scrollbar { width: 0; height: 0; }
+.tap { cursor: pointer; }
 
 #cw-header {
   position: sticky; top: 0; z-index: 40;
@@ -365,63 +368,6 @@ input, textarea { font-family: inherit; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-#pod-view {
-  position: fixed; inset: 0; z-index: 70;
-  background: var(--bg);
-  display: none; flex-direction: column;
-}
-#pod-view.active { display: flex; }
-.pod-topbar {
-  display: flex; align-items: center; gap: 12px;
-  padding: calc(12px + var(--safe-top)) 16px 12px;
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-}
-.pod-back { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--text-2); }
-.pod-avatar { width: 38px; height: 38px; border-radius: 12px; background: rgba(var(--brand-rgb), 0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.pod-name { flex: 1; font-weight: 800; font-size: 15px; }
-.pod-name small { display: block; font-weight: 500; font-size: 11.5px; color: var(--text-2); }
-
-.pod-tabs { display: flex; padding: 0 16px; background: var(--card); border-bottom: 1px solid var(--border); }
-.pod-tab {
-  flex: 1; padding: 12px 4px; text-align: center;
-  font-size: 13px; font-weight: 700; color: var(--text-3);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-}
-.pod-tab.active { color: var(--brand); border-bottom-color: var(--brand); }
-
-.pod-scroll { flex: 1; overflow-y: auto; padding: 16px; }
-.pod-msg { margin-bottom: 12px; max-width: 84%; }
-.pod-msg.self { margin-left: auto; text-align: right; }
-.pod-msg-author { font-size: 11.5px; font-weight: 800; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 3px; }
-.pod-msg-bubble { display: inline-block; padding: 10px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.5; text-align: left; word-wrap: break-word; }
-.pod-msg.self .pod-msg-bubble { background: var(--brand); color: #fff; border-bottom-right-radius: 4px; }
-.pod-msg:not(.self) .pod-msg-bubble { background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
-.pod-msg-system { text-align: center; font-size: 12.5px; color: var(--text-3); padding: 8px 0; font-style: italic; }
-.pod-msg-time { font-size: 10.5px; color: var(--text-3); margin-top: 3px; }
-
-.pod-input-row {
-  display: flex; gap: 8px; align-items: flex-end;
-  padding: 12px 16px calc(14px + var(--safe-bot));
-  background: var(--card);
-  border-top: 1px solid var(--border);
-}
-.pod-input {
-  flex: 1; padding: 12px 16px; font-size: 16px;
-  border-radius: 22px; background: var(--bg-elev);
-  border: 1.5px solid var(--border); color: var(--text);
-  font-family: inherit; resize: none; max-height: 120px;
-  line-height: 1.4;
-}
-.pod-input:focus { outline: none; border-color: var(--brand); }
-.pod-send {
-  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
-  background: var(--brand); color: #fff; display: flex;
-  align-items: center; justify-content: center; font-size: 18px;
-}
-.pod-send:disabled { opacity: .4; }
-
 .member-row {
   display: flex; align-items: center; gap: 12px;
   padding: 10px 0; border-bottom: 1px solid var(--border);
@@ -452,6 +398,170 @@ input, textarea { font-family: inherit; }
 .cw-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .cw-toast-error { background: var(--danger); color: #fff; }
 .cw-toast-success { background: var(--brand); color: #fff; }
+
+/* ============================================================
+   FULL-SCREEN OVERLAYS (all-pairs page + chat)
+   ============================================================ */
+.overlay {
+  position: fixed; inset: 0; height: 100dvh;
+  background: var(--bg);
+  display: none; justify-content: center;
+}
+.overlay.active { display: flex; }
+#pairs-view { z-index: 65; }
+#chat-view { z-index: 70; background: var(--chat-bg); }
+.shell {
+  width: 100%; max-width: 560px; height: 100%;
+  display: flex; flex-direction: column; position: relative;
+  border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+}
+#pairs-view .shell { background: var(--bg); }
+#chat-view .shell { background: var(--chat-bg); }
+
+.topbar {
+  flex-shrink: 0; position: relative; z-index: 3;
+  display: flex; align-items: center; gap: 8px;
+  padding: calc(10px + var(--safe-top)) 10px 10px;
+  background: var(--card); border-bottom: 1px solid var(--border);
+}
+.top-btn {
+  width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--text-2);
+}
+.top-btn:active { background: var(--border); }
+.chat-id { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 2px 0; }
+.chat-avatar {
+  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--indigo); color: #fff; font-weight: 800; font-size: 15px;
+  background-size: cover; background-position: center;
+}
+.chat-avatar.pod { background: rgba(var(--brand-rgb), .16); font-size: 21px; border-radius: 14px; }
+.chat-title { min-width: 0; line-height: 1.2; }
+.chat-title span { display: block; font-weight: 800; font-size: 15.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-title small { display: block; font-size: 12px; color: var(--text-2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.chat-menu-wrap { position: relative; flex-shrink: 0; }
+.chat-menu {
+  position: absolute; top: 46px; right: 0; min-width: 220px; z-index: 20;
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 6px; box-shadow: var(--shadow-lg); display: none;
+}
+.chat-menu.show { display: block; animation: menuIn .12s ease; }
+@keyframes menuIn { from { opacity: 0; transform: translateY(-4px) scale(.98); } to { opacity: 1; transform: none; } }
+.chat-menu button {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 11px 14px; text-align: left; font-size: 14px; font-weight: 600; border-radius: 9px;
+}
+.chat-menu button:hover, .chat-menu button:active { background: rgba(var(--brand-rgb), .08); }
+.chat-menu button.danger { color: var(--danger); }
+.chat-menu hr { border: none; border-top: 1px solid var(--border); margin: 5px 4px; }
+.chat-menu .lock { margin-left: auto; font-size: 12px; opacity: .8; }
+
+.chat-body { flex: 1 1 auto; min-height: 0; position: relative; }
+.chat-scroll {
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+  padding: 12px 12px 8px; display: flex; flex-direction: column;
+  -webkit-overflow-scrolling: touch;
+}
+.chat-day, .chat-system { align-self: center; margin: 12px 0 6px; }
+.chat-day span, .chat-system span {
+  display: inline-block; padding: 4px 12px; border-radius: 999px;
+  background: rgba(var(--brand-rgb), .10); color: var(--text-2);
+  font-size: 11.5px; font-weight: 700;
+}
+.chat-system span { font-weight: 600; background: var(--card); border: 1px solid var(--border); }
+
+.m-row { display: flex; align-items: flex-end; gap: 6px; margin-top: 2px; max-width: 100%; animation: msgIn .16s ease; }
+.m-row.first { margin-top: 10px; }
+.m-row.mine { justify-content: flex-end; }
+@keyframes msgIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+.m-av, .m-av-sp { width: 28px; height: 28px; flex-shrink: 0; }
+.m-av {
+  border-radius: 50%; background: var(--indigo); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 10.5px; cursor: pointer;
+}
+.m-col { max-width: 78%; display: flex; flex-direction: column; min-width: 0; }
+.m-row.mine .m-col { align-items: flex-end; }
+.m-name { font-size: 11.5px; font-weight: 800; color: var(--indigo); margin: 0 0 3px 10px; cursor: pointer; }
+[data-theme="dark"] .m-name { color: #8FA8E8; }
+.m-bubble {
+  padding: 8px 12px 6px; font-size: 14.5px; line-height: 1.45;
+  white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word;
+  border-radius: 18px; position: relative;
+}
+.m-bubble::after { content: ''; display: table; clear: both; }
+.m-row.theirs .m-bubble { background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 18px; }
+.m-row.mine .m-bubble { background: var(--brand); color: #fff; border-bottom-right-radius: 18px; }
+.m-row.theirs:not(.first) .m-bubble { border-top-left-radius: 6px; }
+.m-row.theirs:not(.last) .m-bubble { border-bottom-left-radius: 6px; }
+.m-row.theirs.last .m-bubble { border-bottom-left-radius: 5px; }
+.m-row.mine:not(.first) .m-bubble { border-top-right-radius: 6px; }
+.m-row.mine:not(.last) .m-bubble { border-bottom-right-radius: 6px; }
+.m-row.mine.last .m-bubble { border-bottom-right-radius: 5px; }
+.m-meta { float: right; margin: 7px 0 -1px 12px; font-size: 10.5px; opacity: .65; white-space: nowrap; user-select: none; }
+.m-tick { margin-left: 3px; font-weight: 800; }
+.m-row.pending .m-bubble { opacity: .75; }
+
+.chat-empty { margin: auto; text-align: center; padding: 30px 24px; color: var(--text-2); }
+.chat-empty .em { font-size: 52px; margin-bottom: 10px; }
+.chat-empty b { display: block; font-size: 17px; color: var(--text); margin-bottom: 4px; }
+.chat-empty p { font-size: 13.5px; max-width: 260px; margin: 0 auto; }
+
+.to-bottom {
+  position: absolute; right: 14px; bottom: 12px; z-index: 4;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow-lg);
+  display: none; align-items: center; justify-content: center; font-size: 18px; color: var(--text-2);
+}
+.to-bottom.show { display: flex; }
+
+.composer {
+  flex-shrink: 0; display: flex; align-items: flex-end; gap: 8px;
+  padding: 8px 10px calc(10px + var(--safe-bot));
+  background: var(--card); border-top: 1px solid var(--border);
+}
+.composer textarea {
+  flex: 1; padding: 11px 16px; font-size: 16px; line-height: 1.4;
+  border-radius: 22px; background: var(--bg-elev); border: 1.5px solid var(--border);
+  color: var(--text); resize: none; max-height: 120px; outline: none;
+}
+.composer textarea:focus { border-color: var(--brand); }
+.send-btn {
+  width: 46px; height: 46px; flex-shrink: 0; border-radius: 50%;
+  background: var(--brand); color: #fff; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .08s, opacity .15s;
+}
+.send-btn:active { transform: scale(.92); }
+.send-btn:disabled { opacity: .35; }
+
+/* all-pairs page */
+.pairs-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 14px 16px calc(24px + var(--safe-bot)); }
+.search-wrap { flex-shrink: 0; padding: 10px 16px; background: var(--bg); border-bottom: 1px solid var(--border); }
+.search-wrap input {
+  width: 100%; padding: 11px 16px; font-size: 16px; border-radius: 999px;
+  background: var(--card); border: 1.5px solid var(--border); color: var(--text); outline: none;
+}
+.search-wrap input:focus { border-color: var(--brand); }
+.see-all { margin-top: 2px; }
+
+/* member profile sheet */
+.prof { text-align: center; padding: 4px 0 8px; }
+.prof-avatar { width: 84px; height: 84px; border-radius: 50%; background: var(--indigo); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 28px; margin: 0 auto 12px; }
+.prof-name { font-size: 20px; font-weight: 800; }
+.prof-user { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+.prof-bio { font-size: 13.5px; color: var(--text-2); margin: 10px auto 0; max-width: 320px; line-height: 1.5; }
+.prof-lang { display: inline-block; margin-top: 10px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--brand-rgb), .1); color: var(--brand); font-size: 12.5px; font-weight: 700; }
+.prof-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 18px 0 8px; }
+.prof-stat { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px; padding: 14px 6px; }
+.prof-stat b { display: block; font-size: 22px; font-weight: 800; color: var(--brand); }
+.prof-stat span { font-size: 11.5px; color: var(--text-2); }
+.prof-lang-row { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; text-align: left; }
+.prof-lang-row:last-child { border-bottom: none; }
+.prof-since { font-size: 12px; color: var(--text-3); margin-top: 14px; }
 
 @media (max-width: 380px) {
   .page-hero h1 { font-size: 21px; }
@@ -534,37 +644,75 @@ input, textarea { font-family: inherit; }
   </button>
 </nav>
 
-<div id="pod-view">
-  <div class="pod-topbar">
-    <button class="pod-back" onclick="Comm.closePod()">←</button>
-    <div class="pod-avatar" id="pod-avatar">👥</div>
-    <div class="pod-name" id="pod-name">
-      Pod
-      <small id="pod-sub"></small>
+<!-- ============ ALL PAIRS PAGE ============ -->
+<div id="pairs-view" class="overlay">
+  <div class="shell">
+    <div class="topbar">
+      <button class="top-btn" onclick="history.back()" aria-label="Back">←</button>
+      <div class="chat-title" style="flex:1">
+        <span>Language exchange</span>
+        <small id="pairs-view-sub">All your partners</small>
+      </div>
+      <button class="chip-btn primary" onclick="Comm.openPairMenu()">+ Find</button>
     </div>
+    <div class="search-wrap">
+      <input type="search" id="pairs-search" placeholder="Search partners" autocomplete="off">
+    </div>
+    <div class="pairs-scroll" id="pairs-all"></div>
   </div>
-  <div class="pod-tabs">
-    <button class="pod-tab active" data-tab="chat" onclick="Comm.podTab('chat')">Chat</button>
-    <button class="pod-tab" data-tab="members" onclick="Comm.podTab('members')">Members</button>
-    <button class="pod-tab" data-tab="leaderboard" onclick="Comm.podTab('leaderboard')">Leaderboard</button>
-  </div>
-  <div class="pod-scroll" id="pod-content"></div>
-  <div class="pod-input-row" id="pod-input-row">
-    <textarea class="pod-input" id="pod-input" rows="1" placeholder="Say something kind…"></textarea>
-    <button class="pod-send" id="pod-send" onclick="Comm.sendPodMessage()">➤</button>
+</div>
+
+<!-- ============ CHAT (pods + pairs) ============ -->
+<div id="chat-view" class="overlay">
+  <div class="shell">
+    <div class="topbar">
+      <button class="top-btn" onclick="history.back()" aria-label="Back">←</button>
+      <div class="chat-id" onclick="Comm.chatHeaderTap()">
+        <div class="chat-avatar" id="chat-avatar"></div>
+        <div class="chat-title">
+          <span id="chat-name">Chat</span>
+          <small id="chat-sub"></small>
+        </div>
+      </div>
+      <div class="chat-menu-wrap">
+        <button class="top-btn" onclick="Comm.toggleChatMenu(event)" aria-label="Menu">⋮</button>
+        <div class="chat-menu" id="chat-menu"></div>
+      </div>
+    </div>
+
+    <div class="chat-body">
+      <div class="chat-scroll" id="chat-scroll"></div>
+      <button class="to-bottom" id="to-bottom" onclick="Comm.scrollBottom(true)" aria-label="Latest messages">↓</button>
+    </div>
+
+    <div class="composer">
+      <textarea id="chat-input" rows="1" placeholder="Message" autocomplete="off"></textarea>
+      <button class="send-btn" id="chat-send" onclick="Comm.sendMessage()" aria-label="Send" disabled>➤</button>
+    </div>
   </div>
 </div>
 
 <script src="shared.js"></script>
 <script>
+const $ = id => document.getElementById(id);
+
 const Comm = {
   user: null,
   pods: [],
   pairs: [],
   cards: [],
+  PAIRS_PREVIEW: 3,
+
+  // open chat state
+  chat: null,          // { kind: 'pod' | 'pair', id, name, partnerId, partner }
   activePod: null,
-  activePodMessages: [],
-  podTabState: 'chat',
+  activePair: null,
+  chatMsgs: [],
+  _poll: null,
+  _lastSig: '',
+  _pairQuery: '',
+
+  myId() { return (State.user && (State.user._id || State.user.id)) || ''; },
 
   async init() {
     const ok = await cwBoot();
@@ -575,11 +723,22 @@ const Comm = {
     this.loadPods();
     this.loadPairs();
     this.loadCards();
+    // progress lives in /api/progress and this page never loaded it, so cards read 0
+    State.loadProgress(State.currentLanguage).then(() => this.renderCards()).catch(() => {});
 
     State.on('hydrated', () => { this.user = State.user; });
     State.on('unread:changed', () => {
       Badges.renderPodBadges();
       Badges.renderPairBadges();
+    });
+
+    // phone back button: chat -> all-pairs page -> Community tab
+    window.addEventListener('popstate', () => {
+      if ($('chat-view').classList.contains('active')) this.closeChatView();
+      else if ($('pairs-view').classList.contains('active')) this.closePairsView();
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && this.chat) this.refreshMessages(true);
     });
   },
 
@@ -587,7 +746,7 @@ const Comm = {
      PODS
      ============================================================ */
   async loadPods() {
-    const list = document.getElementById('pods-list');
+    const list = $('pods-list');
     if (!list) return;
     try {
       const res = await Backend.listPods();
@@ -606,7 +765,7 @@ const Comm = {
   },
 
   renderPods() {
-    const list = document.getElementById('pods-list');
+    const list = $('pods-list');
     if (!list) return;
     if (!this.pods.length) {
       list.innerHTML = `
@@ -735,7 +894,7 @@ const Comm = {
   },
 
   async joinPodWithCode() {
-    const code = (document.getElementById('pod-invite-code')?.value || '').trim().toUpperCase();
+    const code = ($('pod-invite-code')?.value || '').trim().toUpperCase();
     if (!code) { showToast('Enter an invite code.', 'info'); return; }
     try {
       const res = await Backend.joinPodByCode(code);
@@ -773,7 +932,7 @@ const Comm = {
   },
 
   async createPod() {
-    const name = document.getElementById('pod-name-input')?.value.trim();
+    const name = $('pod-name-input')?.value.trim();
     if (!name) { showToast('Give your pod a name.', 'info'); return; }
     const lvl = State.progress?.currentLevel || 1;
     const levelTier = typeof lvl === 'string'
@@ -802,211 +961,108 @@ const Comm = {
     }
   },
 
-  /* ============================================================
-     OPEN POD — chat / members / leaderboard
-     ============================================================ */
   async openPod(podId, index) {
-    this.activePod = this.pods.find(p => (p._id || p.id) === podId)
+    let pod = this.pods.find(p => (p._id || p.id) === podId)
       || (index != null ? this.pods[index] : null);
 
-    if (!this.activePod) {
+    if (!pod) {
       try {
         const res = await Backend.listPods();
         this.pods = res.data || res.items || res.pods || (Array.isArray(res) ? res : []) || [];
-        this.activePod = this.pods.find(p => (p._id || p.id) === podId);
+        pod = this.pods.find(p => (p._id || p.id) === podId);
       } catch (err) {
         console.warn('openPod refetch failed:', err);
       }
     }
-
-    if (!this.activePod) {
+    if (!pod) {
       showToast('Pod not found — try refreshing.', 'error');
       return;
     }
 
-    const p = this.activePod.data || this.activePod;
+    const p = pod.data || pod;
     const langCfg = CW_CONFIG.LANGUAGES[p.language] || CW_CONFIG.LANGUAGES.yoruba;
+    const n = (p.members || []).length;
 
-    document.getElementById('pod-avatar').textContent = langCfg.emoji;
-    const nameNode = document.getElementById('pod-name');
-    const nameChildSmall = nameNode.querySelector('small');
-    nameNode.childNodes[0].nodeValue = (p.name || (langCfg.name + ' Pod')) + ' ';
-    if (nameChildSmall) {
-      nameChildSmall.textContent =
-        (p.members || []).length + ' learners · Level ' + (p.level || 1);
-    }
+    this.activePod = pod;
+    this.activePair = null;
+    this.openChatView({
+      kind: 'pod',
+      id: pod._id || pod.id,
+      name: p.name || (langCfg.name + ' Pod'),
+      sub: n + (n === 1 ? ' learner' : ' learners') + ' · tap for members',
+      avatar: langCfg.emoji
+    });
 
-    document.getElementById('pod-view').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    this.podTabState = 'chat';
-    this.setPodTab('chat');
-    this.loadPodMessages();
-
-    // Mark this pod as read and refresh badges
     Backend.markPodRead(podId).catch(() => {});
     Badges.refresh();
   },
 
-  closePod() {
-    document.getElementById('pod-view').classList.remove('active');
-    document.body.style.overflow = '';
-    this.activePod = null;
-    this.activePodMessages = [];
-    document.querySelectorAll('.pod-tab').forEach(t => { t.style.display = ''; });
-  },
-
-  podTab(tab) {
-    this.setPodTab(tab);
-  },
-
-  setPodTab(tab) {
-    document.querySelectorAll('.pod-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
-    this.podTabState = tab;
-    const inputRow = document.getElementById('pod-input-row');
-    if (inputRow) inputRow.style.display = tab === 'chat' ? 'flex' : 'none';
-    if (tab === 'chat') this.loadPodMessages();
-    else if (tab === 'members') this.renderPodMembers();
-    else if (tab === 'leaderboard') this.renderPodLeaderboard();
-  },
-
-  async loadPodMessages() {
+  /* ---------- pod sheets (opened from the chat menu) ---------- */
+  openMembers() {
     if (!this.activePod) return;
-
-    const content = document.getElementById('pod-content');
-    if (!content) return;
-    content.innerHTML = '<div class="modal-loading">Loading messages…</div>';
-
-    const chatId = this.activePod._id || this.activePod.id;
-    const isPair = !!this.activePod.isPair;
-
-    try {
-      const res = isPair
-        ? await Backend.getPairMessages(chatId, { limit: 50 })
-        : await Backend.getPodMessages(chatId, { limit: 50 });
-
-      const items = res.data || res.items || res.messages || (Array.isArray(res) ? res : []) || [];
-      this.activePodMessages = items;
-
-      if (!items.length) {
-        content.innerHTML = `
-          <div class="empty-note">
-            <strong>${isPair ? 'Say hello' : 'No messages yet'}</strong>
-            ${isPair ? 'Start your first conversation.' : 'Say hi, or check in for this week\'s goal.'}
-          </div>`;
-        return;
-      }
-
-      const myId = (State.user && (State.user._id || State.user.id)) || '';
-      content.innerHTML = items.map(m => this.renderPodMessage(m, myId)).join('');
-      content.scrollTop = content.scrollHeight;
-    } catch (e) {
-      console.warn(`${isPair ? 'Pair' : 'Pod'} messages load failed:`, e);
-      content.innerHTML = `
-        <div class="empty-note">
-          <strong>Couldn't load messages.</strong>
-          <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.loadPodMessages()">Retry</button>
-        </div>`;
-    }
-  },
-
-  renderPodMessage(m, myId) {
-    const d = m.data || m;
-
-    if (d.type === 'checkin' || d.type === 'system') {
-      return `<div class="pod-msg-system">${esc(d.authorName || 'Someone')} checked in${d.note ? ': ' + esc(d.note) : ''}</div>`;
-    }
-
-    const senderId = d.senderId || d.authorId || '';
-    const isSelf = d.isMine === true || String(senderId) === String(myId);
-
-    return `
-      <div class="pod-msg ${isSelf ? 'self' : ''}">
-        ${!isSelf ? `<div class="pod-msg-author">${esc(d.authorName || 'Learner')}</div>` : ''}
-        <div class="pod-msg-bubble">${esc(d.text || d.content || d.message || '')}</div>
-        <div class="pod-msg-time">${fmtTimeAgo(d.createdAt || m._createdAt)}</div>
-      </div>`;
-  },
-
-  async sendPodMessage() {
-    if (!this.activePod) return;
-
-    const input = document.getElementById('pod-input');
-    const sendBtn = document.getElementById('pod-send');
-    const text = (input?.value || '').trim();
-    if (!text) return;
-
-    input.value = '';
-    input.style.height = 'auto';
-    if (sendBtn) sendBtn.disabled = true;
-
-    const myId = (State.user && (State.user._id || State.user.id)) || '';
-
-    const optimistic = {
-      data: {
-        senderId: myId,
-        authorId: myId,
-        authorName: State.user?.fullName || 'You',
-        text,
-        content: text,
-        isMine: true,
-        createdAt: new Date().toISOString()
-      }
-    };
-
-    const content = document.getElementById('pod-content');
-    if (content.querySelector('.empty-note')) content.innerHTML = '';
-    content.insertAdjacentHTML('beforeend', this.renderPodMessage(optimistic, myId));
-    content.scrollTop = content.scrollHeight;
-
-    const chatId = this.activePod._id || this.activePod.id;
-
-    try {
-      if (this.activePod.isPair) {
-        await Backend.sendPairMessage(chatId, text);
-        Backend.markPairRead(chatId).catch(() => {});
-      } else {
-        await Backend.sendPodMessage(chatId, text);
-        Backend.markPodRead(chatId).catch(() => {});
-      }
-    } catch (e) {
-      console.warn('Send message failed:', e);
-      showToast('Could not send — check your connection.', 'error');
-    } finally {
-      if (sendBtn) sendBtn.disabled = false;
-    }
-  },
-
-  async renderPodMembers() {
-    if (!this.activePod) return;
-    const content = document.getElementById('pod-content');
     const p = this.activePod.data || this.activePod;
     const members = p.members || [];
 
     if (!members.length) {
-      content.innerHTML = '<div class="empty-note">No member info yet.</div>';
+      Header._modal('Members', '<div class="empty-note">No member info yet.</div>');
       return;
     }
 
-    content.innerHTML = `
-      <div style="margin-bottom: 16px;">
+    Header._modal('Members', `
+      <div style="margin-bottom: 14px;">
         <button class="chip-btn primary" style="width: 100%; padding: 14px;" onclick="Comm.checkIn()">
           ✅ Check in for this week
         </button>
       </div>
       ${members.map(m => {
-    const name = m.fullName || m.username || 'Learner';
-    const initials = initialsOf(name);
-    const isLeader = m.role === 'leader';
-    return `
+        const name = m.fullName || m.username || 'Learner';
+        const uid = esc(String(m.userId || m._id || ''));
+        const isLeader = m.role === 'leader';
+        return `
         <div class="member-row">
-            <div class="member-avatar">${initials}</div>
-            <div class="member-body">
-                <div class="member-name">${esc(name)}${isLeader ? ' 👑' : ''}</div>
-                <div class="member-sub">Level ${m.currentLevel || 1} · ${m.weeklyXP || 0} XP this week</div>
-            </div>
+          <div class="member-avatar tap" onclick="Comm.openProfile('${uid}')">${initialsOf(name)}</div>
+          <div class="member-body tap" onclick="Comm.openProfile('${uid}')">
+            <div class="member-name">${esc(name)}${isLeader ? ' 👑' : ''}</div>
+            <div class="member-sub">Level ${m.currentLevel || 1} · ${m.weeklyXP || 0} XP this week${m.streak ? ' · 🔥 ' + m.streak : ''}</div>
+          </div>
         </div>`;
-}).join('')}
-    `;
+      }).join('')}
+    `);
+  },
+
+  async openLeaderboard() {
+    if (!this.activePod) return;
+    Header._modal('Leaderboard', '<div class="modal-loading">Loading leaderboard…</div>');
+    const podId = this.activePod._id || this.activePod.id;
+    try {
+      const res = await Backend.podLeaderboard(podId);
+      const rows = res.members || res.leaderboard || res || [];
+      const body = document.querySelector('#cw-generic-modal .cw-modal-body');
+      if (!rows.length) { body.innerHTML = '<div class="empty-note">No leaderboard data yet.</div>'; return; }
+      body.innerHTML = `
+        <div style="padding: 0 0 12px; font-size: 12.5px; color: var(--text-2); text-align: center;">
+          Ranked by XP earned this week
+        </div>
+        ${rows.map((r, i) => {
+          const rank = i + 1;
+          const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '#' + rank;
+          const name = r.fullName || r.name || 'Learner';
+          const uid = esc(String(r.userId || r._id || ''));
+          return `
+            <div class="member-row">
+              <div style="width: 30px; text-align: center; font-weight: 800; font-size: 14px;">${medal}</div>
+              <div class="member-avatar tap" onclick="Comm.openProfile('${uid}')">${initialsOf(name)}</div>
+              <div class="member-body tap" onclick="Comm.openProfile('${uid}')">
+                <div class="member-name">${esc(name)}</div>
+                <div class="member-sub">${r.weeklyXP || r.xp || 0} XP this week</div>
+              </div>
+            </div>`;
+        }).join('')}
+      `;
+    } catch (e) {
+      const body = document.querySelector('#cw-generic-modal .cw-modal-body');
+      if (body) body.innerHTML = '<div class="empty-note">Couldn\'t load leaderboard.</div>';
+    }
   },
 
   async checkIn() {
@@ -1031,9 +1087,9 @@ const Comm = {
   async submitCheckin() {
     if (!this.activePod) return;
     const podId = this.activePod._id || this.activePod.id;
-    const input = document.getElementById('checkin-lessons');
-    const err = document.getElementById('checkin-err');
-    const btn = document.getElementById('checkin-btn');
+    const input = $('checkin-lessons');
+    const err = $('checkin-err');
+    const btn = $('checkin-btn');
     const lessons = parseInt(input?.value, 10);
 
     if (!Number.isFinite(lessons) || lessons < 0) {
@@ -1048,7 +1104,7 @@ const Comm = {
       await Backend.podCheckin(podId, lessons);
       closeModal('cw-generic-modal');
       showToast('Checked in! 🎉', 'success');
-      this.loadPodMessages();
+      this.refreshMessages(true);
     } catch (e) {
       if (e.status === 400 && /already/i.test(e.message || '')) {
         showToast('You already checked in this week.', 'info');
@@ -1061,36 +1117,309 @@ const Comm = {
     }
   },
 
-  async renderPodLeaderboard() {
+  async leavePod() {
     if (!this.activePod) return;
-    const content = document.getElementById('pod-content');
-    content.innerHTML = '<div class="modal-loading">Loading leaderboard…</div>';
+    if (!confirm('Leave this pod? You can join or match with another one later.')) return;
     const podId = this.activePod._id || this.activePod.id;
     try {
-      const res = await Backend.podLeaderboard(podId);
-      const rows = res.members || res.leaderboard || res || [];
-      if (!rows.length) { content.innerHTML = '<div class="empty-note">No leaderboard data yet.</div>'; return; }
-      content.innerHTML = `
-        <div style="padding: 4px 0 12px; font-size: 12.5px; color: var(--text-2); text-align: center;">
-          Ranked by XP earned this week
-        </div>
-        ${rows.map((r, i) => {
-          const rank = i + 1;
-          const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '#' + rank;
-          const name = r.fullName || r.name || 'Learner';
-          return `
-            <div class="member-row">
-              <div style="width: 30px; text-align: center; font-weight: 800; font-size: 14px;">${medal}</div>
-              <div class="member-avatar">${initialsOf(name)}</div>
-              <div class="member-body">
-                <div class="member-name">${esc(name)}</div>
-                <div class="member-sub">${r.weeklyXP || r.xp || 0} XP this week</div>
-              </div>
-            </div>`;
-        }).join('')}
-      `;
+      await Backend.leavePod(podId);
+      showToast('You left the pod.', 'info');
+      history.back();
+      this.loadPods();
     } catch (e) {
-      content.innerHTML = '<div class="empty-note">Couldn\'t load leaderboard.</div>';
+      showToast(e.message || 'Could not leave the pod.', 'error');
+    }
+  },
+
+  /* ============================================================
+     CHAT VIEW — shared by pods and pairs (native-style)
+     ============================================================ */
+  openChatView(cfg) {
+    this.chat = cfg;
+    this.chatMsgs = [];
+    this._lastSig = '';
+
+    const av = $('chat-avatar');
+    if (cfg.kind === 'pod') {
+      av.className = 'chat-avatar pod';
+      av.style.backgroundImage = '';
+      av.textContent = cfg.avatar || '👥';
+    } else {
+      av.className = 'chat-avatar';
+      const url = /^https?:\/\//i.test(cfg.avatarUrl || '') ? cfg.avatarUrl : '';
+      av.style.backgroundImage = url ? `url('${url.replace(/'/g, '%27')}')` : '';
+      av.textContent = url ? '' : initialsOf(cfg.name);
+    }
+    $('chat-name').textContent = cfg.name;
+    $('chat-sub').textContent = cfg.sub || '';
+    $('chat-menu').innerHTML = this.buildChatMenu();
+    $('chat-menu').classList.remove('show');
+    $('chat-input').value = '';
+    $('chat-input').style.height = 'auto';
+    $('chat-input').placeholder = 'Message';
+    $('chat-send').disabled = true;
+    $('chat-scroll').innerHTML = '<div class="chat-empty"><div class="em">💬</div><p>Loading messages…</p></div>';
+    $('to-bottom').classList.remove('show');
+
+    $('chat-view').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    history.pushState({ v: 'chat' }, '');
+
+    this.refreshMessages();
+    this.startPoll();
+  },
+
+  // called from popstate (the back arrows call history.back())
+  closeChatView() {
+    $('chat-view').classList.remove('active');
+    $('chat-menu').classList.remove('show');
+    if (!$('pairs-view').classList.contains('active')) document.body.style.overflow = '';
+    this.stopPoll();
+    this.chat = null;
+    this.activePod = null;
+    this.activePair = null;
+    this.chatMsgs = [];
+    Badges.refresh();
+  },
+
+  startPoll() {
+    this.stopPoll();
+    this._poll = setInterval(() => {
+      if (document.visibilityState === 'visible') this.refreshMessages(true);
+    }, 6000);
+  },
+  stopPoll() { if (this._poll) clearInterval(this._poll); this._poll = null; },
+
+  chatHeaderTap() {
+    if (!this.chat) return;
+    if (this.chat.kind === 'pod') this.openMembers();
+    else this.openProfile(this.chat.partnerId, this.chat.partner || {});
+  },
+
+  toggleChatMenu(e) {
+    e.stopPropagation();
+    $('chat-menu').classList.toggle('show');
+  },
+
+  buildChatMenu() {
+    const c = this.chat;
+    if (!c) return '';
+    if (c.kind === 'pod') {
+      return `
+        <button onclick="Comm.menuDo('members')">👥 Members</button>
+        <button onclick="Comm.menuDo('leaderboard')">🏆 Leaderboard</button>
+        <button onclick="Comm.menuDo('checkin')">✅ Check in</button>
+        <hr>
+        <button class="danger" onclick="Comm.menuDo('leave')">🚪 Leave pod</button>`;
+    }
+    const d = this.activePair ? (this.activePair.data || this.activePair) : {};
+    const lock = ok => (ok ? '' : '<span class="lock">🔒</span>');
+    return `
+      <button onclick="Comm.menuDo('profile')">👤 View profile</button>
+      <button onclick="Comm.menuDo('voice')">📞 Voice call ${lock(d.voiceEnabled === true)}</button>
+      <button onclick="Comm.menuDo('video')">🎥 Video call ${lock(d.videoEnabled === true)}</button>
+      <hr>
+      <button onclick="Comm.menuDo('report')">🚩 Report</button>
+      <button class="danger" onclick="Comm.menuDo('end')">⛔ End pair</button>`;
+  },
+
+  menuDo(action) {
+    $('chat-menu').classList.remove('show');
+    const c = this.chat;
+    if (!c) return;
+    const pair = this.activePair;
+    const d = pair ? (pair.data || pair) : {};
+    switch (action) {
+      case 'members': this.openMembers(); break;
+      case 'leaderboard': this.openLeaderboard(); break;
+      case 'checkin': this.checkIn(); break;
+      case 'leave': this.leavePod(); break;
+      case 'profile': this.openProfile(c.partnerId, c.partner || {}); break;
+      case 'voice':
+        if (d.voiceEnabled === true) this.startCall(c.id, 'voice'); else this.showVoicePaywall();
+        break;
+      case 'video':
+        if (d.videoEnabled === true) this.startCall(c.id, 'video'); else this.showVideoPaywall();
+        break;
+      case 'report': this.reportPair(c.id); break;
+      case 'end': this.endPair(c.id, true); break;
+    }
+  },
+
+  /* ---------- messages ---------- */
+  normMsg(m) {
+    const d = m.data || m;
+    const myId = String(this.myId());
+    const senderId = String(d.senderId || d.authorId || '');
+    return {
+      id: String(m._id || m.id || d._id || d.id || ''),
+      type: (d.type === 'checkin' || d.type === 'system') ? 'system' : 'text',
+      senderId,
+      mine: d.isMine === true || (!!senderId && senderId === myId),
+      name: d.authorName || 'Learner',
+      text: d.text || d.content || d.message || '',
+      note: d.note || '',
+      ts: new Date(d.createdAt || m._createdAt || m.createdAt || Date.now()).getTime(),
+      pending: false
+    };
+  },
+
+  async refreshMessages(silent) {
+    const c = this.chat;
+    if (!c) return;
+    try {
+      const res = c.kind === 'pair'
+        ? await Backend.getPairMessages(c.id, { limit: 50 })
+        : await Backend.getPodMessages(c.id, { limit: 50 });
+      if (!this.chat || this.chat.id !== c.id) return;   // user left meanwhile
+
+      const items = res.data || res.items || res.messages || (Array.isArray(res) ? res : []) || [];
+      const server = items.map(m => this.normMsg(m)).sort((a, b) => a.ts - b.ts);
+      const pending = this.chatMsgs.filter(m => m.pending);
+      const sig = server.map(m => m.id || m.ts).join('|') + '#' + pending.length;
+      if (silent && sig === this._lastSig) return;
+
+      const prevLast = this.chatMsgs.filter(m => !m.pending).slice(-1)[0];
+      const newLast = server[server.length - 1];
+      const gotNew = newLast && (!prevLast || prevLast.id !== newLast.id) && !newLast.mine;
+
+      this._lastSig = sig;
+      this.chatMsgs = server.concat(pending);
+      this.renderChat(!silent);
+
+      if (gotNew && silent) {
+        (c.kind === 'pair' ? Backend.markPairRead(c.id) : Backend.markPodRead(c.id)).catch(() => {});
+      }
+    } catch (e) {
+      console.warn('Messages load failed:', e);
+      if (!silent) {
+        $('chat-scroll').innerHTML = `
+          <div class="chat-empty">
+            <div class="em">📡</div><b>Couldn't load messages</b>
+            <button class="btn btn-sm" style="margin-top: 12px;" onclick="Comm.refreshMessages()">Retry</button>
+          </div>`;
+      }
+    }
+  },
+
+  fmtClock(ts) {
+    const d = new Date(ts);
+    let h = d.getHours();
+    const ap = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return h + ':' + String(d.getMinutes()).padStart(2, '0') + ' ' + ap;
+  },
+
+  dayLabel(ts) {
+    const d = new Date(ts), t = new Date(), y = new Date();
+    y.setDate(t.getDate() - 1);
+    if (d.toDateString() === t.toDateString()) return 'Today';
+    if (d.toDateString() === y.toDateString()) return 'Yesterday';
+    return d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+  },
+
+  renderChat(forceBottom) {
+    const el = $('chat-scroll');
+    if (!el || !this.chat) return;
+    const msgs = this.chatMsgs;
+    const nearBottom = forceBottom || (el.scrollHeight - el.scrollTop - el.clientHeight < 160);
+
+    if (!msgs.length) {
+      const pair = this.chat.kind === 'pair';
+      el.innerHTML = `
+        <div class="chat-empty">
+          <div class="em">${pair ? '👋' : '🌱'}</div>
+          <b>${pair ? 'Say hello' : 'No messages yet'}</b>
+          <p>${pair ? 'Start your first conversation with ' + esc(this.chat.name) + '.' : 'Say hi, or check in for this week\'s goal.'}</p>
+        </div>`;
+      return;
+    }
+
+    const isPod = this.chat.kind === 'pod';
+    let html = '', lastDay = '';
+    msgs.forEach((m, i) => {
+      const day = new Date(m.ts).toDateString();
+      if (day !== lastDay) { html += `<div class="chat-day"><span>${this.dayLabel(m.ts)}</span></div>`; lastDay = day; }
+
+      if (m.type === 'system') {
+        html += `<div class="chat-system"><span>${esc(m.name)} checked in${m.note ? ': ' + esc(m.note) : ''}</span></div>`;
+        return;
+      }
+
+      const prev = msgs[i - 1], next = msgs[i + 1];
+      const same = o => o && o.type === 'text' && o.mine === m.mine && o.senderId === m.senderId
+        && new Date(o.ts).toDateString() === day;
+      const first = !same(prev), last = !same(next);
+      const uid = esc(String(m.senderId));
+
+      const avatar = (!m.mine && isPod)
+        ? (last ? `<div class="m-av" onclick="Comm.openProfile('${uid}')">${esc(initialsOf(m.name))}</div>` : '<div class="m-av-sp"></div>')
+        : '';
+      const nameLine = (!m.mine && isPod && first)
+        ? `<div class="m-name" onclick="Comm.openProfile('${uid}')">${esc(m.name)}</div>` : '';
+      const tick = m.mine ? `<span class="m-tick">${m.pending ? '·' : '✓'}</span>` : '';
+
+      html += `
+        <div class="m-row ${m.mine ? 'mine' : 'theirs'}${first ? ' first' : ''}${last ? ' last' : ''}${m.pending ? ' pending' : ''}">
+          ${avatar}
+          <div class="m-col">
+            ${nameLine}
+            <div class="m-bubble">${esc(m.text)}<span class="m-meta">${this.fmtClock(m.ts)}${tick}</span></div>
+          </div>
+        </div>`;
+    });
+
+    el.innerHTML = html;
+    if (nearBottom) el.scrollTop = el.scrollHeight;
+    this.updateToBottom();
+  },
+
+  updateToBottom() {
+    const el = $('chat-scroll'), b = $('to-bottom');
+    if (!el || !b) return;
+    b.classList.toggle('show', el.scrollHeight - el.scrollTop - el.clientHeight > 220);
+  },
+
+  scrollBottom(smooth) {
+    const el = $('chat-scroll');
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: smooth ? 'smooth' : 'auto' });
+  },
+
+  async sendMessage() {
+    const c = this.chat;
+    if (!c) return;
+    const input = $('chat-input');
+    const text = (input.value || '').trim();
+    if (!text) return;
+
+    input.value = '';
+    input.style.height = 'auto';
+    $('chat-send').disabled = true;
+
+    const temp = {
+      id: 'tmp_' + Date.now(), type: 'text', senderId: String(this.myId()), mine: true,
+      name: 'You', text, note: '', ts: Date.now(), pending: true
+    };
+    this.chatMsgs.push(temp);
+    this.renderChat(true);
+
+    try {
+      if (c.kind === 'pair') {
+        await Backend.sendPairMessage(c.id, text);
+        Backend.markPairRead(c.id).catch(() => {});
+      } else {
+        await Backend.sendPodMessage(c.id, text);
+        Backend.markPodRead(c.id).catch(() => {});
+      }
+      temp.pending = false;
+      this.refreshMessages(true);
+    } catch (e) {
+      console.warn('Send message failed:', e);
+      this.chatMsgs = this.chatMsgs.filter(m => m !== temp);
+      this.renderChat();
+      input.value = text;                       // give the text back so nothing is lost
+      $('chat-send').disabled = false;
+      showToast('Could not send — check your connection.', 'error');
     }
   },
 
@@ -1098,12 +1427,13 @@ const Comm = {
      PAIRS
      ============================================================ */
   async loadPairs() {
-    const list = document.getElementById('pairs-list');
+    const list = $('pairs-list');
     if (!list) return;
     try {
       const res = await Backend.listPairs();
       this.pairs = res.data || res.items || res.pairs || (Array.isArray(res) ? res : []) || [];
       this.renderPairs();
+      if ($('pairs-view').classList.contains('active')) this.renderAllPairs();
     } catch (e) {
       console.warn('Pairs load failed:', e);
       list.innerHTML = `
@@ -1116,12 +1446,18 @@ const Comm = {
     }
   },
 
+  // pending requests first, then active pairs
+  orderedPairs() {
+    const st = p => (p.status || p.data?.status);
+    const pending = this.pairs.filter(p => st(p) === 'pending');
+    const active = this.pairs.filter(p => st(p) !== 'pending');
+    return [...pending, ...active];
+  },
+
   renderPairs() {
-    const list = document.getElementById('pairs-list');
+    const list = $('pairs-list');
     if (!list) return;
-    const active = this.pairs.filter(p => (p.status || p.data?.status) !== 'pending');
-    const pending = this.pairs.filter(p => (p.status || p.data?.status) === 'pending');
-    const myId = (State.user && (State.user._id || State.user.id)) || '';
+    const myId = this.myId();
 
     if (!this.pairs.length) {
       list.innerHTML = `
@@ -1137,18 +1473,80 @@ const Comm = {
       return;
     }
 
-    list.innerHTML = [
-      ...pending.map(p => this.renderPairCard(p, myId, true)),
-      ...active.map(p => this.renderPairCard(p, myId, false))
-    ].join('');
+    const all = this.orderedPairs();
+    const shown = all.slice(0, this.PAIRS_PREVIEW);
+    const isPending = p => (p.status || p.data?.status) === 'pending';
+
+    list.innerHTML = shown.map(p => this.renderPairCard(p, myId, isPending(p))).join('')
+      + (all.length > shown.length
+        ? `<button class="btn btn-ghost btn-block see-all" onclick="Comm.openAllPairs()">See all ${all.length} partners →</button>`
+        : '');
 
     Badges.renderPairBadges();
   },
 
-   renderPairCard(pair, myId, isPending) {
+  /* ---------- all-pairs page ---------- */
+  openAllPairs() {
+    $('pairs-search').value = '';
+    this._pairQuery = '';
+    this.renderAllPairs();
+    $('pairs-view').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    history.pushState({ v: 'pairs' }, '');
+  },
+
+  closePairsView() {
+    $('pairs-view').classList.remove('active');
+    if (!$('chat-view').classList.contains('active')) document.body.style.overflow = '';
+  },
+
+  renderAllPairs() {
+    const host = $('pairs-all');
+    if (!host) return;
+    const myId = this.myId();
+    const q = this._pairQuery.trim().toLowerCase();
+    const isPending = p => (p.status || p.data?.status) === 'pending';
+
+    let all = this.orderedPairs();
+    if (q) {
+      all = all.filter(p => {
+        const partner = this.partnerOf(p);
+        return String(partner.fullName || partner.name || '').toLowerCase().includes(q)
+          || String(partner.username || '').toLowerCase().includes(q);
+      });
+    }
+
+    $('pairs-view-sub').textContent = this.pairs.length + (this.pairs.length === 1 ? ' partner' : ' partners');
+
+    if (!all.length) {
+      host.innerHTML = `<div class="empty-note"><strong>${q ? 'No matches' : 'No partners yet'}</strong>${q ? 'Try a different name.' : 'Tap “+ Find” to match with someone.'}</div>`;
+      return;
+    }
+    host.innerHTML = all.map(p => this.renderPairCard(p, myId, isPending(p))).join('');
+    Badges.renderPairBadges();
+  },
+
+  partnerOf(pair) {
+    const d = pair.data || pair;
+    let partner = d.partner || d.other;
+    if (!partner) {
+      const myId = String(this.myId());
+      const userAId = d.userA && (d.userA._id || d.userA);
+      const userBId = d.userB && (d.userB._id || d.userB);
+      if (String(userAId) === myId) partner = d.userB;
+      else if (String(userBId) === myId) partner = d.userA;
+      else partner = d.userA;
+    }
+    partner = partner || {};
+    if (typeof partner !== 'object') partner = { _id: partner };
+    return partner;
+  },
+
+  renderPairCard(pair, myId, isPending) {
     const d = pair.data || pair;
     const pairId = pair._id || pair.id;
-    const partner = d.partner || d.other || {};
+    const partner = this.partnerOf(pair);
+    const partnerId = partner._id || partner.id || d.partnerId || '';
     const name = partner.fullName || partner.name || 'Your partner';
     const initials = initialsOf(name);
     const langCfg = CW_CONFIG.LANGUAGES[partner.primaryLanguage || d.language] || {};
@@ -1187,8 +1585,8 @@ const Comm = {
     return `
       <div class="pair-card" data-pair-id="${pairId}" style="flex-direction: column; align-items: stretch;">
         <div style="display: flex; align-items: center; gap: 12px;">
-          <div class="pair-avatar">${initials}</div>
-          <div class="pair-body">
+          <div class="pair-avatar tap" onclick="Comm.openProfile('${esc(String(partnerId))}')">${initials}</div>
+          <div class="pair-body tap" onclick="Comm.openProfile('${esc(String(partnerId))}')">
             <div class="pair-name">${esc(name)}</div>
             <div class="pair-sub">${langCfg.name ? langCfg.name + ' · ' : ''}Learning together</div>
           </div>
@@ -1315,8 +1713,8 @@ const Comm = {
   },
 
   async sendPairRequest() {
-    const target = document.getElementById('pair-target')?.value.trim();
-    const message = document.getElementById('pair-message')?.value.trim() || '';
+    const target = $('pair-target')?.value.trim();
+    const message = $('pair-message')?.value.trim() || '';
     if (!target) { showToast('Enter a username.', 'info'); return; }
     try {
       await Backend.requestPair(target, message);
@@ -1338,11 +1736,12 @@ const Comm = {
     }
   },
 
-  async endPair(pairId) {
+  async endPair(pairId, fromChat) {
     if (!confirm('End this pair? You can always pair with someone else later.')) return;
     try {
       await Backend.endPair(pairId);
       showToast('Pair ended.', 'info');
+      if (fromChat) history.back();   // popstate closes the chat
       this.loadPairs();
     } catch (e) {
       showToast(e.message || 'Could not end pair.', 'error');
@@ -1357,42 +1756,22 @@ const Comm = {
     }
 
     const d = pair.data || pair;
-    let partner = d.partner;
-    if (!partner) {
-      const myId = (State.user && (State.user._id || State.user.id)) || '';
-      const userAId = d.userA && (d.userA._id || d.userA);
-      const userBId = d.userB && (d.userB._id || d.userB);
-      if (String(userAId) === String(myId)) partner = d.userB;
-      else if (String(userBId) === String(myId)) partner = d.userA;
-      else partner = d.userA;
-    }
-    partner = partner || {};
-
+    const partner = this.partnerOf(pair);
     const name = partner.fullName || partner.name || 'Your partner';
+    const langCfg = CW_CONFIG.LANGUAGES[partner.primaryLanguage || d.language] || {};
 
-    document.getElementById('pod-avatar').textContent = '💬';
-    const nameNode = document.getElementById('pod-name');
-    const nameChildSmall = nameNode.querySelector('small');
-    nameNode.childNodes[0].nodeValue = name + ' ';
-    if (nameChildSmall) nameChildSmall.textContent = 'Language exchange partner';
-
-    document.getElementById('pod-view').classList.add('active');
-    document.body.style.overflow = 'hidden';
-
-    this.activePod = {
-      _id: pairId,
-      isPair: true,
-      data: { name, members: [] }
-    };
-
-    document.querySelectorAll('.pod-tab').forEach(t => {
-      t.style.display = t.dataset.tab === 'chat' ? '' : 'none';
+    this.activePair = pair;
+    this.activePod = null;
+    this.openChatView({
+      kind: 'pair',
+      id: pairId,
+      name,
+      sub: (langCfg.name ? langCfg.name + ' · ' : '') + 'Language exchange',
+      partnerId: partner._id || partner.id || d.partnerId || '',
+      partner,
+      avatarUrl: partner.avatarUrl || ''
     });
 
-    this.setPodTab('chat');
-    this.loadPodMessages();
-
-    // Mark pair as read and refresh badges
     Backend.markPairRead(pairId).catch(() => {});
     Badges.refresh();
   },
@@ -1420,8 +1799,8 @@ const Comm = {
   },
 
   async submitReport(targetId) {
-    const reason = document.getElementById('report-reason')?.value || 'other';
-    const details = document.getElementById('report-details')?.value.trim() || '';
+    const reason = $('report-reason')?.value || 'other';
+    const details = $('report-details')?.value.trim() || '';
     try {
       await Backend.submitReport({
         targetType: 'pair',
@@ -1437,10 +1816,98 @@ const Comm = {
   },
 
   /* ============================================================
+     MEMBER PROFILES (tap a name or photo)
+     Shows streak / XP / level / lessons only — never tier, pods or pairs.
+     ============================================================ */
+  async openProfile(id, fb = {}) {
+    if (!id) { showToast('Profile unavailable.', 'info'); return; }
+    Header._modal('Profile', '<div class="modal-loading">Loading profile…</div>');
+    try {
+      const r = await Backend.getCommunityProfile(id);
+      this.showProfile(r.profile || r);
+    } catch (e) {
+      console.warn('profile load failed', e);
+      if (e.status === 404) { closeModal('cw-generic-modal'); showToast('This profile is not available.', 'info'); return; }
+      this.showProfile(fb, true);
+    }
+  },
+
+  showProfile(d, partial) {
+    d = d || {};
+    const name = d.fullName || d.name || d.username || 'Learner';
+    const attr = s => esc(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    const url = /^https?:\/\//i.test(d.avatarUrl || '') ? d.avatarUrl : '';
+    const avatar = `<div class="prof-avatar" style="${url ? `background-image:url('${attr(url)}');background-size:cover;background-position:center` : ''}">${url ? '' : esc(initialsOf(name))}</div>`;
+    const head = `${avatar}<div class="prof-name">${esc(name)}</div>${d.username ? `<div class="prof-user">@${esc(d.username)}</div>` : ''}`;
+
+    if (d.isPublic === false) {
+      Header._modal('Profile', `<div class="prof">${head}<p style="margin-top:16px;font-size:13.5px;color:var(--text-2)">This profile is private.</p></div>`);
+      return;
+    }
+
+    const num = v => (v == null || v === '' || isNaN(Number(v)) ? '—' : Number(v));
+    const lang = CW_CONFIG.LANGUAGES[d.language];
+    const rows = (d.languages || []).map(l => {
+      const c = CW_CONFIG.LANGUAGES[l.language] || {};
+      return `<div class="prof-lang-row"><span>${c.emoji || '📚'} ${esc(c.name || l.language)}</span><span>Lvl ${num(l.currentLevel)} · ${num(l.totalXP)} XP · 🔥 ${num(l.streak)}</span></div>`;
+    }).join('');
+    const since = d.createdAt ? new Date(d.createdAt).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : '';
+
+    Header._modal('Profile', `
+      <div class="prof">
+        ${head}
+        ${d.bio ? `<div class="prof-bio">${esc(d.bio)}</div>` : ''}
+        ${lang ? `<div class="prof-lang">${lang.emoji} Learning ${esc(lang.name)}</div>` : ''}
+        <div class="prof-stats">
+          <div class="prof-stat"><b>🔥 ${num(d.streak)}</b><span>Day streak</span></div>
+          <div class="prof-stat"><b>${num(d.totalXP)}</b><span>Total XP</span></div>
+          <div class="prof-stat"><b>${num(d.currentLevel)}</b><span>Level</span></div>
+        </div>
+        <div style="font-size:13px;color:var(--text-2)">📚 ${num(d.lessonsCompleted)} lessons completed</div>
+        ${rows ? `<div style="margin-top:18px"><div class="section-h" style="margin:0 0 6px">Progress by language</div>${rows}</div>` : ''}
+        ${since ? `<div class="prof-since">Learning with ClearWords since ${esc(since)}</div>` : ''}
+        ${partial ? `<div class="prof-since">Couldn't load full stats right now.</div>` : ''}
+      </div>`);
+  },
+
+  /* ============================================================
      PROGRESS CARDS
      ============================================================ */
+  async ensureProgress() {
+    const p = State.progress;
+    if (!p || (p.language && p.language !== State.currentLanguage)) await State.loadProgress(State.currentLanguage);
+    return State.progress || {};
+  },
+
+  statsNow() {
+    const p = State.progress || {};
+    return {
+      streak: p.streak || 0,
+      xp: p.totalXP || 0,
+      level: p.currentLevel || 1,
+      lessonsCompleted: Math.max((p.completedLessons || []).length, (p.completedLevels || []).length)
+    };
+  },
+
+  // use the card's saved numbers; cards saved as all-zero show current numbers instead
+  cardStats(d) {
+    const s = d.stats || {};
+    return (s.streak || s.xp || s.lessonsCompleted)
+      ? { ...this.statsNow(), ...s, level: s.level || this.statsNow().level }
+      : this.statsNow();
+  },
+
+  cardBig(type, st) {
+    switch (type) {
+      case 'lessons':   return { label: 'Lessons',   value: st.lessonsCompleted, sub: 'Level ' + st.level };
+      case 'vocab':     return { label: 'XP earned', value: st.xp,               sub: 'Level ' + st.level };
+      case 'milestone': return { label: 'Milestone', value: 'Lvl ' + st.level,   sub: st.xp + ' XP' };
+      default:          return { label: 'Streak',    value: st.streak,           sub: st.xp + ' XP' };
+    }
+  },
+
   async loadCards() {
-    const grid = document.getElementById('cards-grid');
+    const grid = $('cards-grid');
     if (!grid) return;
     try {
       const res = await Backend.listMyCards();
@@ -1454,7 +1921,7 @@ const Comm = {
   },
 
   renderCards() {
-    const grid = document.getElementById('cards-grid');
+    const grid = $('cards-grid');
     if (!grid) return;
     const cards = (this.cards || []).slice(0, 4);
     const slots = Math.max(2, cards.length);
@@ -1465,9 +1932,8 @@ const Comm = {
       if (c) {
         const d = c.data || c;
         const palette = i % 3 === 0 ? '' : i % 3 === 1 ? 'gold' : 'terracotta';
-        const title = d.title || d.cardType || 'Progress';
-        const big = d.stats?.streak || d.stats?.xp || d.stats?.level || '—';
-        const sub = d.stats?.xp ? d.stats.xp + ' XP' : d.stats?.lessonsCompleted ? d.stats.lessonsCompleted + ' lessons' : '';
+        const st = this.cardStats(d), b = this.cardBig(d.cardType, st);
+        const title = d.title || b.label, big = b.value, sub = b.sub;
         html.push(`
           <button class="pcard ${palette}" onclick="Comm.viewCard('${c._id || c.id}')">
             <div>
@@ -1491,12 +1957,9 @@ const Comm = {
   },
 
   async createProgressCard() {
+    await this.ensureProgress();
     const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
-    const p = State.progress || {};
-    const streak = p.streak || State.user?.streak || 0;
-    const xp = p.totalXP || State.user?.totalXP || 0;
-    const level = p.currentLevel || 1;
-    const lessons = (p.completedLessons || p.completedLevels || []).length;
+    const { streak, xp, level, lessonsCompleted: lessons } = this.statsNow();
 
     Header._modal('Create a progress card', `
       <p style="font-size: 14px; color: var(--text-2); margin-bottom: 14px;">
@@ -1527,23 +1990,17 @@ const Comm = {
   },
 
   async submitCreateCard() {
-    const btn = document.getElementById('card-create-btn');
+    const btn = $('card-create-btn');
     if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-inline"></span> Creating…'; }
-    const cardType = document.getElementById('card-type')?.value || 'streak';
-    const caption = document.getElementById('card-caption')?.value.trim() || '';
-    const p = State.progress || {};
+    const cardType = $('card-type')?.value || 'streak';
+    const caption = $('card-caption')?.value.trim() || '';
 
     try {
       const res = await Backend.createCard({
         language: State.currentLanguage,
         cardType,
         caption,
-        stats: {
-          streak: p.streak || State.user?.streak || 0,
-          xp: p.totalXP || State.user?.totalXP || 0,
-          level: p.currentLevel || 1,
-          lessonsCompleted: (p.completedLessons || p.completedLevels || []).length
-        }
+        stats: this.statsNow()
       });
       const cardId = res._id || res.cardId;
       if (cardId) {
@@ -1563,14 +2020,14 @@ const Comm = {
     const card = (this.cards || []).find(c => (c._id || c.id) === cardId);
     if (!card) return;
     const d = card.data || card;
-    const stats = d.stats || {};
+    const stats = this.cardStats(d), b = this.cardBig(d.cardType, stats);
     const langCfg = CW_CONFIG.LANGUAGES[d.language] || CW_CONFIG.LANGUAGES.yoruba;
 
     Header._modal('Your progress card', `
       <div class="pcard ${d.cardType === 'streak' ? 'gold' : ''}" style="min-height: 260px; padding: 24px;">
         <div>
           <div class="pcard-head">${esc(String(d.cardType || 'PROGRESS').toUpperCase())}</div>
-          <div class="pcard-big" style="font-size: 46px;">${stats.streak || stats.xp || stats.level || '—'}</div>
+          <div class="pcard-big" style="font-size: 46px;">${esc(String(b.value))}</div>
           <div class="pcard-sub" style="font-size: 14px;">${langCfg.name}</div>
           ${d.caption ? `<div class="pcard-sub" style="margin-top: 10px; font-style: italic;">"${esc(d.caption)}"</div>` : ''}
         </div>
@@ -1587,7 +2044,7 @@ const Comm = {
 
   async shareCardToPod(cardId) {
     if (!this.pods.length) { showToast('Join a pod first to share.', 'info'); return; }
-    const list = this.pods.map((p, i) => {
+    const list = this.pods.map(p => {
       const d = p.data || p;
       const langCfg = CW_CONFIG.LANGUAGES[d.language] || {};
       return `<button class="chip-btn" style="width: 100%; padding: 14px; margin-bottom: 8px;" onclick="Comm.doShareCard('${cardId}', '${p._id || p.id}')">${langCfg.emoji || '👥'} ${esc(d.name || 'Pod')}</button>`;
@@ -1625,20 +2082,31 @@ const Comm = {
 };
 
 /* ============================================================
-   AUTO-GROW TEXTAREA + ENTER-TO-SEND FOR POD INPUT
+   INPUT HANDLERS
    ============================================================ */
 document.addEventListener('input', (e) => {
-  if (e.target.id === 'pod-input') {
+  if (e.target.id === 'chat-input') {
     e.target.style.height = 'auto';
     e.target.style.height = Math.min(120, e.target.scrollHeight) + 'px';
+    $('chat-send').disabled = !e.target.value.trim();
+  }
+  if (e.target.id === 'pairs-search') {
+    Comm._pairQuery = e.target.value;
+    Comm.renderAllPairs();
   }
 });
 document.addEventListener('keydown', (e) => {
-  if (e.target.id === 'pod-input' && e.key === 'Enter' && !e.shiftKey) {
+  if (e.target.id === 'chat-input' && e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    Comm.sendPodMessage();
+    Comm.sendMessage();
   }
 });
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.chat-menu-wrap')) $('chat-menu')?.classList.remove('show');
+});
+document.addEventListener('scroll', (e) => {
+  if (e.target && e.target.id === 'chat-scroll') Comm.updateToBottom();
+}, true);
 
 document.addEventListener('DOMContentLoaded', () => Comm.init());
 window.Comm = Comm;
