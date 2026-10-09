@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#2E8B57">
 <title>ClearWords — Practice</title>
+  <!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- Theme color (browser chrome tint on mobile) -->
+<meta name="theme-color" content="#2E8B57">
+
+<!-- iOS: full-screen web app when added to home screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ClearWords">
+<link rel="apple-touch-icon" href="/logo.png">
+
+<!-- Android: enables install prompt -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="ClearWords">
+<meta name="msapplication-TileColor" content="#2E8B57">
+<meta name="msapplication-TileImage" content="/logo.png">
 <style>
 :root{--brand:#2E8B57;--brand-rgb:46,139,87;--gold:#E8B33C;--gold-rgb:232,179,60;--indigo-rgb:59,91,165;--terracotta-rgb:217,119,87;--danger:#E5484D;--bg:#FAF7F2;--bg-elev:#fff;--card:#fff;--text:#1C1E21;--text-2:#6B6F76;--text-3:#9AA0A6;--border:#E5E1D8;--shadow:0 2px 12px rgba(28,30,33,.06);--shadow-lg:0 8px 28px rgba(28,30,33,.1);--danger-rgb:229,72,77;--border-strong:#D4CFC2;--radius-lg:20px;--radius-full:999px;--indigo:#3B5BA5;--terracotta:#D97757;--radius:14px;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)}
 [data-theme=dark]{--bg:#0F1114;--bg-elev:#16191D;--card:#1A1D21;--text:#F2EFE9;--text-2:#9AA0A6;--text-3:#6B6F76;--border:#2A2E33;--brand:#4CAF7A;--brand-rgb:76,175,122;--border-strong:#3A3E44;--shadow:0 2px 12px rgba(0,0,0,.4);--shadow-lg:0 8px 28px rgba(0,0,0,.6)}
@@ -813,6 +830,14 @@ document.addEventListener('keydown', e => { if (e.target.id === 'timmy-input' &&
 document.addEventListener('click', e => { if (!e.target.closest('.chat-menu-wrap')) document.querySelectorAll('.chat-menu.show').forEach(m => m.classList.remove('show')); });
 document.addEventListener('DOMContentLoaded', () => Practice.init());
 window.Practice = Practice;
+  // Register the service worker for offline + installability
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('[PWA] SW registered:', reg.scope))
+        .catch(err => console.warn('[PWA] SW registration failed:', err));
+    });
+  }
 </script>
 </body>
 </html>
