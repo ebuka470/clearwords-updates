@@ -151,6 +151,11 @@ const Backend = {
   updateProfile: (payload) => api.put('/api/users/profile', payload),
   getUser: (identifier) => api.get('/api/users/' + encodeURIComponent(identifier)),
   getUserStats: (userId) => api.get('/api/users/' + userId + '/stats', { auth: false }),
+  // What a pod / pair member sees when tapping someone's name or photo.
+  // Backend returns only streak, XP, level, lessons, language, bio, avatar —
+  // never tier, pods or pairs.
+  getCommunityProfile: (userId, language) =>
+    api.get('/api/users/' + encodeURIComponent(userId) + '/community-profile', { params: { language } }),
 
   getProgress: (language) => api.get('/api/progress', { params: { language } }),
   completeLesson: (payload) => api.post('/api/progress/complete-lesson', {
