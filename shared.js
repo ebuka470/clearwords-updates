@@ -384,11 +384,39 @@ const State = {
     }
   },
 
+  // GET /api/progress returns the progress document itself. The old code used
+  // `data.progress || data`, which breaks if the document ever carries a `progress`
+  // field. Prefer whichever object actually holds the numbers.
+  normProgress(raw) {
+    if (!raw || typeof raw !== 'object') return raw;
+    const has = o => o && typeof o === 'object' &&
+      (o.totalXP !== undefined || Array.isArray(o.completedLessons) || o.streak !== undefined);
+    if (has(raw)) return raw;
+    if (has(raw.data)) return raw.data;
+    if (has(raw.progress)) return raw.progress;
+    return raw.progress || raw;
+  },
+
+  // The stored streak only changes when a lesson is completed, so one that ended
+  // days ago would still read e.g. "9". Count it only if the last lesson was today
+  // or yesterday (device-local date, same as the lesson recorder).
+  effectiveStreak(p) {
+    const s = (p && p.streak) || 0;
+    if (!s) return 0;
+    const last = p.lastCompletedDate;
+    if (!last) return s;
+    const key = off => {
+      const d = new Date(Date.now() - off * 86400000);
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    };
+    return (last === key(0) || last === key(1)) ? s : 0;
+  },
+
   async loadProgress(language) {
     if (!Auth.isLoggedIn()) return null;
     try {
       const data = await Backend.getProgress(language);
-      this.progress = data.progress || data;
+      this.progress = this.normProgress(data);
       this.emit('progress:changed', this.progress);
       return this.progress;
     } catch (e) {
@@ -1024,7 +1052,7 @@ const Header = {
     if (!el) return;
     const lang = State.currentLanguage;
     const langCfg = CW_CONFIG.LANGUAGES[lang] || {};
-    const streak = (State.user && State.user.streak) || 0;
+    const streak = this._cachedStreak();
 
     el.innerHTML = `
       <div class="hdr-left">
@@ -1049,6 +1077,45 @@ const Header = {
       </div>
     `;
     this.refreshNotifDot();
+
+    // keep the 🔥 number in sync whenever progress is (re)loaded on any page
+    if (!this._streakHooked) {
+      this._streakHooked = true;
+      State.on('progress:changed', p => this._paintStreak(p));
+    }
+    this.refreshStreak();
+  },
+
+  _streakKey() { return 'cw_streak_' + State.currentLanguage; },
+
+  // last known streak, so the header doesn't flash 0 while progress loads
+  _cachedStreak() {
+    if (State.progress && State.progress.language === State.currentLanguage) {
+      return State.effectiveStreak(State.progress);
+    }
+    const v = parseInt(localStorage.getItem(this._streakKey()), 10);
+    return Number.isFinite(v) ? v : 0;
+  },
+
+  _paintStreak(p) {
+    if (!p) return;
+    const n = State.effectiveStreak(p);
+    try { localStorage.setItem(this._streakKey(), String(n)); } catch {}
+    const el = document.querySelector('#cw-header .streak-btn span:last-child');
+    if (el) el.textContent = n;
+  },
+
+  async refreshStreak() {
+    if (!Auth.isLoggedIn()) return;
+    try {
+      let p = State.progress;
+      const fresh = p && p.language === State.currentLanguage && p.streak !== undefined;
+      if (!fresh) {
+        p = State.normProgress(await Backend.getProgress(State.currentLanguage));
+        State.progress = p;
+      }
+      this._paintStreak(p);
+    } catch {}
   },
 
   async refreshNotifDot() {
