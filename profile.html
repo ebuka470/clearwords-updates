@@ -1426,8 +1426,8 @@ const Prof = {
     const code = $('ref-code-val').textContent || (this.user && this.user.referralCode) || '';
     if (!code || code === '—') { showToast('Code not ready yet.', 'info'); return; }
     const shareText = `Join me on ClearWords to learn Nigerian languages! Use my code: ${code}
-    
-    https://www.clearwords.com.ng/`;
+
+https://www.clearwords.com.ng/`;
     if (navigator.share) {
       navigator.share({ title: 'ClearWords', text: shareText }).catch(() => {});
     } else {
