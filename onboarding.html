@@ -23,7 +23,7 @@
 <meta name="msapplication-TileColor" content="#2E8B57">
 <meta name="msapplication-TileImage" content="/logo.png">
 <style>
-/* ============ DESIGN TOKENS (matched to learn/practice) ============ */
+/* ============ DESIGN TOKENS (same as every other page) ============ */
 :root {
   --brand: #2E8B57;
   --brand-rgb: 46,139,87;
@@ -110,35 +110,59 @@ input, textarea { font-family: inherit; }
 }
 .progress-dots span.active { background: var(--brand); width: 20px; border-radius: 4px; }
 
-/* ============ WELCOME ============ */
+/* ============ WELCOME (the heritage hook) ============ */
 .welcome {
   flex: 1;
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
   text-align: center;
   padding: 20px 0;
+  position: relative;
+}
+.welcome::before {
+  content: ''; position: absolute; inset: -40px -22px auto; height: 360px; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(circle at 80% 10%, rgba(var(--gold-rgb), .20) 0, transparent 55%),
+    radial-gradient(circle at 10% 30%, rgba(var(--brand-rgb), .16) 0, transparent 55%);
 }
 .welcome-logo {
-  font-size: 84px; line-height: 1;
-  margin-bottom: 20px;
+  font-size: 72px; line-height: 1;
+  margin-bottom: 16px;
   animation: logoPop .6s cubic-bezier(.2,.9,.3,1.4);
 }
 @keyframes logoPop {
   0% { transform: scale(0.4); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
+.hook-eyebrow {
+  font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--brand); margin-bottom: 12px;
+}
 .welcome h1 {
-  font-size: 28px; font-weight: 800;
-  letter-spacing: -0.03em; line-height: 1.15;
-  max-width: 320px;
+  font-size: 29px; font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.18;
+  max-width: 340px;
+}
+.welcome h1 .rot {
+  display: inline-block; color: var(--brand);
+  transition: opacity .26s ease, transform .26s ease;
+}
+.welcome h1 .rot.out { opacity: 0; transform: translateY(8px); }
+.hook-fix {
+  margin-top: 12px; font-size: 22px; font-weight: 800; letter-spacing: -0.02em;
+  background: linear-gradient(90deg, var(--brand), var(--gold));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .welcome p {
   font-size: 15px; color: var(--text-2);
-  margin-top: 12px; max-width: 320px; line-height: 1.5;
+  margin-top: 14px; max-width: 330px; line-height: 1.5;
 }
 .welcome-actions {
-  margin-top: 34px; width: 100%; max-width: 320px;
+  margin-top: 30px; width: 100%; max-width: 320px;
   display: flex; flex-direction: column; gap: 10px;
+}
+.welcome-proof {
+  margin-top: 18px; font-size: 12.5px; color: var(--text-3); font-weight: 600;
 }
 
 /* ============ QUESTION HEADER ============ */
@@ -191,6 +215,11 @@ input, textarea { font-family: inherit; }
 .choice-icon.tint-danger { background: rgba(229,72,77,0.12); }
 .choice-body { flex: 1; min-width: 0; }
 .choice-title { font-weight: 700; font-size: 15px; }
+.choice-tag {
+  display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 6px; vertical-align: middle;
+  font-size: 10px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
+  background: rgba(var(--gold-rgb), .20); color: var(--gold);
+}
 .choice-sub { font-size: 12.5px; color: var(--text-2); margin-top: 2px; line-height: 1.35; }
 .choice-check {
   width: 22px; height: 22px; border-radius: 50%;
@@ -341,10 +370,35 @@ input, textarea { font-family: inherit; }
 .login-hero h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
 .login-hero p { font-size: 14.5px; color: var(--text-2); margin-top: 6px; }
 
+/* heritage line on the signup screen */
+.heritage-pill {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; margin-bottom: 18px; border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(var(--brand-rgb), .12), rgba(var(--gold-rgb), .12));
+  border: 1px solid rgba(var(--brand-rgb), .30);
+  font-size: 13.5px; font-weight: 700; line-height: 1.4;
+}
+.heritage-pill span:first-child { font-size: 24px; }
+
+/* toast (shared.js calls showToast during signup/login) */
+.cw-toast {
+  position: fixed; left: 50%; bottom: 40px;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--text); color: var(--bg);
+  padding: 12px 20px; border-radius: var(--radius-full);
+  font-size: 14px; font-weight: 600; z-index: 20000;
+  opacity: 0; transition: opacity .2s, transform .2s;
+  max-width: 90%; text-align: center; box-shadow: var(--shadow-lg);
+}
+.cw-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.cw-toast-error { background: var(--danger); color: #fff; }
+.cw-toast-success { background: var(--brand); color: #fff; }
+
 @media (max-width: 380px) {
-  .welcome h1 { font-size: 24px; }
+  .welcome h1 { font-size: 25px; }
+  .hook-fix { font-size: 19px; }
   .q-title { font-size: 21px; }
-  .welcome-logo { font-size: 68px; }
+  .welcome-logo { font-size: 60px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
@@ -353,19 +407,25 @@ input, textarea { font-family: inherit; }
 </head>
 <body>
 
-<!-- ==================== 1. WELCOME ==================== -->
+<!-- ==================== 1. WELCOME (heritage hook) ==================== -->
 <section class="screen active" id="s-welcome">
   <div class="welcome">
     <div class="welcome-logo">🗣️</div>
-    <h1>Keep the language close.</h1>
-    <p>Learn Nigerian languages through words, conversations, and everyday life — for you, and for the people you love.</p>
+    <div class="hook-eyebrow">Keep the language close</div>
+    <h1>Your name is <span class="rot" id="rot-name">Chika</span>, but you can't speak to your grandmother.</h1>
+    <div class="hook-fix">Let's fix that.</div>
+    <p>Learn Yorùbá, Igbo, Hausa or Pidgin through short lessons and real conversations, so you can finally talk to the people you love.</p>
     <div class="welcome-actions">
-      <button class="btn btn-block" onclick="Onb.go('s-purpose')">
-        Get started →
+      <button class="btn btn-block" onclick="Onb.startHeritage()">
+        Let's fix that →
       </button>
       <button class="btn btn-ghost btn-block" onclick="Onb.go('s-login')">
         I already have an account
       </button>
+    </div>
+    <div class="welcome-proof">Short lessons · Real audio · Timmy, your AI tutor</div>
+    <div class="link-row" style="margin-top: 12px;">
+      Learning for another reason? <a onclick="Onb.go('s-purpose')">Start here</a>
     </div>
   </div>
 </section>
@@ -483,8 +543,9 @@ input, textarea { font-family: inherit; }
   <div class="q-header">
     <div class="q-eyebrow">Last step</div>
     <div class="q-title">Create your account</div>
-    <div class="q-sub">We'll personalize your learning and keep your progress safe.</div>
+    <div class="q-sub" id="signup-sub">We'll personalize your learning and keep your progress safe.</div>
   </div>
+  <div class="heritage-pill" id="heritage-pill" style="display:none;"></div>
   <form class="form" id="signup-form" onsubmit="Onb.submitSignup(event)">
     <div class="field">
       <label for="su-fullname">Full name <span class="req">*</span></label>
@@ -605,6 +666,70 @@ const Onb = {
 
     // Restore selections visually
     this.restoreSelections();
+
+    // The hook: "Your name is Chika, but..." cycles through common names
+    this.startNameRotation();
+  },
+
+  /* ---------- Heritage hook ---------- */
+  startNameRotation() {
+    const el = document.getElementById('rot-name');
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const names = (window.Heritage && Heritage.NAMES) || ['Chika', 'Tunde', 'Amina', 'Ngozi', 'Emeka', 'Bisi'];
+    let i = 0;
+    this._rot = setInterval(() => {
+      el.classList.add('out');
+      setTimeout(() => { i = (i + 1) % names.length; el.textContent = names[i]; el.classList.remove('out'); }, 260);
+    }, 2600);
+  },
+
+  // "Let's fix that": they've told us why they're here, so skip the purpose question
+  startHeritage() {
+    this.data.purpose = 'heritage';
+    this.savePartial();
+    this.clearSelected('choices-purpose');
+    this.markSelected('choices-purpose', 'heritage');
+    document.getElementById('next-purpose').disabled = false;
+    this.go('s-learning-for');
+  },
+
+  isFamilyMinded() {
+    return ['heritage', 'family', 'child'].includes(this.data.purpose);
+  },
+
+  langName() {
+    const cfg = CW_CONFIG.LANGUAGES[this.data.language];
+    return cfg ? cfg.name : '';
+  },
+
+  // copy that adapts to what they've told us so far
+  personalize(screenId) {
+    const her = this.isFamilyMinded();
+    const lang = this.langName();
+    const set = (sel, text) => { const el = document.querySelector(sel); if (el) el.textContent = text; };
+
+    if (screenId === 's-language') {
+      set('#s-language .q-title', her ? 'Which language do your people speak?' : 'What language connects you to home?');
+      set('#s-language .q-sub', her ? "Pick the one you want to hear your family say back to you." : 'You can add more languages later.');
+    }
+    if (screenId === 's-goals') {
+      set('#s-goals .q-sub', her ? 'Pick everything that feels true. Most people start with “talk with family”.' : 'Pick everything that feels true.');
+    }
+    if (screenId === 's-level') {
+      set('#s-level .q-sub', her ? "Even “three words and a greeting” counts. Be honest, we'll meet you there." : "Be honest — we'll adjust as you go.");
+    }
+    if (screenId === 's-signup') {
+      set('#signup-sub', her && lang
+        ? `Let's get you talking to your family in ${lang}. We'll keep your progress safe.`
+        : "We'll personalize your learning and keep your progress safe.");
+      const pill = document.getElementById('heritage-pill');
+      if (pill) {
+        if (her && lang) {
+          pill.style.display = 'flex';
+          pill.innerHTML = `<span>🌳</span><span>Your first goal: say hello to your grandmother in ${esc(lang)}.</span>`;
+        } else pill.style.display = 'none';
+      }
+    }
   },
 
   /* ---------- Navigation ---------- */
@@ -612,6 +737,7 @@ const Onb = {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const el = document.getElementById(screenId);
     if (el) {
+      this.personalize(screenId);
       el.classList.add('active');
       window.scrollTo(0, 0);
     }
@@ -670,12 +796,17 @@ const Onb = {
     });
   },
 
+  clearSelected(containerId) {
+    const container = document.getElementById(containerId);
+    if (container) container.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+  },
+
   /* ============================================================
      STEP 1 — PURPOSE
      ============================================================ */
   renderPurpose() {
     const options = [
-      { v: 'heritage',    icon: '🌳', title: 'My heritage',  sub: 'Reconnect with the language of my family' },
+      { v: 'heritage',    icon: '🌳', title: 'My heritage',  tag: 'Most popular', sub: 'I want to speak with my grandmother, my parents, my people' },
       { v: 'family',      icon: '👨‍👩‍👧‍👦', title: 'My family',     sub: 'Communicate with relatives' },
       { v: 'self',        icon: '🌟', title: 'For myself',   sub: 'Personal growth and curiosity' },
       { v: 'child',       icon: '🧒', title: 'My child',     sub: 'Raise them knowing their language' },
@@ -806,7 +937,7 @@ const Onb = {
               onclick="Onb.selectChoice('${containerId}', '${o.v}', this, ${singleSelect})">
         <div class="choice-icon ${o.tint ? 'tint-' + o.tint : ''}">${o.icon}</div>
         <div class="choice-body">
-          <div class="choice-title">${o.title}</div>
+          <div class="choice-title">${o.title}${o.tag ? `<span class="choice-tag">${o.tag}</span>` : ''}</div>
           ${o.sub ? `<div class="choice-sub">${o.sub}</div>` : ''}
         </div>
         <div class="choice-check">✓</div>
@@ -974,6 +1105,7 @@ document.addEventListener('DOMContentLoaded', () => Onb.init());
 window.addEventListener('popstate', (e) => {
   const screenId = (e.state && e.state.screen) || (location.hash || '#s-welcome').slice(1);
   if (document.getElementById(screenId)) {
+    Onb.personalize(screenId);
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
     window.scrollTo(0, 0);
