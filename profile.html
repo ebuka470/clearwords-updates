@@ -620,7 +620,7 @@ input, textarea, select { font-family: inherit; }
       <div class="set-body"><div class="set-title">Dark mode</div></div>
       <div class="toggle" id="theme-toggle"></div>
     </div>
-    <div class="set-row" onclick="Prof.toggleNotifications()">
+    <div class="set-row" onclick="Prof.togglePushNotifications()">
       <div class="set-ico terracotta">🔔</div>
       <div class="set-body"><div class="set-title">Notifications</div><div class="set-sub">Streak reminders and updates</div></div>
       <div class="toggle" id="notif-toggle"></div>
@@ -1661,29 +1661,38 @@ https://www.clearwords.com.ng/`;
     this.applyThemeToggle();
   },
 
-  async toggleNotifications() {
-    const el = $('notif-toggle');
-    const currentlyOn = el.classList.contains('on');
+  async function togglePushNotifications() {
+  const btn = document.getElementById('notif-toggle-btn');
+  const currentlyOn = btn.textContent.includes('Enabled');
 
-    if (currentlyOn) {
-      try { await Backend.updateProfile({ notificationsEnabled: false }); } catch {}
-      if (State.user) State.user.notificationsEnabled = false;
-      el.classList.remove('on');
-      showToast('Notifications off', 'info');
-    } else {
-      if (!('Notification' in window)) { showToast('Notifications not supported.', 'info'); return; }
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        try { await Backend.updateProfile({ notificationsEnabled: true }); } catch {}
-        if (State.user) State.user.notificationsEnabled = true;
-        el.classList.add('on');
-        showToast('Notifications on 🔔', 'success');
-      } else {
-        showToast('Permission denied.', 'info');
-      }
-    }
-    Auth.setUser(State.user);
-  },
+  if (currentlyOn) {
+    await PushManager.disable();
+    btn.textContent = 'Enable';
+    showToast('Notifications disabled', 'info');
+    return;
+  }
+
+  // On iOS, if the app isn't installed, tell the user how
+  if (PushManager.needsInstallFirst()) {
+    showToast('Add ClearWords to your Home Screen first to enable notifications.', 'info');
+    return;
+  }
+
+  const result = await PushManager.enable();
+
+  if (result.ok) {
+    btn.textContent = 'Enabled ✅';
+    showToast('Notifications enabled 🔔', 'success');
+  } else if (result.reason === 'denied') {
+    showToast('Permission denied. Enable it in your browser settings.', 'error');
+  } else if (result.reason === 'unsupported') {
+    showToast('Push notifications not supported on this browser.', 'error');
+  } else if (result.reason === 'no_vapid') {
+    showToast('Push not configured on the server yet.', 'error');
+  } else {
+    showToast('Could not enable notifications. Try again.', 'error');
+  }
+},
 
   /* ============================================================
      STATIC PAGES
