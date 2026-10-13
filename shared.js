@@ -15,6 +15,7 @@ const CW_CONFIG = {
   THEME_KEY: 'cw_theme',
   ONBOARDING_KEY: 'cw_onboarding',
   LAST_LESSON_KEY: 'cw_last_lesson',
+  VAPID_PUBLIC_KEY: null,
   SUPABASE_URL: 'https://megxgmsivslzdxaqxxpl.supabase.co',
   SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lZ3hnbXNpdnNsemR4YXF4eHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NzA4MzIsImV4cCI6MjEwMDA0NjgzMn0.hJmwvrXhhGADlHxkciTzq2TgQo25QCdKv142at9_jyw',
   SUPABASE_BUCKET: 'audio',
@@ -151,9 +152,6 @@ const Backend = {
   updateProfile: (payload) => api.put('/api/users/profile', payload),
   getUser: (identifier) => api.get('/api/users/' + encodeURIComponent(identifier)),
   getUserStats: (userId) => api.get('/api/users/' + userId + '/stats', { auth: false }),
-  // What a pod / pair member sees when tapping someone's name or photo.
-  // Backend returns only streak, XP, level, lessons, language, bio, avatar —
-  // never tier, pods or pairs.
   getCommunityProfile: (userId, language) =>
     api.get('/api/users/' + encodeURIComponent(userId) + '/community-profile', { params: { language } }),
 
@@ -305,7 +303,13 @@ const Backend = {
     api.delete(`/api/timmy-chats/section/${encodeURIComponent(sectionId)}`),
 
   importTimmyChats: (language, threads) =>
-    api.post('/api/timmy-chats/import', { language, threads })
+    api.post('/api/timmy-chats/import', { language, threads }),
+
+  // ---- PUSH NOTIFICATIONS ----
+  getVapidPublicKey: () => api.get('/api/push/vapid-public-key', { auth: false }),
+  subscribeToPush: (subscription) => api.post('/api/push/subscribe', subscription),
+  unsubscribeFromPush: (endpoint) => api.delete('/api/push/unsubscribe', { endpoint }),
+  testPush: () => api.post('/api/push/test')
 };
 
 /* ============================================================
@@ -384,9 +388,6 @@ const State = {
     }
   },
 
-  // GET /api/progress returns the progress document itself. The old code used
-  // `data.progress || data`, which breaks if the document ever carries a `progress`
-  // field. Prefer whichever object actually holds the numbers.
   normProgress(raw) {
     if (!raw || typeof raw !== 'object') return raw;
     const has = o => o && typeof o === 'object' &&
@@ -397,9 +398,6 @@ const State = {
     return raw.progress || raw;
   },
 
-  // The stored streak only changes when a lesson is completed, so one that ended
-  // days ago would still read e.g. "9". Count it only if the last lesson was today
-  // or yesterday (device-local date, same as the lesson recorder).
   effectiveStreak(p) {
     const s = (p && p.streak) || 0;
     if (!s) return 0;
@@ -1078,7 +1076,6 @@ const Header = {
     `;
     this.refreshNotifDot();
 
-    // keep the 🔥 number in sync whenever progress is (re)loaded on any page
     if (!this._streakHooked) {
       this._streakHooked = true;
       State.on('progress:changed', p => this._paintStreak(p));
@@ -1088,7 +1085,6 @@ const Header = {
 
   _streakKey() { return 'cw_streak_' + State.currentLanguage; },
 
-  // last known streak, so the header doesn't flash 0 while progress loads
   _cachedStreak() {
     if (State.progress && State.progress.language === State.currentLanguage) {
       return State.effectiveStreak(State.progress);
@@ -1237,7 +1233,6 @@ const Header = {
 
 /* ============================================================
    10b. BADGES — unread counts across the whole app
-   Covers: pod messages, pair messages, AND Timmy chats.
    ============================================================ */
 const Badges = {
   _unread: { pods: {}, pairs: {}, timmy: {}, total: 0 },
@@ -1379,6 +1374,206 @@ const Badges = {
 };
 
 /* ============================================================
+   10c. PUSH MANAGER — Web Push notifications
+   Handles permission, subscription, and syncing with the backend.
+   ============================================================ */
+const PushManager = {
+  _vapidKey: null,
+  _registering: false,
+
+  isSupported() {
+    return (
+      'serviceWorker' in navigator &&
+      'PushManager' in window &&
+      'Notification' in window
+    );
+  },
+
+  isStandalone() {
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true
+    );
+  },
+
+  // On iOS, web push ONLY works when the app is installed to home screen.
+  needsInstallFirst() {
+    const ua = navigator.userAgent;
+    const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    return isIOS && !this.isStandalone();
+  },
+
+  permission() {
+    return ('Notification' in window) ? Notification.permission : 'denied';
+  },
+
+  async getVapidKey() {
+    if (this._vapidKey) return this._vapidKey;
+    try {
+      const res = await Backend.getVapidPublicKey();
+      this._vapidKey = res.publicKey;
+      return this._vapidKey;
+    } catch (e) {
+      console.warn('Could not fetch VAPID key:', e);
+      return null;
+    }
+  },
+
+  async getRegistration() {
+    if (!('serviceWorker' in navigator)) return null;
+    try {
+      const reg = await Promise.race([
+        navigator.serviceWorker.ready,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('SW timeout')), 5000))
+      ]);
+      return reg;
+    } catch (e) {
+      console.warn('Service worker not ready:', e.message);
+      return null;
+    }
+  },
+
+  async getSubscription() {
+    const reg = await this.getRegistration();
+    if (!reg) return null;
+    try {
+      return await reg.pushManager.getSubscription();
+    } catch {
+      return null;
+    }
+  },
+
+  async enable() {
+    if (this._registering) return { ok: false, reason: 'busy' };
+    if (!this.isSupported()) return { ok: false, reason: 'unsupported' };
+    if (this.needsInstallFirst()) return { ok: false, reason: 'needs_install' };
+
+    this._registering = true;
+    try {
+      let perm = this.permission();
+      if (perm === 'default') {
+        perm = await Notification.requestPermission();
+      }
+      if (perm !== 'granted') return { ok: false, reason: 'denied' };
+
+      const vapid = await this.getVapidKey();
+      if (!vapid) return { ok: false, reason: 'no_vapid' };
+
+      const reg = await this.getRegistration();
+      if (!reg) return { ok: false, reason: 'no_sw' };
+
+      let sub = await reg.pushManager.getSubscription();
+
+      if (sub) {
+        try {
+          const existingKey = sub.options?.applicationServerKey;
+          if (existingKey && !this._keysMatch(existingKey, vapid)) {
+            await sub.unsubscribe();
+            sub = null;
+          }
+        } catch {}
+      }
+
+      if (!sub) {
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: this._urlBase64ToUint8Array(vapid)
+        });
+      }
+
+      const json = sub.toJSON();
+      await Backend.subscribeToPush({
+        endpoint: json.endpoint,
+        keys: json.keys,
+        userAgent: navigator.userAgent
+      });
+
+      // Update local user flag so the profile toggle reflects reality
+      if (State.user) {
+        State.user.notificationsEnabled = true;
+        Auth.setUser(State.user);
+      }
+
+      State.emit('push:enabled');
+      return { ok: true };
+    } catch (e) {
+      console.error('Push enable failed:', e);
+      return { ok: false, reason: e.message || 'error' };
+    } finally {
+      this._registering = false;
+    }
+  },
+
+  async disable() {
+    try {
+      const sub = await this.getSubscription();
+      if (sub) {
+        const endpoint = sub.endpoint;
+        try { await sub.unsubscribe(); } catch {}
+        try { await Backend.unsubscribeFromPush(endpoint); } catch {}
+      }
+
+      // Update local user flag
+      if (State.user) {
+        State.user.notificationsEnabled = false;
+        Auth.setUser(State.user);
+      }
+
+      State.emit('push:disabled');
+      return { ok: true };
+    } catch (e) {
+      console.warn('Push disable failed:', e);
+      return { ok: false };
+    }
+  },
+
+  async syncIfGranted() {
+    if (!this.isSupported()) return;
+    if (this.permission() !== 'granted') return;
+    if (this.needsInstallFirst()) return;
+
+    try {
+      const sub = await this.getSubscription();
+      if (!sub) return;
+
+      const json = sub.toJSON();
+      await Backend.subscribeToPush({
+        endpoint: json.endpoint,
+        keys: json.keys,
+        userAgent: navigator.userAgent
+      });
+    } catch (e) {
+      console.warn('Push silent sync failed:', e.message);
+    }
+  },
+
+  _urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  },
+
+  _keysMatch(existingKey, vapidKey) {
+    try {
+      const existingArr = new Uint8Array(existingKey);
+      const expectedArr = this._urlBase64ToUint8Array(vapidKey);
+      if (existingArr.length !== expectedArr.length) return false;
+      for (let i = 0; i < existingArr.length; i++) {
+        if (existingArr[i] !== expectedArr[i]) return false;
+      }
+      return true;
+    } catch {
+      return true;
+    }
+  }
+};
+
+/* ============================================================
    11. AUTH FLOW HELPERS
    ============================================================ */
 async function cwSignup(payload) {
@@ -1410,6 +1605,10 @@ async function cwLogin(email, password) {
 function cwLogout() {
   Badges.stop();
   Badges._unread = { pods: {}, pairs: {}, timmy: {}, total: 0 };
+
+  // Best-effort: unsubscribe from push on this device before clearing auth.
+  try { PushManager.disable().catch(() => {}); } catch {}
+
   Auth.clear();
   localStorage.removeItem(CW_CONFIG.LANG_KEY);
   localStorage.removeItem('cw_onboarding_partial');
@@ -1447,6 +1646,9 @@ async function cwBoot() {
 
   Badges.start();
 
+  // Keep the server's push subscription record fresh (never prompts).
+  setTimeout(() => PushManager.syncIfGranted(), 3000);
+
   return true;
 }
 
@@ -1466,6 +1668,7 @@ window.AudioMgr = AudioMgr;
 window.Nav = Nav;
 window.Header = Header;
 window.Badges = Badges;
+window.PushManager = PushManager;
 window.showToast = showToast;
 window.showModal = showModal;
 window.closeModal = closeModal;
