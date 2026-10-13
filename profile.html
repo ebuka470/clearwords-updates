@@ -5,23 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#2E8B57">
 <title>ClearWords — Profile</title>
-    <!-- PWA Manifest -->
+
+<!-- PWA Manifest -->
 <link rel="manifest" href="/manifest.json">
-
-<!-- Theme color (browser chrome tint on mobile) -->
-<meta name="theme-color" content="#2E8B57">
-
-<!-- iOS: full-screen web app when added to home screen -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="ClearWords">
 <link rel="apple-touch-icon" href="/logo.png">
-
-<!-- Android: enables install prompt -->
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="ClearWords">
 <meta name="msapplication-TileColor" content="#2E8B57">
 <meta name="msapplication-TileImage" content="/logo.png">
+
 <style>
 /* ============ DESIGN TOKENS ============ */
 :root {
@@ -287,7 +282,6 @@ input, textarea, select { font-family: inherit; }
 .ach-tile.unlocked .ach-sub { color: var(--gold); }
 .ach-foot { font-size: 11.5px; color: var(--text-3); margin-top: 10px; text-align: center; }
 
-/* achievement sheets */
 .ach-cat { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); margin: 18px 0 6px; display: flex; justify-content: space-between; }
 .ach-cat:first-child { margin-top: 0; }
 .ach-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); width: 100%; text-align: left; }
@@ -341,7 +335,7 @@ input, textarea, select { font-family: inherit; }
 .freeze-sub { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
 .freeze-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
 
-/* ============ SETTINGS (native grouped list) ============ */
+/* ============ SETTINGS ============ */
 .set-label { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); margin: 18px 8px 7px; }
 .set-group { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; }
 .set-row {
@@ -363,7 +357,6 @@ input, textarea, select { font-family: inherit; }
 .set-sub { font-size: 12px; color: var(--text-2); margin-top: 1px; }
 .set-value { font-size: 13px; color: var(--text-3); font-weight: 600; }
 .set-chev { color: var(--text-3); font-size: 20px; }
-.set-footer { font-size: 12px; color: var(--text-3); margin: 6px 10px 0; line-height: 1.45; }
 .set-danger .set-title { color: var(--danger); }
 
 .toggle { width: 46px; height: 28px; border-radius: 14px; background: var(--border-strong); position: relative; transition: background .2s; flex-shrink: 0; }
@@ -401,7 +394,7 @@ input, textarea, select { font-family: inherit; }
 }
 @keyframes badgePop { 0% { transform: scale(.4); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
-/* ============ MODAL (bottom sheet) ============ */
+/* ============ MODAL ============ */
 .cw-modal-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,.55); backdrop-filter: blur(4px); display: none; align-items: flex-end; justify-content: center; }
 .cw-modal-overlay.active { display: flex; }
 .cw-modal { width: 100%; max-width: 520px; max-height: 90vh; display: flex; flex-direction: column; background: var(--card); border-radius: 24px 24px 0 0; animation: modalUp .25s ease; border: 1px solid var(--border); border-bottom: none; }
@@ -457,7 +450,7 @@ input, textarea, select { font-family: inherit; }
 .spinner-inline { width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ============ PLAN CARDS (paywall) ============ */
+/* ============ PLAN CARDS ============ */
 .plan-card { display: flex; align-items: flex-start; gap: 14px; padding: 16px; border-radius: 14px; border: 2px solid var(--border); background: var(--card); margin-bottom: 10px; width: 100%; text-align: left; transition: border-color .15s, background .15s; }
 .plan-card.selected { border-color: var(--brand); background: rgba(var(--brand-rgb), 0.05); }
 .plan-card.recommended { border-color: rgba(var(--gold-rgb), 0.55); }
@@ -585,7 +578,7 @@ input, textarea, select { font-family: inherit; }
     </div>
   </div>
 
-  <!-- ============ FAMILY (shared accounts only) ============ -->
+  <!-- ============ FAMILY ============ -->
   <div id="family-section" style="display:none;">
     <div class="section-h">Family</div>
     <div class="card card-tint-gold" id="family-card"></div>
@@ -704,9 +697,6 @@ const $ = id => document.getElementById(id);
 
 /* ============================================================
    ACHIEVEMENT DEFINITIONS
-   Every badge is computed from real data:
-     lessons / level / xp / perfect / longestStreak  -> your progress in the current language
-     words / pods / pairs / cards / referrals         -> your account
    ============================================================ */
 const ACH_CATS = [
   { id: 'learn',     name: 'Learning',  icon: '📚' },
@@ -753,9 +743,6 @@ const Prof = {
   freezes: null,
   referrals: null,
 
-  /* ============================================================
-     BOOT
-     ============================================================ */
   async init() {
     const ok = await cwBoot();
     if (!ok) return;
@@ -763,10 +750,10 @@ const Prof = {
     this.user = State.user;
 
     this.renderBanner();
-    this.renderAchievements();      // shows skeleton until progress arrives
+    this.renderAchievements();
     this.applyThemeToggle();
+    this.syncNotifButton();
 
-    // everything loads in parallel; each section renders as it resolves
     this.loadProgress();
     this.loadSubscription();
     this.loadReferrals();
@@ -776,18 +763,20 @@ const Prof = {
     State.on('hydrated', () => {
       this.user = State.user;
       this.renderBanner();
-      this.renderAchievements();    // pods / pairs / cards / referrals / saved words come from the account
+      this.renderAchievements();
       this.maybeShowFamily();
       this.loadSubscription();
       this.loadReferrals();
+      this.syncNotifButton();
     });
 
-    // coming back to the tab after finishing a lesson elsewhere: refresh
+    State.on('push:enabled',  () => this.syncNotifButton());
+    State.on('push:disabled', () => this.syncNotifButton());
+
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible' && this.progressLoaded) this.loadProgress(true);
     });
 
-    // redirected here from a paywall prompt
     const urlParams = new URLSearchParams(location.search);
     if (urlParams.get('upgrade') === '1') {
       setTimeout(() => this.openUpgrade(), 400);
@@ -796,10 +785,8 @@ const Prof = {
   },
 
   /* ============================================================
-     PROGRESS (single source for banner + achievements)
+     PROGRESS
      ============================================================ */
-  // GET /api/progress returns the progress document itself.
-  // Be defensive about the wrapper some endpoints add.
   normProgress(raw) {
     if (!raw || typeof raw !== 'object') return {};
     const has = o => o && typeof o === 'object' && (o.totalXP !== undefined || Array.isArray(o.completedLessons) || o.streak !== undefined);
@@ -826,9 +813,6 @@ const Prof = {
     this.syncHeaderStreak();
   },
 
-  // The stored streak only changes when a lesson is completed, so a streak that
-  // ended yesterday would still read "7". Only count it if the last lesson was
-  // today or yesterday (device-local date, same as the lesson recorder).
   effectiveStreak(p) {
     const s = (p && p.streak) || 0;
     if (!s) return 0;
@@ -862,7 +846,6 @@ const Prof = {
     const username = u.username || (u.email ? u.email.split('@')[0] : 'learner');
     const langCfg = CW_CONFIG.LANGUAGES[u.primaryLanguage || State.currentLanguage];
 
-    // avatar: photo if there is one, otherwise a friendly coloured initial
     const av = $('p-avatar');
     const url = /^https?:\/\//i.test(u.avatarUrl || '') ? u.avatarUrl : '';
     if (url) {
@@ -892,7 +875,6 @@ const Prof = {
 
     this.renderNudge(p, streak);
 
-    // goals as soft chips
     const goalsHost = $('profile-goals');
     const goals = u.goals || [];
     const labels = {
@@ -906,7 +888,6 @@ const Prof = {
     if (langValue && langCfg) langValue.textContent = langCfg.emoji + ' ' + langCfg.name;
   },
 
-  // a friendly line under the stats, based on the real streak state
   renderNudge(p, streak) {
     const host = $('p-nudge');
     if (!host) return;
@@ -1220,7 +1201,7 @@ const Prof = {
   },
 
   /* ============================================================
-     ACHIEVEMENTS — computed from real data, always up to date
+     ACHIEVEMENTS
      ============================================================ */
   achStats() {
     const p = this.progress || {};
@@ -1230,7 +1211,6 @@ const Prof = {
       level: p.currentLevel || 1,
       xp: p.totalXP || 0,
       perfect: p.perfectScores || 0,
-      // longestStreak never decays, so an earned streak badge stays earned
       longestStreak: Math.max(p.longestStreak || 0, p.streak || 0),
       words: (u.savedWords || []).length,
       pods: u.podsJoined || 0,
@@ -1253,7 +1233,6 @@ const Prof = {
     const summary = $('ach-summary'), row = $('ach-row'), foot = $('ach-foot');
     if (!row) return;
 
-    // never show "everything locked" while the real numbers are still on their way
     if (!this.progressLoaded) {
       summary.innerHTML = '<div class="skel skel-row" style="width:55%;height:18px"></div><div class="skel skel-row" style="width:85%"></div>';
       row.innerHTML = '<div class="skel skel-tile"></div>'.repeat(4);
@@ -1273,7 +1252,6 @@ const Prof = {
     const total = list.length;
     const pct = Math.round((done / total) * 100);
 
-    // closest locked badge = "next up"
     const next = list.filter(a => !a.done).sort((a, b) => b.pct - a.pct)[0];
     const nextLine = next
       ? `Next up: <b>${next.icon} ${esc(next.name)}</b> — ${next.value.toLocaleString()} / ${next.target.toLocaleString()}`
@@ -1289,7 +1267,6 @@ const Prof = {
         </div>
       </div>`;
 
-    // unlocked first, then closest to unlocking
     const sorted = [...list].sort((a, b) => (Number(b.done) - Number(a.done)) || (b.pct - a.pct));
     row.innerHTML = sorted.map(a => `
       <button class="ach-tile ${a.done ? 'unlocked' : 'locked'}" onclick="Prof.showAchievement('${a.id}')" aria-label="${esc(a.name)}">
@@ -1304,8 +1281,6 @@ const Prof = {
     this.celebrateNew();
   },
 
-  // Celebrate badges unlocked since the last visit. The first visit just records
-  // what you already have, so you aren't buried in popups.
   celebrateNew() {
     const uid = (this.user && (this.user.id || this.user._id)) || 'me';
     const key = 'cw_ach_seen_' + uid;
@@ -1503,7 +1478,7 @@ https://www.clearwords.com.ng/`;
   },
 
   /* ============================================================
-     FAMILY / SHARED ACCOUNT
+     FAMILY
      ============================================================ */
   maybeShowFamily() {
     const u = this.user || {};
@@ -1648,12 +1623,6 @@ https://www.clearwords.com.ng/`;
   applyThemeToggle() {
     const el = $('theme-toggle');
     if (el) el.classList.toggle('on', State.theme === 'dark');
-    const notif = $('notif-toggle');
-    if (notif) {
-      const perm = ('Notification' in window) ? Notification.permission === 'granted' : false;
-      const enabled = State.user?.notificationsEnabled ?? perm;
-      notif.classList.toggle('on', !!enabled);
-    }
   },
 
   toggleDarkMode() {
@@ -1661,38 +1630,59 @@ https://www.clearwords.com.ng/`;
     this.applyThemeToggle();
   },
 
-  async function togglePushNotifications() {
-  const btn = document.getElementById('notif-toggle-btn');
-  const currentlyOn = btn.textContent.includes('Enabled');
+  // Reflect the real state of push: permission + live subscription
+  syncNotifButton() {
+    const notif = $('notif-toggle');
+    if (!notif) return;
 
-  if (currentlyOn) {
-    await PushManager.disable();
-    btn.textContent = 'Enable';
-    showToast('Notifications disabled', 'info');
-    return;
-  }
+    if (!PushManager.isSupported()) {
+      notif.classList.remove('on');
+      return;
+    }
 
-  // On iOS, if the app isn't installed, tell the user how
-  if (PushManager.needsInstallFirst()) {
-    showToast('Add ClearWords to your Home Screen first to enable notifications.', 'info');
-    return;
-  }
+    const perm = PushManager.permission();
+    if (perm !== 'granted') {
+      notif.classList.toggle('on', false);
+      return;
+    }
 
-  const result = await PushManager.enable();
+    // Permission granted — confirm we still have a live subscription
+    PushManager.getSubscription().then(sub => {
+      notif.classList.toggle('on', !!sub);
+    }).catch(() => notif.classList.toggle('on', false));
+  },
 
-  if (result.ok) {
-    btn.textContent = 'Enabled ✅';
-    showToast('Notifications enabled 🔔', 'success');
-  } else if (result.reason === 'denied') {
-    showToast('Permission denied. Enable it in your browser settings.', 'error');
-  } else if (result.reason === 'unsupported') {
-    showToast('Push notifications not supported on this browser.', 'error');
-  } else if (result.reason === 'no_vapid') {
-    showToast('Push not configured on the server yet.', 'error');
-  } else {
-    showToast('Could not enable notifications. Try again.', 'error');
-  }
-},
+  async togglePushNotifications() {
+    const notif = $('notif-toggle');
+    const currentlyOn = notif.classList.contains('on');
+
+    if (currentlyOn) {
+      await PushManager.disable();
+      notif.classList.remove('on');
+      showToast('Notifications off', 'info');
+      return;
+    }
+
+    if (PushManager.needsInstallFirst()) {
+      showToast('Add ClearWords to your Home Screen first to enable notifications.', 'info');
+      return;
+    }
+
+    const result = await PushManager.enable();
+
+    if (result.ok) {
+      notif.classList.add('on');
+      showToast('Notifications on 🔔', 'success');
+    } else if (result.reason === 'denied') {
+      showToast('Permission denied. Enable it in your browser settings.', 'error');
+    } else if (result.reason === 'unsupported') {
+      showToast('Push notifications not supported on this browser.', 'error');
+    } else if (result.reason === 'no_vapid') {
+      showToast('Push not configured on the server yet.', 'error');
+    } else {
+      showToast('Could not enable notifications. Try again.', 'error');
+    }
+  },
 
   /* ============================================================
      STATIC PAGES
@@ -1805,17 +1795,11 @@ https://www.clearwords.com.ng/`;
     }
   },
 
-  /* ============================================================
-     SETTINGS (gear icon in the cover)
-     ============================================================ */
   openSettings() {
     const el = $('settings');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   },
 
-  /* ============================================================
-     SIGN OUT
-     ============================================================ */
   signOut() {
     if (!confirm('Sign out of ClearWords?')) return;
     cwLogout();
@@ -1828,15 +1812,14 @@ https://www.clearwords.com.ng/`;
 document.addEventListener('DOMContentLoaded', () => Prof.init());
 window.Prof = Prof;
 
-  
-  // Register the service worker for offline + installability
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(reg => console.log('[PWA] SW registered:', reg.scope))
-        .catch(err => console.warn('[PWA] SW registration failed:', err));
-    });
-  }
+// Register the service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(reg => console.log('[PWA] SW registered:', reg.scope))
+      .catch(err => console.warn('[PWA] SW registration failed:', err));
+  });
+}
 </script>
 </body>
 </html>
