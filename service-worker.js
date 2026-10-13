@@ -223,11 +223,15 @@ self.addEventListener('push', event => {
   const options = {
     body: payload.body,
     icon: payload.icon || '/logo.png',
-    badge: payload.badge || '/logo.png',
+    badge: payload.badge || '/badge-72.png',
+    // Big image shown on Android when the notification is expanded
+    image: payload.image || undefined,
     vibrate: payload.vibrate || [100, 50, 100],
     tag: payload.tag,
     renotify: !!payload.renotify,
     requireInteraction: !!payload.requireInteraction,
+    // This makes the notification look like a chat message on Android
+    ...(payload.chat ? { android: { style: 'bigtext' } } : {}),
     data: {
       url: payload.url,
       ...(payload.data || {})
@@ -239,7 +243,6 @@ self.addEventListener('push', event => {
     self.registration.showNotification(payload.title, options)
   );
 });
-
 self.addEventListener('notificationclick', event => {
   event.notification.close();
 
