@@ -7,21 +7,15 @@
 <title>ClearWords — Community</title>
   <!-- PWA Manifest -->
 <link rel="manifest" href="/manifest.json">
-
-<!-- Theme color (browser chrome tint on mobile) -->
-<meta name="theme-color" content="#2E8B57">
-
-<!-- iOS: full-screen web app when added to home screen -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="ClearWords">
 <link rel="apple-touch-icon" href="/logo.png">
-
-<!-- Android: enables install prompt -->
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="ClearWords">
 <meta name="msapplication-TileColor" content="#2E8B57">
 <meta name="msapplication-TileImage" content="/logo.png">
+
 <style>
 :root {
   --brand: #2E8B57;
@@ -587,6 +581,36 @@ input, textarea { font-family: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* ===== ClearWords UI kit: one look across Learn / Practice / Community / Profile ===== */
+:root { --chat-bg: #F3EFE6; }
+[data-theme="dark"] { --chat-bg: #0C0E10; }
+.section-h { margin: 24px 6px 10px; }
+.card { border-radius: var(--radius); padding: 16px; }
+.cw-modal::before { content: ''; display: block; width: 38px; height: 4px; border-radius: 2px; background: var(--border-strong); margin: 8px auto 0; }
+.cw-modal-head { padding: 12px 20px 12px; }
+.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 12px; }
+.stat-tile { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 8px 12px; text-align: center; box-shadow: var(--shadow); }
+.stat-ico { font-size: 22px; line-height: 1; }
+.stat-val { font-size: 22px; font-weight: 800; letter-spacing: -.02em; margin-top: 6px; }
+.stat-lbl { font-size: 10.5px; color: var(--text-2); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; margin-top: 1px; }
+.nudge { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding: 14px 16px; border-radius: var(--radius); background: rgba(var(--gold-rgb), .10); border: 1px solid rgba(var(--gold-rgb), .30); font-size: 13.5px; line-height: 1.45; }
+.nudge.brand { background: linear-gradient(135deg, rgba(var(--brand-rgb), .12), rgba(var(--gold-rgb), .12)); border-color: rgba(var(--brand-rgb), .30); }
+.nudge-ico { font-size: 26px; flex-shrink: 0; }
+.nudge-body { flex: 1; min-width: 0; }
+.nudge-body b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+.nudge-link { color: var(--brand); font-weight: 800; font-size: 13px; white-space: nowrap; }
+.set-group { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; box-shadow: var(--shadow); }
+
+/* community: the ClearWords card (meme generator) */
+.idcard{display:flex;gap:16px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:var(--shadow)}
+.idcard canvas{width:132px;height:auto;border-radius:12px;box-shadow:0 6px 18px rgba(28,30,33,.2);flex-shrink:0;cursor:pointer}
+.idcard-body{flex:1;min-width:0}
+.idcard-title{font-weight:800;font-size:16px;letter-spacing:-.01em}
+.idcard-sub{font-size:13px;color:var(--text-2);margin:4px 0 12px;line-height:1.45}
+.idcard-actions{display:flex;gap:8px;flex-wrap:wrap}
+.idcard.locked{background:linear-gradient(135deg,rgba(var(--brand-rgb),.10),rgba(var(--gold-rgb),.12));border-color:rgba(var(--brand-rgb),.3)}
+.idcard .lock-ico{width:64px;height:64px;border-radius:18px;background:rgba(var(--brand-rgb),.15);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -597,6 +621,12 @@ input, textarea { font-family: inherit; }
   <div class="page-hero">
     <h1>Community</h1>
     <p>Learn together, stay accountable, share your progress.</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-tile"><div class="stat-ico">🔥</div><div class="stat-val" id="c-streak">0</div><div class="stat-lbl">Day streak</div></div>
+    <div class="stat-tile"><div class="stat-ico">👥</div><div class="stat-val" id="c-pods">0</div><div class="stat-lbl">Pods</div></div>
+    <div class="stat-tile"><div class="stat-ico">🤝</div><div class="stat-val" id="c-pairs">0</div><div class="stat-lbl">Partners</div></div>
   </div>
 
   <div class="section-h">
@@ -615,8 +645,11 @@ input, textarea { font-family: inherit; }
     <div class="card"><div class="skel skel-row" style="width: 40%"></div><div class="skel skel-block"></div></div>
   </div>
 
+  <div class="section-h">Your ClearWords card</div>
+  <div id="idcard"></div>
+
   <div class="section-h">
-    Your progress cards
+    Pod stat cards
     <span class="action" onclick="Comm.createProgressCard()">Create</span>
   </div>
   <div id="cards-grid" class="card-grid"></div>
@@ -741,7 +774,8 @@ const Comm = {
     this.loadPairs();
     this.loadCards();
     // progress lives in /api/progress and this page never loaded it, so cards read 0
-    State.loadProgress(State.currentLanguage).then(() => this.renderCards()).catch(() => {});
+    State.loadProgress(State.currentLanguage).then(() => { this.renderCards(); this.renderIdCard(); this.renderTiles(); }).catch(() => {});
+    this.renderIdCard();
 
     State.on('hydrated', () => { this.user = State.user; });
     State.on('unread:changed', () => {
@@ -769,6 +803,7 @@ const Comm = {
       const res = await Backend.listPods();
       this.pods = res.data || res.items || res.pods || (Array.isArray(res) ? res : []) || [];
       this.renderPods();
+      this.renderTiles();
     } catch (e) {
       console.warn('Pods load failed:', e);
       list.innerHTML = `
@@ -1450,6 +1485,7 @@ const Comm = {
       const res = await Backend.listPairs();
       this.pairs = res.data || res.items || res.pairs || (Array.isArray(res) ? res : []) || [];
       this.renderPairs();
+      this.renderTiles();
       if ($('pairs-view').classList.contains('active')) this.renderAllPairs();
     } catch (e) {
       console.warn('Pairs load failed:', e);
@@ -1886,6 +1922,62 @@ const Comm = {
         ${partial ? `<div class="prof-since">Couldn't load full stats right now.</div>` : ''}
       </div>`);
   },
+
+  /* ============================================================
+     CLEARWORDS CARD — the shareable identity card (HTML canvas)
+     ============================================================ */
+  _idSeed: 0,
+
+  renderTiles() {
+    const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+    set('c-streak', State.effectiveStreak(State.progress || {}));
+    set('c-pods', this.pods.length);
+    set('c-pairs', this.pairs.filter(p => (p.status || p.data?.status) !== 'pending').length);
+  },
+
+  async renderIdCard() {
+    const host = $('idcard');
+    if (!host || !window.ShareCards) return;
+    let d = null;
+    try { d = await ShareCards.gather(); } catch {}
+    if (!d) { host.innerHTML = ''; return; }
+
+    if (d.lessons < 1) {
+      host.innerHTML = `
+        <div class="idcard locked">
+          <div class="lock-ico">🪪</div>
+          <div class="idcard-body">
+            <div class="idcard-title">Unlock your card</div>
+            <div class="idcard-sub">Finish your first lesson to get a ClearWords card with your spirit age. Share it with your family.</div>
+            <div class="idcard-actions"><button class="btn btn-sm" onclick="Nav.go('learn')">Start a lesson →</button></div>
+          </div>
+        </div>`;
+      return;
+    }
+
+    const full = ShareCards.drawIdentity(d, this._idSeed);
+    const thumb = document.createElement('canvas');
+    thumb.width = 264; thumb.height = 330;
+    thumb.getContext('2d').drawImage(full, 0, 0, 264, 330);
+    thumb.addEventListener('click', () => this.openMyCard());
+
+    host.innerHTML = `
+      <div class="idcard">
+        <div id="idcard-thumb"></div>
+        <div class="idcard-body">
+          <div class="idcard-title">I'm ${esc(ShareCards.art(d.langName))} ${esc(d.langName)} ${esc(ShareCards.levelLabel(d.level))}</div>
+          <div class="idcard-sub">Spirit age ${ShareCards.spiritAge(d, this._idSeed)} · ${d.fluency}% fluent. One tap to share on WhatsApp or X.</div>
+          <div class="idcard-actions">
+            <button class="btn btn-sm" onclick="Comm.openMyCard()">Share my card</button>
+            <button class="btn btn-sm btn-ghost" onclick="Comm.rerollIdCard()">🎲 New vibe</button>
+          </div>
+        </div>
+      </div>`;
+    $('idcard-thumb').appendChild(thumb);
+  },
+
+  rerollIdCard() { this._idSeed++; this.renderIdCard(); },
+  openMyCard() { ShareCards.openIdentity(this._idSeed); },
 
   /* ============================================================
      PROGRESS CARDS
