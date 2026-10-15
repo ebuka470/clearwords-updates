@@ -18,15 +18,15 @@
   const CHAT_W = 1080;
   const CHAT_H = 900;
 
-  const PALETTE = {
-    yoruba:   { bg1: '#0F172A', bg2: '#1E293B', accent: '#FBBF24', accent2: '#F472B6', label: 'Yorùbá' },
-    igbo:     { bg1: '#052E16', bg2: '#064E3B', accent: '#34D399', accent2: '#60A5FA', label: 'Igbo' },
-    hausa:    { bg1: '#1E1B4B', bg2: '#312E81', accent: '#F472B6', accent2: '#A78BFA', label: 'Hausa' },
-    pidgin:   { bg1: '#3B0764', bg2: '#581C87', accent: '#C084FC', accent2: '#F472B6', label: 'Nigerian Pidgin' },
-    urhobo:   { bg1: '#431407', bg2: '#7C2D12', accent: '#FB923C', accent2: '#FBBF24', label: 'Urhobo' },
-    itsekiri: { bg1: '#1E3A8A', bg2: '#1E40AF', accent: '#60A5FA', accent2: '#93C5FD', label: 'Itsekiri' }
-  };
-
+ const PALETTE = {
+  yoruba:   { bg1: '#0E3B26', bg2: '#1E2A45', accent: '#E8B33C', accent2: '#F5C767', label: 'Yorùbá' },
+  igbo:     { bg1: '#0E3B26', bg2: '#1E3A2E', accent: '#7ED9A6', accent2: '#E8B33C', label: 'Igbo' },
+  hausa:    { bg1: '#1E2A45', bg2: '#2A3A5C', accent: '#E8B33C', accent2: '#F5C767', label: 'Hausa' },
+  pidgin:   { bg1: '#2A1E45', bg2: '#3B2A5C', accent: '#E8B33C', accent2: '#D97757', label: 'Nigerian Pidgin' },
+  urhobo:   { bg1: '#3B2418', bg2: '#5A3A28', accent: '#D97757', accent2: '#E8B33C', label: 'Urhobo' },
+  itsekiri: { bg1: '#1E2A45', bg2: '#1E3B5A', accent: '#6FA8DC', accent2: '#E8B33C', label: 'Itsekiri' }
+};
+   
   const LEVELS = [
     { max: 1,  label: 'Newcomer' },
     { max: 5,  label: 'Starter' },
