@@ -7,21 +7,15 @@
 <title>ClearWords — Practice</title>
   <!-- PWA Manifest -->
 <link rel="manifest" href="/manifest.json">
-
-<!-- Theme color (browser chrome tint on mobile) -->
-<meta name="theme-color" content="#2E8B57">
-
-<!-- iOS: full-screen web app when added to home screen -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="ClearWords">
 <link rel="apple-touch-icon" href="/logo.png">
-
-<!-- Android: enables install prompt -->
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="ClearWords">
 <meta name="msapplication-TileColor" content="#2E8B57">
 <meta name="msapplication-TileImage" content="/logo.png">
+
 <style>
 :root{--brand:#2E8B57;--brand-rgb:46,139,87;--gold:#E8B33C;--gold-rgb:232,179,60;--indigo-rgb:59,91,165;--terracotta-rgb:217,119,87;--danger:#E5484D;--bg:#FAF7F2;--bg-elev:#fff;--card:#fff;--text:#1C1E21;--text-2:#6B6F76;--text-3:#9AA0A6;--border:#E5E1D8;--shadow:0 2px 12px rgba(28,30,33,.06);--shadow-lg:0 8px 28px rgba(28,30,33,.1);--danger-rgb:229,72,77;--border-strong:#D4CFC2;--radius-lg:20px;--radius-full:999px;--indigo:#3B5BA5;--terracotta:#D97757;--radius:14px;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)}
 [data-theme=dark]{--bg:#0F1114;--bg-elev:#16191D;--card:#1A1D21;--text:#F2EFE9;--text-2:#9AA0A6;--text-3:#6B6F76;--border:#2A2E33;--brand:#4CAF7A;--brand-rgb:76,175,122;--border-strong:#3A3E44;--shadow:0 2px 12px rgba(0,0,0,.4);--shadow-lg:0 8px 28px rgba(0,0,0,.6)}
@@ -174,6 +168,48 @@ body{-webkit-font-smoothing:antialiased;overscroll-behavior-y:contain}
 .skel{background:linear-gradient(90deg,var(--border) 0%,#D4CFC2 50%,var(--border) 100%);background-size:200% 100%;animation:skel 1.2s infinite;border-radius:8px}
 @keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ===== ClearWords UI kit: one look across Learn / Practice / Community / Profile ===== */
+:root { --chat-bg: #F3EFE6; }
+[data-theme="dark"] { --chat-bg: #0C0E10; }
+.section-h { margin: 24px 6px 10px; }
+.card { border-radius: var(--radius); padding: 16px; }
+.cw-modal::before { content: ''; display: block; width: 38px; height: 4px; border-radius: 2px; background: var(--border-strong); margin: 8px auto 0; }
+.cw-modal-head { padding: 12px 20px 12px; }
+.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 12px; }
+.stat-tile { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 8px 12px; text-align: center; box-shadow: var(--shadow); }
+.stat-ico { font-size: 22px; line-height: 1; }
+.stat-val { font-size: 22px; font-weight: 800; letter-spacing: -.02em; margin-top: 6px; }
+.stat-lbl { font-size: 10.5px; color: var(--text-2); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; margin-top: 1px; }
+.nudge { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding: 14px 16px; border-radius: var(--radius); background: rgba(var(--gold-rgb), .10); border: 1px solid rgba(var(--gold-rgb), .30); font-size: 13.5px; line-height: 1.45; }
+.nudge.brand { background: linear-gradient(135deg, rgba(var(--brand-rgb), .12), rgba(var(--gold-rgb), .12)); border-color: rgba(var(--brand-rgb), .30); }
+.nudge-ico { font-size: 26px; flex-shrink: 0; }
+.nudge-body { flex: 1; min-width: 0; }
+.nudge-body b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+.nudge-link { color: var(--brand); font-weight: 800; font-size: 13px; white-space: nowrap; }
+.set-group { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; box-shadow: var(--shadow); }
+
+/* practice: sections as grouped list rows */
+.set-group .method-card,.set-group .situation-card{margin:0;border:none;border-bottom:1px solid var(--border);border-radius:0;background:transparent;padding:12px 14px}
+.set-group .method-card:last-child,.set-group .situation-card:last-child{border-bottom:none}
+.set-group .method-card:active,.set-group .situation-card:active{transform:none;background:rgba(var(--brand-rgb),.07)}
+.set-group .method-icon,.set-group .situation-icon{width:40px;height:40px;border-radius:11px;font-size:21px}
+.set-group .method-badge{top:50%;margin-top:-10px;right:40px}
+.page-hero h1{font-size:26px;letter-spacing:-.02em}
+/* practice: native chat polish (matches Community chats) */
+#timmy-chat-view,#timmy-list-view{background:var(--chat-bg)}
+#timmy-list-view{background:var(--bg)}
+.chat-topbar{background:var(--card)}
+.chat-scroll{gap:2px;padding:14px 12px 12px}
+.msg-row{max-width:84%;gap:2px;margin-top:8px}
+.bubble{border-radius:20px;padding:9px 14px}
+.msg-row.bot .bubble{border-bottom-left-radius:6px;box-shadow:none}
+.msg-row.user .bubble{border-bottom-right-radius:6px}
+.msg-meta{display:flex;align-items:center;gap:10px;padding:0 6px}
+.msg-share{font-size:11px;font-weight:800;color:var(--brand);padding:2px 0}
+.msg-share:active{opacity:.6}
+.chat-foot{gap:8px}
+.chat-input{border-radius:22px}
 </style>
 </head>
 <body>
@@ -182,21 +218,31 @@ body{-webkit-font-smoothing:antialiased;overscroll-behavior-y:contain}
 
 <main class="page">
   <div class="page-hero"><h1>Practice</h1><p>Talk, listen, and get comfortable with the sounds of the language.</p></div>
+  <div class="stat-row">
+    <div class="stat-tile"><div class="stat-ico">🔥</div><div class="stat-val" id="t-streak">0</div><div class="stat-lbl">Day streak</div></div>
+    <div class="stat-tile"><div class="stat-ico">⭐</div><div class="stat-val" id="t-words">0</div><div class="stat-lbl">Saved words</div></div>
+    <div class="stat-tile"><div class="stat-ico">💬</div><div class="stat-val" id="t-left">—</div><div class="stat-lbl">Timmy left</div></div>
+  </div>
+  <div class="nudge brand"><div class="nudge-ico">🤓</div><div class="nudge-body"><b>Timmy is ready when you are.</b>Share your best chats. Tap “Share” under any reply.</div></div>
   <div id="usage-bar" class="usage-bar" style="display:none"><span class="label">Timmy usage today</span><span class="count" id="usage-count">—</span></div>
 
   <div class="section-h">Talk with Timmy</div>
+  <div class="set-group">
   <button class="method-card" data-section="practice" onclick="Practice.openSection('practice')"><div class="method-icon">🤓</div><div class="method-body"><div class="method-title">Practice with Timmy</div><div class="method-desc" data-lang-slot="practice">Chat about your latest lesson</div></div><div class="method-chev">›</div></button>
   <button class="method-card tint-indigo" data-section="cultural" onclick="Practice.openSection('cultural')"><div class="method-icon">🎭</div><div class="method-body"><div class="method-title">Cultural advice</div><div class="method-desc">How and when to use words in real Nigerian contexts</div></div><div class="method-chev">›</div></button>
   <button class="method-card tint-gold" data-section="quick" onclick="Practice.openSection('quick')"><div class="method-icon">⚡</div><div class="method-body"><div class="method-title">Quick translations</div><div class="method-desc">Fast translations with pronunciation help</div></div><div class="method-chev">›</div></button>
 
-  <div class="section-h">Speak</div>
+  </div>
+
+  <div class="section-h">Speak &amp; review</div>
+  <div class="set-group">
   <button class="method-card tint-terracotta" onclick="Practice.openSpeak()"><div class="method-icon">🎤</div><div class="method-body"><div class="method-title">Pronunciation practice</div><div class="method-desc">Listen, then repeat. Timmy explains where you can improve</div></div><div class="method-chev">›</div></button>
 
-  <div class="section-h">Review</div>
   <button class="method-card" onclick="Practice.openReview()"><div class="method-icon">⭐</div><div class="method-body"><div class="method-title">Saved words</div><div class="method-desc" id="saved-count-text">Review words you've saved during lessons</div></div><div class="method-chev">›</div></button>
+  </div>
 
   <div class="section-h">Situations</div>
-  <div id="situations-list"></div>
+  <div class="set-group" id="situations-list"></div>
   <div style="text-align:center;font-size:12px;color:var(--text-3);padding:24px 0 12px">Timmy resets at midnight local time</div>
 </main>
 
@@ -235,6 +281,7 @@ body{-webkit-font-smoothing:antialiased;overscroll-behavior-y:contain}
       <div class="chat-menu-wrap">
         <button class="chat-menu-btn" onclick="Practice.toggleMenu(event,'timmy-menu')" aria-label="Menu">⋮</button>
         <div class="chat-menu" id="timmy-menu">
+          <button onclick="Practice.shareLast()">🖼️ Share a snippet</button>
           <button onclick="Practice.exportCurrentChat()">📤 Export chat</button>
           <button class="danger" onclick="Practice.deleteCurrentChat()">🗑️ Delete this chat</button>
         </div>
@@ -293,11 +340,12 @@ const Practice = {
     if (!(await cwBoot())) return;
     Header.render('practice');
     this.user = State.user;
-    this.setupLangSlots(); this.renderSituations(); this.renderSavedCount(); this.loadUsage();
+    this.setupLangSlots(); this.renderSituations(); this.renderSavedCount(); this.loadUsage(); this.renderTiles();
+    State.loadProgress(State.currentLanguage).then(() => this.renderTiles()).catch(() => {});
     this.flushOfflineQueue().catch(()=>{});
     this.maybeImportLocalChats().catch(()=>{});
     this.refreshSectionBadges();
-    State.on('hydrated', () => { this.user = State.user; this.renderSavedCount(); });
+    State.on('hydrated', () => { this.user = State.user; this.renderSavedCount(); this.renderTiles(); });
     State.on('language:changed', () => { this.setupLangSlots(); this._cache = {}; this.refreshSectionBadges(); });
     State.on('unread:changed', () => this.renderSectionBadges());
     window.addEventListener('popstate', () => {
@@ -312,22 +360,31 @@ const Practice = {
   },
 
   async loadUsage() {
-    const bar = $('usage-bar'), count = $('usage-count');
+    const bar = $('usage-bar'), count = $('usage-count'), tile = $('t-left');
     try {
       const c = (await Backend.getAIUsage())?.chat || {};
       const label = bar.querySelector('.label');
-      bar.style.display = 'flex'; bar.classList.remove('warning','limit');
-      if (c.unlimited) { count.textContent = '∞'; label.textContent = 'Unlimited Timmy messages'; return; }
+      bar.style.display = 'none'; bar.classList.remove('warning','limit');   // the tile below shows this now
+      if (c.unlimited) { count.textContent = '∞'; label.textContent = 'Unlimited Timmy messages'; if (tile) tile.textContent = '∞'; return; }
       const limit = c.limit ?? 200, rem = c.remaining ?? Math.max(0, limit - (c.used ?? 0));
       count.textContent = rem + ' / ' + limit;
+      if (tile) tile.textContent = rem;
       if (rem === 0) bar.classList.add('limit'); else if (rem <= limit * .15) bar.classList.add('warning');
       label.textContent = rem === 0 ? 'Daily limit reached — resets at midnight' : 'Timmy messages remaining today';
-    } catch { bar.style.display = 'none'; }
+      if (rem === 0) bar.style.display = 'flex';
+    } catch { bar.style.display = 'none'; if (tile) tile.textContent = '—'; }
+  },
+
+  renderTiles() {
+    const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+    set('t-streak', State.effectiveStreak(State.progress || {}));
+    set('t-words', ((this.user && this.user.savedWords) || []).length);
   },
 
   renderSavedCount() {
     const n = ((this.user && this.user.savedWords) || []).length;
     $('saved-count-text').textContent = n ? `${n} word${n===1?'':'s'} saved from your lessons` : "Review words you've saved during lessons";
+    this.renderTiles && this.renderTiles();
   },
 
   renderSituations() {
@@ -536,8 +593,14 @@ const Practice = {
   async deleteAllChats() {
     const sid = this.currentSection; if (!sid) return;
     if (!confirm(`Delete ALL chats in "${SECTIONS[sid].title}"? This cannot be undone.`)) return;
-    this._cache[sid] = {};
-    try { await Backend.deleteTimmySection(sid); } catch (e) { console.warn(e); }
+    const backup = this._cache[sid]; this._cache[sid] = {};
+    try { await Backend.deleteTimmySection(sid); }
+    catch (e) {
+      console.error('deleteTimmySection failed', e);
+      this._cache[sid] = backup;   // server refused: put the chats back instead of pretending
+      $('list-menu').classList.remove('show'); this.renderChatList(sid); this.renderSectionBadges();
+      showToast('Could not delete: ' + (e.message || 'server error'), 'error'); return;
+    }
     $('list-menu').classList.remove('show'); this.renderChatList(sid); this.renderSectionBadges();
     State.emit('timmy:section-cleared', { sectionId:sid }); window.Badges && Badges.refresh(); showToast('All chats deleted', 'info');
   },
@@ -551,8 +614,13 @@ const Practice = {
   async deleteCurrentChat() {
     if (!this.currentChatId || !confirm('Delete this chat permanently?')) return;
     const sid = this.currentSection, cid = this.currentChatId;
+    try { await Backend.deleteTimmyChat(sid, cid); }
+    catch (e) {
+      console.error('deleteTimmyChat failed', e);
+      $('timmy-menu').classList.remove('show');
+      showToast('Could not delete: ' + (e.message || 'server error'), 'error'); return;
+    }
     if (this._cache[sid]) delete this._cache[sid][cid];
-    try { await Backend.deleteTimmyChat(sid, cid); } catch (e) { console.warn(e); }
     try { localStorage.removeItem(this._chatKey(sid, cid)); } catch {}
     $('timmy-menu').classList.remove('show'); showToast('Chat deleted', 'info');
     history.back();   // popstate → backToList()
@@ -568,7 +636,8 @@ const Practice = {
       const day = new Date(m.ts || Date.now()).toDateString(), sep = day !== lastDay ? `<div class="chat-daysep">${this.dayLabel(m.ts)}</div>` : ''; lastDay = day;
       const user = m.role === 'user';
       const body = user ? `<div class="bubble">${esc(m.content)}</div>` : `<div class="bubble ${m.isError ? 'is-error' : ''}">${this.formatBotHTML(m.content)}</div>`;
-      return `${sep}<div class="msg-row ${user ? 'user' : 'bot'}">${body}<div class="msg-meta">${this.fmtTime(m.ts)}${user && i === lastUser ? ' · Read' : ''}</div></div>`;
+      const share = (!user && !m.isError && i > 0) ? `<button class="msg-share" onclick="Practice.shareExchange(${i})">↗ Share</button>` : '';
+      return `${sep}<div class="msg-row ${user ? 'user' : 'bot'}">${body}<div class="msg-meta"><span>${this.fmtTime(m.ts)}${user && i === lastUser ? ' · Read' : ''}</span>${share}</div></div>`;
     }).join('');
   },
   dayLabel(ts) {
@@ -641,6 +710,27 @@ const Practice = {
       this.messages.push({ id:'a_' + Date.now(), role:'assistant', content:msg, ts:Date.now(), isError:true });
       this.renderChat(); this.scrollToBottom();
     } finally { this.sending = false; sendBtn.disabled = false; }
+  },
+
+  /* ---------- share a moment with Timmy as an image (HTML canvas) ---------- */
+  shareExchange(i) {
+    if (!window.ShareCards) { showToast('Sharing is not available right now.', 'error'); return; }
+    const list = []; let idx = -1;
+    this.messages.forEach((m, j) => {
+      if (m.isError) return;
+      list.push({ role: m.role === 'user' ? 'user' : 'assistant', text: m.content });
+      if (j === i) idx = list.length - 1;
+    });
+    if (idx < 0) return;
+    ShareCards.openChat({ messages: list, index: idx });
+  },
+  shareLast() {
+    $('timmy-menu').classList.remove('show');
+    for (let i = this.messages.length - 1; i > 0; i--) {
+      const m = this.messages[i];
+      if (m.role === 'assistant' && !m.isError) { this.shareExchange(i); return; }
+    }
+    showToast('Chat with Timmy first, then share a moment.', 'info');
   },
 
   /* ---------- one-time import of legacy local chats ---------- */
@@ -830,6 +920,7 @@ document.addEventListener('keydown', e => { if (e.target.id === 'timmy-input' &&
 document.addEventListener('click', e => { if (!e.target.closest('.chat-menu-wrap')) document.querySelectorAll('.chat-menu.show').forEach(m => m.classList.remove('show')); });
 document.addEventListener('DOMContentLoaded', () => Practice.init());
 window.Practice = Practice;
+
   // Register the service worker for offline + installability
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
