@@ -1,32 +1,51 @@
 /* ============================================================
    ClearWords — ShareCards
    Renders the ClearWords identity card and chat snippets to
-   canvas, and opens a native or fallback share sheet.
+   canvas using the app's brand palette, and opens a share sheet.
 
-   Loaded as <script src="sharecards.js"></script> before page
-   scripts. Exposes window.ShareCards.
+   Load after shared.js:
+     <script src="shared.js"></script>
+     <script src="sharecards.js"></script>
+   Exposes window.ShareCards.
    ============================================================ */
 
 (function () {
   'use strict';
 
   /* ============================================================
-     CONSTANTS
+     CONSTANTS — brand palette, no indigo, no purple
      ============================================================ */
   const CARD_W = 1080;
   const CARD_H = 1350;
   const CHAT_W = 1080;
-  const CHAT_H = 900;
+  const CHAT_H = 1200;
 
- const PALETTE = {
-  yoruba:   { bg1: '#0E3B26', bg2: '#1E2A45', accent: '#E8B33C', accent2: '#F5C767', label: 'Yorùbá' },
-  igbo:     { bg1: '#0E3B26', bg2: '#1E3A2E', accent: '#7ED9A6', accent2: '#E8B33C', label: 'Igbo' },
-  hausa:    { bg1: '#1E2A45', bg2: '#2A3A5C', accent: '#E8B33C', accent2: '#F5C767', label: 'Hausa' },
-  pidgin:   { bg1: '#2A1E45', bg2: '#3B2A5C', accent: '#E8B33C', accent2: '#D97757', label: 'Nigerian Pidgin' },
-  urhobo:   { bg1: '#3B2418', bg2: '#5A3A28', accent: '#D97757', accent2: '#E8B33C', label: 'Urhobo' },
-  itsekiri: { bg1: '#1E2A45', bg2: '#1E3B5A', accent: '#6FA8DC', accent2: '#E8B33C', label: 'Itsekiri' }
-};
-   
+  // Brand colors pulled straight from the app
+  const BRAND = {
+    green:      '#2E8B57',
+    greenDeep:  '#1E5C3A',
+    greenDark:  '#0F3E24',
+    greenLight: '#4CAF7A',
+    gold:       '#E8B33C',
+    goldLight:  '#F5CB6C',
+    goldDeep:   '#C79422',
+    cream:      '#FAF7F2',
+    text:       '#1C1E21',
+    textMuted:  '#6B6F76'
+  };
+
+  // Per-language: a subtly different shade within the brand family.
+  // Every background is a green, every accent is gold. Only the hue
+  // warmth shifts a little so cards don't feel identical.
+  const PALETTE = {
+    yoruba:   { bg1: '#0F3E24', bg2: '#1E5C3A', accent: '#E8B33C', accent2: '#F5CB6C', label: 'Yorùbá' },
+    igbo:     { bg1: '#0F3E24', bg2: '#1B5535', accent: '#E8B33C', accent2: '#F5CB6C', label: 'Igbo' },
+    hausa:    { bg1: '#123F28', bg2: '#1F5C3C', accent: '#E8B33C', accent2: '#F5CB6C', label: 'Hausa' },
+    pidgin:   { bg1: '#0F3E24', bg2: '#256B45', accent: '#E8B33C', accent2: '#F5CB6C', label: 'Nigerian Pidgin' },
+    urhobo:   { bg1: '#123E22', bg2: '#1E5A34', accent: '#E8B33C', accent2: '#D97757', label: 'Urhobo' },
+    itsekiri: { bg1: '#0F3E24', bg2: '#1E5C3A', accent: '#E8B33C', accent2: '#F5CB6C', label: 'Itsekiri' }
+  };
+
   const LEVELS = [
     { max: 1,  label: 'Newcomer' },
     { max: 5,  label: 'Starter' },
@@ -49,7 +68,6 @@
   }
 
   function loadState() {
-    // shared.js owns the canonical State. If it's there, use it.
     const state = (typeof window !== 'undefined' && window.State) ? window.State : null;
     if (state && state.user) {
       return {
@@ -58,7 +76,6 @@
         language: state.currentLanguage || (state.user.language) || 'yoruba'
       };
     }
-    // Fallback: read from localStorage directly if shared.js hasn't loaded
     let user = null;
     try { user = JSON.parse(localStorage.getItem('cw_user') || 'null'); } catch {}
     const language = localStorage.getItem('cw_language') || (user && user.language) || 'yoruba';
@@ -84,13 +101,14 @@
     return (cfg && cfg.emoji) || '👑';
   }
 
-  // Seeded RNG so the same seed gives the same card every time
   function mulberry32(seed) {
-    let a = seed || 1;
+    let a = (seed | 0) >>> 0;
+    if (a === 0) a = 1;
     return function () {
-      a |= 0; a = (a + 0x6D2B79F5) | 0;
-      let t = Math.imul(a ^ (a >>> 15), 1 | a);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      a = (a + 0x6D2B79F5) | 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   }
@@ -106,7 +124,7 @@
   }
 
   function wrapText(ctx, text, maxWidth) {
-    const words = String(text).split(' ');
+    const words = String(text).split(/\s+/);
     const lines = [];
     let line = '';
     for (const word of words) {
@@ -120,6 +138,65 @@
     }
     if (line) lines.push(line);
     return lines;
+  }
+
+  /* ============================================================
+     THE LOGO — a branded mark drawn on canvas
+     ============================================================ */
+
+  /**
+   * Draws the ClearWords logo mark: a rounded-square badge with the
+   * brand green gradient, a gold ring inside it, and a small
+   * speech-bubble icon. Returns { width, height } so callers can
+   * position other elements relative to it.
+   */
+  function drawLogo(ctx, x, y, size) {
+    const r = size * 0.28;
+
+    // Badge background — brand green gradient
+    const grad = ctx.createLinearGradient(x, y, x + size, y + size);
+    grad.addColorStop(0, BRAND.greenLight);
+    grad.addColorStop(1, BRAND.greenDeep);
+    roundedRect(ctx, x, y, size, size, r);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Gold inner ring
+    ctx.beginPath();
+    ctx.arc(x + size / 2, y + size / 2, size * 0.32, 0, Math.PI * 2);
+    ctx.strokeStyle = BRAND.gold;
+    ctx.lineWidth = Math.max(2, size * 0.045);
+    ctx.stroke();
+
+    // Speech-bubble icon in the middle
+    const cx = x + size / 2;
+    const cy = y + size / 2;
+    const bw = size * 0.38;
+    const bh = size * 0.28;
+    roundedRect(ctx, cx - bw / 2, cy - bh / 2, bw, bh, bh * 0.35);
+    ctx.fillStyle = BRAND.gold;
+    ctx.fill();
+
+    // Little tail on the bubble
+    ctx.beginPath();
+    ctx.moveTo(cx - bw * 0.18, cy + bh / 2 - 1);
+    ctx.lineTo(cx - bw * 0.05, cy + bh / 2 + bh * 0.28);
+    ctx.lineTo(cx + bw * 0.02, cy + bh / 2 - 1);
+    ctx.closePath();
+    ctx.fillStyle = BRAND.gold;
+    ctx.fill();
+
+    // Three dots inside the bubble
+    const dotR = size * 0.028;
+    const dotGap = size * 0.075;
+    ctx.fillStyle = BRAND.greenDeep;
+    for (let i = -1; i <= 1; i++) {
+      ctx.beginPath();
+      ctx.arc(cx + i * dotGap, cy, dotR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    return { width: size, height: size };
   }
 
   /* ============================================================
@@ -145,15 +222,13 @@
   }
 
   function spiritAge(data, seed) {
-    // A fun, stable "spirit age" derived from real stats + a seed
-    const rand = mulberry32((seed || 0) * 7919 + 13);
+    const rand = mulberry32((seed || 0) + 13);
     const base = 18 + Math.floor((data && data.level ? data.level : 1) * 0.6);
     const variance = Math.floor(rand() * 12) - 6;
     return Math.max(14, base + variance);
   }
 
   function fluency(data) {
-    // 0-100 percentage. Real number, rounded, feels earned.
     if (!data) return 0;
     const lessons = Math.min(data.lessons || 0, 50);
     const xp = Math.min(data.xp || 0, 5000);
@@ -163,7 +238,7 @@
   }
 
   /* ============================================================
-     GATHER — read stats from the running app
+     GATHER
      ============================================================ */
 
   async function gather() {
@@ -178,7 +253,6 @@
       (user.completedLevels || []).length
     );
 
-    // Streak: prefer a fresh value from State.effectiveStreak if available
     let streak = 0;
     try {
       if (typeof window !== 'undefined' && window.State && typeof window.State.effectiveStreak === 'function') {
@@ -205,121 +279,142 @@
       xp,
       level,
       savedWords,
-      // Derived for the card
       fluency: fluency({ lessons, xp }),
       tier: user.subscriptionTier || 'free'
     };
   }
 
   /* ============================================================
-     DRAW — the identity card
+     DRAW — identity card (brand green + gold, logo top-left)
      ============================================================ */
 
   function drawIdentity(data, seed) {
     const d = data || {};
     const cfg = langConfig(d.language);
-    const rand = mulberry32((seed || 0) * 982451653 + 7);
 
     const canvas = document.createElement('canvas');
     canvas.width = CARD_W;
     canvas.height = CARD_H;
     const ctx = canvas.getContext('2d');
 
-    // ---- Background gradient ----
-    const grad = ctx.createLinearGradient(0, 0, CARD_W, CARD_H);
+    // ---- Background: brand green gradient ----
+    const grad = ctx.createLinearGradient(0, 0, 0, CARD_H);
     grad.addColorStop(0, cfg.bg1);
     grad.addColorStop(1, cfg.bg2);
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, CARD_W, CARD_H);
 
-    // ---- Decorative circles ----
-    ctx.globalAlpha = 0.14;
-    ctx.fillStyle = cfg.accent;
-    ctx.beginPath(); ctx.arc(CARD_W * 0.85, CARD_H * 0.12, 260, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = cfg.accent2;
-    ctx.beginPath(); ctx.arc(CARD_W * 0.12, CARD_H * 0.9, 220, 0, Math.PI * 2); ctx.fill();
+    // ---- Subtle top gold bar ----
+    const topGrad = ctx.createLinearGradient(0, 0, CARD_W, 0);
+    topGrad.addColorStop(0, BRAND.gold);
+    topGrad.addColorStop(1, BRAND.goldLight);
+    ctx.fillStyle = topGrad;
+    ctx.fillRect(0, 0, CARD_W, 10);
+
+    // ---- Big soft gold ring behind the card (brand depth, no purple) ----
+    ctx.globalAlpha = 0.06;
+    ctx.strokeStyle = BRAND.gold;
+    ctx.lineWidth = 60;
+    ctx.beginPath(); ctx.arc(CARD_W * 0.9, CARD_H * 0.1, 340, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(CARD_W * 0.05, CARD_H * 0.95, 260, 0, Math.PI * 2); ctx.stroke();
     ctx.globalAlpha = 1;
 
-    // ---- Top bar ----
-    const topGrad = ctx.createLinearGradient(0, 0, CARD_W, 0);
-    topGrad.addColorStop(0, cfg.accent);
-    topGrad.addColorStop(1, cfg.accent2);
-    ctx.fillStyle = topGrad;
-    ctx.fillRect(0, 0, CARD_W, 12);
+    // ============================================================
+    // HEADER — logo + wordmark on the left, language on the right
+    // ============================================================
+    const headerY = 90;
+    const logoSize = 72;
+    drawLogo(ctx, 80, headerY, logoSize);
 
-    // ---- Brand row ----
-    ctx.font = '700 40px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    ctx.fillStyle = cfg.accent;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = BRAND.cream;
+    ctx.font = '800 42px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText('ClearWords', 80 + logoSize + 22, headerY + logoSize / 2);
+
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'rgba(232,179,60,0.85)';
+    ctx.font = '700 34px -apple-system, sans-serif';
+    ctx.fillText(d.langName || 'Nigerian', CARD_W - 80, headerY + logoSize / 2);
+
+    // ---- Divider under header ----
+    ctx.beginPath();
+    ctx.moveTo(80, headerY + logoSize + 40);
+    ctx.lineTo(CARD_W - 80, headerY + logoSize + 40);
+    ctx.strokeStyle = 'rgba(232,179,60,0.22)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // ============================================================
+    // EYEBROW + NAME + HANDLE
+    // ============================================================
+    let y = headerY + logoSize + 90;
+
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    ctx.fillText('ClearWords', 80, 90);
+    ctx.fillStyle = 'rgba(250,247,242,0.55)';
+    ctx.font = '700 26px -apple-system, sans-serif';
+    ctx.fillText('MY CLEARWORDS CARD', 80, y);
+    y += 50;
 
-    // Top-right: language label
-    ctx.font = '600 34px -apple-system, sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.72)';
-    ctx.textAlign = 'right';
-    ctx.fillText(d.langName || 'Nigerian', CARD_W - 80, 96);
-
-    // ---- Big "ID card" heading ----
-    ctx.textAlign = 'left';
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.font = '700 28px -apple-system, sans-serif';
-    ctx.fillText('MY CLEARWORDS CARD', 80, 200);
-
-    // ---- Name ----
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = '800 84px -apple-system, sans-serif';
-    const nameLines = wrapText(ctx, d.name || 'Learner', CARD_W - 160);
-    let nameY = 260;
+    ctx.fillStyle = BRAND.cream;
+    ctx.font = '800 92px -apple-system, sans-serif';
+    const nameLines = wrapText(ctx, d.name || 'Learner', CARD_W - 380);
     for (const line of nameLines.slice(0, 2)) {
-      ctx.fillText(line, 80, nameY);
-      nameY += 96;
+      ctx.fillText(line, 80, y);
+      y += 104;
     }
 
-    // ---- Handle ----
-    ctx.fillStyle = 'rgba(255,255,255,0.6)';
-    ctx.font = '500 36px -apple-system, sans-serif';
-    ctx.fillText('@' + (d.username || 'learner'), 80, nameY + 8);
-    nameY += 70;
+    ctx.fillStyle = 'rgba(232,179,60,0.9)';
+    ctx.font = '600 34px -apple-system, sans-serif';
+    ctx.fillText('@' + (d.username || 'learner'), 80, y);
+    y += 60;
 
-    // ---- Big emoji avatar ----
-    const avatarX = CARD_W - 240;
-    const avatarY = 400;
-    ctx.globalAlpha = 0.9;
-    ctx.font = '220px -apple-system, "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+    // ============================================================
+    // LANGUAGE EMOJI AVATAR on the right (top area)
+    // ============================================================
+    const emojiX = CARD_W - 200;
+    const emojiY = headerY + logoSize + 200;
+    ctx.save();
+    ctx.globalAlpha = 0.14;
+    ctx.fillStyle = BRAND.gold;
+    ctx.beginPath(); ctx.arc(emojiX, emojiY, 130, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(d.langEmoji || '👑', avatarX, avatarY);
-    ctx.globalAlpha = 1;
+    ctx.font = '180px -apple-system, "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+    ctx.fillText(d.langEmoji || '👑', emojiX, emojiY);
     ctx.textBaseline = 'top';
 
-    // ---- Identity headline ----
-    const headlineY = nameY + 40;
-    ctx.fillStyle = cfg.accent;
-    ctx.font = '700 46px -apple-system, sans-serif';
+    // ============================================================
+    // HEADLINE — "I'm a Hausa Starter"
+    // ============================================================
+    y += 40;
     ctx.textAlign = 'left';
+    ctx.fillStyle = BRAND.gold;
+    ctx.font = '800 52px -apple-system, sans-serif';
     const headline = `I'm ${art(d.langName)} ${d.langName} ${levelLabel(d.level)}`;
-    const headLines = wrapText(ctx, headline, CARD_W - 160);
-    let hy = headlineY;
+    const headLines = wrapText(ctx, headline, CARD_W - 400);
     for (const line of headLines.slice(0, 2)) {
-      ctx.fillText(line, 80, hy);
-      hy += 60;
+      ctx.fillText(line, 80, y);
+      y += 66;
     }
 
-    // ---- Stats panel ----
-    const panelY = hy + 60;
-    const panelH = 320;
-    roundedRect(ctx, 80, panelY, CARD_W - 160, panelH, 32);
-    ctx.fillStyle = 'rgba(255,255,255,0.07)';
+    // ============================================================
+    // STATS PANEL
+    // ============================================================
+    y += 30;
+    const panelH = 300;
+    roundedRect(ctx, 80, y, CARD_W - 160, panelH, 32);
+    ctx.fillStyle = 'rgba(15, 62, 36, 0.55)';
     ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.strokeStyle = 'rgba(232,179,60,0.35)';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    const statCols = 3;
     const panelW = CARD_W - 160;
-    const colW = panelW / statCols;
-
+    const colW = panelW / 3;
     const stats = [
       { label: 'DAY STREAK', value: String(d.streak || 0) },
       { label: 'TOTAL XP',   value: String(d.xp || 0) },
@@ -329,50 +424,62 @@
     stats.forEach((s, i) => {
       const cx = 80 + colW * i + colW / 2;
       ctx.textAlign = 'center';
-      ctx.fillStyle = cfg.accent;
-      ctx.font = '800 76px -apple-system, sans-serif';
-      ctx.fillText(s.value, cx, panelY + 90);
-      ctx.fillStyle = 'rgba(255,255,255,0.62)';
-      ctx.font = '700 24px -apple-system, sans-serif';
-      ctx.fillText(s.label, cx, panelY + 190);
+      ctx.fillStyle = BRAND.gold;
+      ctx.font = '800 82px -apple-system, sans-serif';
+      ctx.fillText(s.value, cx, y + 100);
+      ctx.fillStyle = 'rgba(250,247,242,0.62)';
+      ctx.font = '700 22px -apple-system, sans-serif';
+      ctx.fillText(s.label, cx, y + 210);
     });
 
-    // Divider lines
-    ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+    // Divider lines inside the panel
+    ctx.strokeStyle = 'rgba(232,179,60,0.22)';
     ctx.beginPath();
-    ctx.moveTo(80 + colW, panelY + 40); ctx.lineTo(80 + colW, panelY + panelH - 40);
-    ctx.moveTo(80 + colW * 2, panelY + 40); ctx.lineTo(80 + colW * 2, panelY + panelH - 40);
+    ctx.moveTo(80 + colW,     y + 50); ctx.lineTo(80 + colW,     y + panelH - 50);
+    ctx.moveTo(80 + colW * 2, y + 50); ctx.lineTo(80 + colW * 2, y + panelH - 50);
     ctx.stroke();
 
-    // ---- Spirit age + fluency row ----
-    const metaY = panelY + panelH + 50;
+    // ============================================================
+    // SPIRIT AGE + FLUENCY
+    // ============================================================
+    y += panelH + 60;
     ctx.textAlign = 'left';
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+
+    ctx.fillStyle = 'rgba(250,247,242,0.55)';
     ctx.font = '700 24px -apple-system, sans-serif';
-    ctx.fillText('SPIRIT AGE', 80, metaY);
-    ctx.fillText('FLUENCY', CARD_W / 2 + 20, metaY);
+    ctx.fillText('SPIRIT AGE', 80, y);
 
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = '800 60px -apple-system, sans-serif';
-    ctx.fillText(String(spiritAge(d, seed || 0)), 80, metaY + 40);
-    ctx.fillText(fluency(d) + '%', CARD_W / 2 + 20, metaY + 40);
+    ctx.fillText('FLUENCY', CARD_W / 2 + 20, y);
 
-    // ---- Bottom footer ----
+    ctx.fillStyle = BRAND.cream;
+    ctx.font = '800 66px -apple-system, sans-serif';
+    ctx.fillText(String(spiritAge(d, seed || 0)), 80, y + 42);
+    ctx.fillText(fluency(d) + '%', CARD_W / 2 + 20, y + 42);
+
+    // ============================================================
+    // FOOTER — small gold mark + URL + tagline
+    // ============================================================
+    const footerY = CARD_H - 110;
+    drawLogo(ctx, 80, footerY, 40);
+
     ctx.textAlign = 'left';
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.font = '500 26px -apple-system, sans-serif';
-    ctx.fillText('clearwords.com.ng', 80, CARD_H - 100);
+    ctx.fillStyle = 'rgba(250,247,242,0.62)';
+    ctx.font = '600 24px -apple-system, sans-serif';
+    ctx.fillText('clearwords.com.ng', 80 + 40 + 14, footerY + 22);
 
     ctx.textAlign = 'right';
-    ctx.fillStyle = cfg.accent;
-    ctx.font = '700 26px -apple-system, sans-serif';
-    ctx.fillText('Speak your heritage 🇳🇬', CARD_W - 80, CARD_H - 100);
+    ctx.fillStyle = BRAND.gold;
+    ctx.font = '700 24px -apple-system, sans-serif';
+    ctx.fillText('Speak your heritage 🇳🇬', CARD_W - 80, footerY + 22);
 
     return canvas;
   }
 
   /* ============================================================
      DRAW — chat snippet card
+     Only includes the selected exchange (the message plus the one
+     it was replying to if applicable), with the ClearWords logo
+     in the header.
      ============================================================ */
 
   function drawChat(snippet) {
@@ -382,96 +489,156 @@
     canvas.height = CHAT_H;
     const ctx = canvas.getContext('2d');
 
-    // Background
-    const grad = ctx.createLinearGradient(0, 0, CHAT_W, CHAT_H);
+    // Background — brand green
+    const grad = ctx.createLinearGradient(0, 0, 0, CHAT_H);
     grad.addColorStop(0, cfg.bg1);
     grad.addColorStop(1, cfg.bg2);
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, CHAT_W, CHAT_H);
 
-    // Top accent bar
+    // Top gold bar
     const topGrad = ctx.createLinearGradient(0, 0, CHAT_W, 0);
-    topGrad.addColorStop(0, cfg.accent);
-    topGrad.addColorStop(1, cfg.accent2);
+    topGrad.addColorStop(0, BRAND.gold);
+    topGrad.addColorStop(1, BRAND.goldLight);
     ctx.fillStyle = topGrad;
     ctx.fillRect(0, 0, CHAT_W, 10);
 
-    // Header
+    // ---- Header with logo ----
+    const headerY = 70;
+    drawLogo(ctx, 60, headerY, 64);
+
     ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.fillStyle = cfg.accent;
-    ctx.font = '700 34px -apple-system, sans-serif';
-    ctx.fillText('ClearWords · Timmy', 60, 60);
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = BRAND.cream;
+    ctx.font = '800 36px -apple-system, sans-serif';
+    ctx.fillText('ClearWords', 60 + 64 + 18, headerY + 32);
 
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.font = '500 26px -apple-system, sans-serif';
-    ctx.fillText('A moment from my practice', 60, 106);
+    ctx.fillStyle = 'rgba(232,179,60,0.85)';
+    ctx.font = '600 24px -apple-system, sans-serif';
+    ctx.fillText('A moment with Timmy 🤓', 60, headerY + 88);
 
-    // Focus exchange: user message above + assistant message
+    // Divider
+    ctx.beginPath();
+    ctx.moveTo(60, headerY + 130);
+    ctx.lineTo(CHAT_W - 60, headerY + 130);
+    ctx.strokeStyle = 'rgba(232,179,60,0.22)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // ---- Build the exchange to display ----
     const messages = snippet.messages || [];
     const idx = Math.max(0, Math.min(snippet.index || 0, messages.length - 1));
 
-    // Grab up to 3 messages ending at idx (or centered)
-    const start = Math.max(0, idx - 2);
-    const slice = messages.slice(start, idx + 1);
+    // The selected message plus the one it replied to (if it was a bot reply)
+    let slice = [];
+    const selected = messages[idx];
+    if (selected) {
+      if (selected.role === 'assistant' && idx > 0 && messages[idx - 1].role === 'user') {
+        // Show the question + the reply
+        slice = [messages[idx - 1], messages[idx]];
+      } else if (selected.role === 'user' && idx + 1 < messages.length && messages[idx + 1].role === 'assistant') {
+        // Show the user's message + the reply it got
+        slice = [messages[idx], messages[idx + 1]];
+      } else {
+        // Just show the selected message
+        slice = [selected];
+      }
+    }
 
-    let y = 200;
-    const bubbleMaxW = CHAT_W - 240;
+    // ---- Chat area: a soft cream board so bubbles pop ----
+    const boardX = 60;
+    const boardY = headerY + 170;
+    const boardW = CHAT_W - 120;
+    const boardH = CHAT_H - boardY - 200;
+
+    roundedRect(ctx, boardX, boardY, boardW, boardH, 32);
+    ctx.fillStyle = 'rgba(15, 62, 36, 0.55)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(232,179,60,0.28)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // ---- Render the bubbles ----
+    let y = boardY + 60;
+    const bubbleMaxW = boardW - 160;
 
     for (const m of slice) {
       const isUser = m.role === 'user';
-      const bubbleW = Math.min(bubbleMaxW, 400 + Math.min(360, String(m.text || '').length * 8));
-      const bubbleX = isUser ? (CHAT_W - 60 - bubbleW) : 60;
-      const padding = 30;
+      const text = String(m.text || m.content || '').slice(0, 400);
 
-      ctx.font = '500 32px -apple-system, sans-serif';
-      const wrapped = wrapText(ctx, String(m.text || '').slice(0, 220), bubbleW - padding * 2);
-      const bubbleH = wrapped.length * 44 + padding * 2;
+      // Measure text at target font
+      ctx.font = '500 34px -apple-system, sans-serif';
+      const wrapped = wrapText(ctx, text, bubbleMaxW);
+      const lineH = 46;
+      const padding = 28;
+      const bubbleH = wrapped.length * lineH + padding * 2 - 6;
 
-      // Bubble
-      roundedRect(ctx, bubbleX, y, bubbleW, bubbleH, 32);
+      // Bubble width fits the wrapped content
+      let maxLineW = 0;
+      for (const line of wrapped) maxLineW = Math.max(maxLineW, ctx.measureText(line).width);
+      const bubbleW = Math.min(bubbleMaxW, maxLineW + padding * 2);
+
+      const bubbleX = isUser
+        ? boardX + boardW - bubbleW - 40
+        : boardX + 40;
+
+      // Sender label above bubble
+      ctx.textAlign = isUser ? 'right' : 'left';
+      ctx.fillStyle = isUser ? BRAND.gold : 'rgba(250,247,242,0.7)';
+      ctx.font = '700 22px -apple-system, sans-serif';
+      ctx.textBaseline = 'bottom';
+      const labelX = isUser ? boardX + boardW - 40 : boardX + 40;
+      ctx.fillText(isUser ? 'You' : 'Timmy', labelX, y - 10);
+      y += 12;
+
+      // Bubble background
+      roundedRect(ctx, bubbleX, y, bubbleW, bubbleH, 26);
       if (isUser) {
-        ctx.fillStyle = cfg.accent;
+        ctx.fillStyle = BRAND.gold;
       } else {
-        ctx.fillStyle = 'rgba(255,255,255,0.10)';
+        ctx.fillStyle = 'rgba(250,247,242,0.10)';
       }
       ctx.fill();
-
-      // Bubble text
-      ctx.fillStyle = isUser ? '#0F172A' : '#FFFFFF';
-      ctx.font = '500 32px -apple-system, sans-serif';
-      let ty = y + padding + 4;
-      for (const line of wrapped) {
-        ctx.fillText(line, bubbleX + padding, ty);
-        ty += 44;
+      if (!isUser) {
+        ctx.strokeStyle = 'rgba(232,179,60,0.30)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
       }
 
-      // From-label above bubble
-      ctx.font = '700 22px -apple-system, sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.55)';
-      ctx.textAlign = isUser ? 'right' : 'left';
-      ctx.fillText(isUser ? 'You' : 'Timmy', isUser ? CHAT_W - 60 : 60, y - 34);
+      // Bubble text
       ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.fillStyle = isUser ? BRAND.greenDark : BRAND.cream;
+      ctx.font = '500 34px -apple-system, sans-serif';
+      let ty = y + padding;
+      for (const line of wrapped) {
+        ctx.fillText(line, bubbleX + padding, ty);
+        ty += lineH;
+      }
 
-      y += bubbleH + 70;
+      y += bubbleH + 60;
     }
 
-    // Footer
+    // ---- Footer: URL + tagline ----
+    const footerY = CHAT_H - 90;
+    drawLogo(ctx, 60, footerY, 36);
+
     ctx.textAlign = 'left';
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.font = '500 26px -apple-system, sans-serif';
-    ctx.fillText('clearwords.com.ng', 60, CHAT_H - 90);
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(250,247,242,0.62)';
+    ctx.font = '600 22px -apple-system, sans-serif';
+    ctx.fillText('clearwords.com.ng', 60 + 36 + 12, footerY + 18);
 
     ctx.textAlign = 'right';
-    ctx.fillStyle = cfg.accent;
-    ctx.font = '700 26px -apple-system, sans-serif';
-    ctx.fillText('Practice with Timmy 🤓', CHAT_W - 60, CHAT_H - 90);
+    ctx.fillStyle = BRAND.gold;
+    ctx.font = '700 22px -apple-system, sans-serif';
+    ctx.fillText('Learn Nigerian languages 🇳🇬', CHAT_W - 60, footerY + 18);
 
     return canvas;
   }
 
   /* ============================================================
-     CANVAS → BLOB / URL helpers
+     CANVAS → BLOB helpers
      ============================================================ */
 
   function canvasToBlob(canvas) {
@@ -479,7 +646,6 @@
       if (canvas.toBlob) {
         canvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob failed')), 'image/png', 0.95);
       } else {
-        // Older browsers
         try {
           const dataUrl = canvas.toDataURL('image/png');
           const bin = atob(dataUrl.split(',')[1]);
@@ -496,7 +662,7 @@
   }
 
   /* ============================================================
-     SHARE SHEET (bottom sheet UI)
+     SHARE SHEET
      ============================================================ */
 
   function ensureSheet() {
@@ -565,7 +731,7 @@
         margin-bottom: 16px; text-align: center;
       }
       .cw-share-preview img {
-        max-width: 100%; max-height: 50vh;
+        max-width: 100%; max-height: 55vh;
         border-radius: 14px;
         box-shadow: 0 8px 24px rgba(0,0,0,0.2);
       }
@@ -616,7 +782,6 @@
       return btn;
     };
 
-    // Native share (mobile)
     if (navigator.share && navigator.canShare) {
       addBtn('Share', '📤', async () => {
         try {
@@ -627,11 +792,10 @@
             _closeSheet();
             return;
           }
-        } catch (e) { /* fall through to other options */ }
+        } catch (e) {}
       }, { primary: true });
     }
 
-    // WhatsApp
     addBtn('WhatsApp', '💬', async () => {
       try {
         const blob = await canvasToBlob(canvas);
@@ -641,24 +805,19 @@
           _closeSheet();
           return;
         }
-        // Fallback: copy to clipboard, open WhatsApp web
-        await copyBlobToClipboard(blob);
+        await copyBlobToClipboard(blob).catch(() => {});
         const text = encodeURIComponent((caption || 'My ClearWords card') + ' — clearwords.com.ng');
         window.open(`https://wa.me/?text=${text}`, '_blank');
         _closeSheet();
-      } catch (e) {
-        console.warn('WhatsApp share failed:', e);
-      }
+      } catch (e) { console.warn('WhatsApp share failed:', e); }
     });
 
-    // X / Twitter
     addBtn('X', '𝕏', async () => {
       const text = encodeURIComponent((caption || 'Learning Nigerian languages with ClearWords') + ' — clearwords.com.ng');
       window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
       _closeSheet();
     });
 
-    // Copy to clipboard
     addBtn('Copy image', '📋', async (btn) => {
       try {
         const blob = await canvasToBlob(canvas);
@@ -670,7 +829,6 @@
       }
     });
 
-    // Download
     addBtn('Save to device', '💾', async () => {
       const a = document.createElement('a');
       a.href = canvasToDataURL(canvas);
@@ -688,7 +846,7 @@
       try {
         await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
         return true;
-      } catch (e) { /* fall through */ }
+      } catch (e) {}
     }
     throw new Error('Clipboard image copy not supported');
   }
@@ -700,13 +858,12 @@
   }
 
   /* ============================================================
-     PUBLIC: openIdentity — the identity card share sheet
+     PUBLIC
      ============================================================ */
 
   async function openIdentity(seed) {
     const data = await gather();
     if (!data) {
-      // No user yet — nothing to share
       if (window.showToast) window.showToast('Finish a lesson first to make your card.', 'info');
       return;
     }
@@ -720,10 +877,6 @@
     openSheet({ canvas, filename, caption });
   }
 
-  /* ============================================================
-     PUBLIC: openChat — snippet share from a Timmy chat
-     ============================================================ */
-
   function openChat(snippet) {
     if (!snippet || !Array.isArray(snippet.messages) || !snippet.messages.length) {
       if (window.showToast) window.showToast('Nothing to share yet.', 'info');
@@ -734,10 +887,6 @@
     const caption = 'A moment from practicing with Timmy 🤓';
     openSheet({ canvas, filename, caption });
   }
-
-  /* ============================================================
-     EXPOSE
-     ============================================================ */
 
   window.ShareCards = {
     gather,
