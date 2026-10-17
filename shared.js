@@ -1,5 +1,7 @@
 /* ============================================================
    ClearWords — Shared Runtime
+   Loaded by learn.html, practice.html, community.html, profile.html,
+   and onboarding.html.
    ============================================================ */
 
 /* ============================================================
@@ -267,40 +269,29 @@ const Backend = {
 
   getTimmySections: (language) =>
     api.get('/api/timmy-chats/sections', { params: { language } }),
-
   listTimmyChats: (sectionId, language) =>
     api.get('/api/timmy-chats', { params: { section: sectionId, language } }),
-
   getTimmyChat: (sectionId, chatId) =>
     api.get(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`),
-
-  createTimmyChat: (payload) =>
-    api.post('/api/timmy-chats', payload),
-
+  createTimmyChat: (payload) => api.post('/api/timmy-chats', payload),
   appendTimmyChatMessage: (sectionId, chatId, role, content, isError) =>
     api.post(
       `/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}/message`,
       { role, content, isError: !!isError }
     ),
-
   markTimmyChatRead: (sectionId, chatId) =>
     api.post(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}/read`),
-
   markTimmySectionRead: (sectionId) =>
     api.post(`/api/timmy-chats/${encodeURIComponent(sectionId)}/read-all`),
-
   renameTimmyChat: (sectionId, chatId, title) =>
     api.patch(
       `/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`,
       { title }
     ),
-
   deleteTimmyChat: (sectionId, chatId) =>
     api.delete(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`),
-
   deleteTimmySection: (sectionId) =>
     api.delete(`/api/timmy-chats/section/${encodeURIComponent(sectionId)}`),
-
   importTimmyChats: (language, threads) =>
     api.post('/api/timmy-chats/import', { language, threads }),
 
@@ -317,6 +308,7 @@ const Backend = {
   switchProfile: (id) => api.post('/api/profiles/' + id + '/switch'),
   getProfileOverview: (id, language) =>
     api.get('/api/profiles/' + id + '/overview', { params: { language } }),
+  enableFamily: () => api.post('/api/profiles/enable-family'),
 };
 
 /* ============================================================
@@ -463,12 +455,11 @@ const State = {
 };
 
 /* ============================================================
-   5b. PROFILE MODULE (NEW)
+   5b. PROFILE MODULE (family accounts)
    ============================================================ */
 const Profile = {
   async list() {
-    const res = await Backend.listProfiles();
-    return res;
+    return Backend.listProfiles();
   },
 
   current() {
@@ -488,7 +479,6 @@ const Profile = {
       localStorage.removeItem(CW_CONFIG.PROFILE_KEY);
     }
 
-    // Update user object
     if (State.user) {
       State.user.activeProfileId = res.activeProfileId || null;
       Auth.setUser(State.user);
@@ -496,7 +486,6 @@ const Profile = {
 
     State.emit('profile:changed', { profileId: State.currentProfileId, profile: res.profile });
 
-    // Reload progress for the new profile
     try {
       await State.loadProgress(State.currentLanguage);
     } catch {}
@@ -506,7 +495,6 @@ const Profile = {
 
   async create(payload) {
     const res = await Backend.createProfile(payload);
-    // Refresh user so familyProfiles is up to date
     try {
       const me = await Backend.me();
       State.user = me.user || me;
@@ -518,7 +506,6 @@ const Profile = {
 
   async rename(id, data) {
     const res = await Backend.updateProfileData(id, data);
-    // Refresh user
     try {
       const me = await Backend.me();
       State.user = me.user || me;
@@ -545,11 +532,30 @@ const Profile = {
 
   async overview(id, language) {
     return Backend.getProfileOverview(id, language || State.currentLanguage);
+  },
+
+  /** One-time migration: enable family on a personal Premium/Immersive account. */
+  async enableFamily() {
+    const res = await Backend.enableFamily();
+    if (res && res.activeProfileId) {
+      State.currentProfileId = String(res.activeProfileId);
+      localStorage.setItem(CW_CONFIG.PROFILE_KEY, State.currentProfileId);
+    }
+    try {
+      const me = await Backend.me();
+      State.user = me.user || me;
+      Auth.setUser(State.user);
+    } catch {}
+    State.emit('profile:changed', {
+      profileId: State.currentProfileId,
+      profile: this.current()
+    });
+    return res;
   }
 };
 
 /* ============================================================
-   5c. LANGUAGE SETUP (unchanged from original)
+   5c. LANGUAGE SETUP (unchanged)
    ============================================================ */
 const LanguageSetup = {
   _pendingResolve: null,
@@ -718,7 +724,7 @@ const LanguageSetup = {
 };
 
 /* ============================================================
-   5d. PAYWALL PROMPT (unchanged)
+   5d. PAYWALL PROMPT
    ============================================================ */
 const Paywall = {
   show(opts = {}) {
@@ -736,7 +742,7 @@ const Paywall = {
           border: 2px solid rgba(232,179,60,0.4);
           display: flex; align-items: center; justify-content: center;
           margin: 0 auto 16px; font-size: 34px;
-        ">🌱</div>
+        ">${feature === 'family' ? '👨‍👩‍👧' : '🌱'}</div>
 
         <div style="font-size: 19px; font-weight: 800; margin-bottom: 8px; line-height: 1.25;">
           ${esc(title)}
@@ -754,7 +760,7 @@ const Paywall = {
             border: 1px solid rgba(46,139,87,0.22);
             font-size: 13px; color: var(--text-2); line-height: 1.5; text-align: left;
           ">
-            <strong style="color: var(--brand);">✨ Premium</strong><br>
+            <strong style="color: var(--brand);">✨ Premium &amp; Immersive</strong><br>
             ${esc(benefit)}
           </div>
         ` : ''}
@@ -859,10 +865,10 @@ const Paywall = {
     if (/family/i.test(message)) {
       this.show({
         title: 'Family accounts are Premium',
-        message: 'Family profiles require Premium or Immersive. Each learner gets their own streak, lessons, and Timmy chats.',
+        message: 'Family profiles are included with Premium and Immersive. Each learner gets their own streak, lessons, and Timmy chats.',
         benefit: 'Up to 6 family profiles, separate progress for each learner.',
         feature: 'family',
-        ctaLabel: 'See Premium'
+        ctaLabel: 'See plans'
       });
       return true;
     }
@@ -1496,7 +1502,7 @@ const Badges = {
 };
 
 /* ============================================================
-   10c. PUSH MANAGER (unchanged)
+   10c. PUSH MANAGER
    ============================================================ */
 const PushManager = {
   _vapidKey: null,
