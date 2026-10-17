@@ -459,39 +459,18 @@ input, textarea { font-family: inherit; }
   </div>
   <div class="choices" id="choices-learning-for"></div>
   <div class="actions">
-    <button class="btn btn-block" id="next-learning-for" onclick="Onb.go('s-account-type')" disabled>Continue →</button>
+    <button class="btn btn-block" id="next-learning-for" onclick="Onb.go('s-language')" disabled>Continue →</button>
   </div>
 </section>
 
-<!-- ==================== 4. ACCOUNT TYPE (shared/family) ==================== -->
-<section class="screen" id="s-account-type">
-  <div class="topbar">
-    <button class="back-btn" onclick="Onb.back('s-learning-for')">←</button>
-    <div class="progress-dots" id="dots-account-type"></div>
-  </div>
-  <div class="q-header">
-    <div class="q-eyebrow">Step 3</div>
-    <div class="q-title">How will you use ClearWords?</div>
-    <div class="q-sub">You can change this later in Settings.</div>
-  </div>
-  <div class="choices" id="choices-account-type"></div>
-  <div class="family-note" id="family-note" style="display:none;">
-    <strong>Shared accounts start with Premium family access.</strong><br>
-    Everyone in your family gets their own learner profile — progress, streak, and lessons stay separate.
-  </div>
-  <div class="actions">
-    <button class="btn btn-block" id="next-account-type" onclick="Onb.go('s-language')" disabled>Continue →</button>
-  </div>
-</section>
-
-<!-- ==================== 5. LANGUAGE ==================== -->
+<!-- ==================== 4. LANGUAGE ==================== -->
 <section class="screen" id="s-language">
   <div class="topbar">
-    <button class="back-btn" onclick="Onb.back('s-account-type')">←</button>
+    <button class="back-btn" onclick="Onb.back('s-learning-for')">←</button>
     <div class="progress-dots" id="dots-language"></div>
   </div>
   <div class="q-header">
-    <div class="q-eyebrow">Step 4</div>
+    <div class="q-eyebrow">Step 3</div>
     <div class="q-title">What language connects you to home?</div>
     <div class="q-sub">You can add more languages later.</div>
   </div>
@@ -501,14 +480,14 @@ input, textarea { font-family: inherit; }
   </div>
 </section>
 
-<!-- ==================== 6. GOALS (multi-select) ==================== -->
+<!-- ==================== 5. GOALS (multi-select) ==================== -->
 <section class="screen" id="s-goals">
   <div class="topbar">
     <button class="back-btn" onclick="Onb.back('s-language')">←</button>
     <div class="progress-dots" id="dots-goals"></div>
   </div>
   <div class="q-header">
-    <div class="q-eyebrow">Step 5</div>
+    <div class="q-eyebrow">Step 4</div>
     <div class="q-title">What do you want to do?</div>
     <div class="q-sub">Pick everything that feels true.</div>
   </div>
@@ -518,14 +497,14 @@ input, textarea { font-family: inherit; }
   </div>
 </section>
 
-<!-- ==================== 7. LEVEL ==================== -->
+<!-- ==================== 6. LEVEL ==================== -->
 <section class="screen" id="s-level">
   <div class="topbar">
     <button class="back-btn" onclick="Onb.back('s-goals')">←</button>
     <div class="progress-dots" id="dots-level"></div>
   </div>
   <div class="q-header">
-    <div class="q-eyebrow">Step 6</div>
+    <div class="q-eyebrow">Step 5</div>
     <div class="q-title">How much do you already know?</div>
     <div class="q-sub">Be honest — we'll adjust as you go.</div>
   </div>
@@ -535,7 +514,7 @@ input, textarea { font-family: inherit; }
   </div>
 </section>
 
-<!-- ==================== 8. SIGNUP ==================== -->
+<!-- ==================== 7. SIGNUP ==================== -->
 <section class="screen" id="s-signup">
   <div class="topbar">
     <button class="back-btn" onclick="Onb.back('s-level')">←</button>
@@ -582,7 +561,7 @@ input, textarea { font-family: inherit; }
   </form>
 </section>
 
-<!-- ==================== 9. LOGIN ==================== -->
+<!-- ==================== 8. LOGIN ==================== -->
 <section class="screen" id="s-login">
   <div class="topbar">
     <button class="back-btn" onclick="Onb.back('s-welcome')">←</button>
@@ -629,45 +608,37 @@ const Onb = {
   data: {
     purpose: null,
     learningFor: null,
-    accountType: null,
     language: null,
     goals: [],
     level: null
   },
 
-  // Which step index is "current" for the dot indicator (0-5)
-  stepOrder: ['s-purpose', 's-learning-for', 's-account-type', 's-language', 's-goals', 's-level'],
+  // Which step index is "current" for the dot indicator (0-4)
+  stepOrder: ['s-purpose', 's-learning-for', 's-language', 's-goals', 's-level'],
 
   /* ---------- Boot ---------- */
   init() {
-    // Theme
     State.setTheme(State.theme);
 
-    // If already logged in, skip straight to learn.html
     if (Auth.isLoggedIn()) {
       location.replace('learn.html');
       return;
     }
 
-    // Restore any partial progress
     try {
       const saved = JSON.parse(localStorage.getItem('cw_onboarding_partial') || 'null');
       if (saved) this.data = { ...this.data, ...saved };
     } catch {}
 
-    // Render every screen's content
     this.renderPurpose();
     this.renderLearningFor();
-    this.renderAccountType();
     this.renderLanguage();
     this.renderGoals();
     this.renderLevel();
     this.renderDots();
 
-    // Restore selections visually
     this.restoreSelections();
 
-    // The hook: "Your name is Chika, but..." cycles through common names
     this.startNameRotation();
   },
 
@@ -683,7 +654,6 @@ const Onb = {
     }, 2600);
   },
 
-  // "Let's fix that": they've told us why they're here, so skip the purpose question
   startHeritage() {
     this.data.purpose = 'heritage';
     this.savePartial();
@@ -702,7 +672,6 @@ const Onb = {
     return cfg ? cfg.name : '';
   },
 
-  // copy that adapts to what they've told us so far
   personalize(screenId) {
     const her = this.isFamilyMinded();
     const lang = this.langName();
@@ -713,10 +682,10 @@ const Onb = {
       set('#s-language .q-sub', her ? "Pick the one you want to hear your family say back to you." : 'You can add more languages later.');
     }
     if (screenId === 's-goals') {
-      set('#s-goals .q-sub', her ? 'Pick everything that feels true. Most people start with “talk with family”.' : 'Pick everything that feels true.');
+      set('#s-goals .q-sub', her ? 'Pick everything that feels true. Most people start with "talk with family".' : 'Pick everything that feels true.');
     }
     if (screenId === 's-level') {
-      set('#s-level .q-sub', her ? "Even “three words and a greeting” counts. Be honest, we'll meet you there." : "Be honest — we'll adjust as you go.");
+      set('#s-level .q-sub', her ? "Even \"three words and a greeting\" counts. Be honest, we'll meet you there." : "Be honest — we'll adjust as you go.");
     }
     if (screenId === 's-signup') {
       set('#signup-sub', her && lang
@@ -741,7 +710,6 @@ const Onb = {
       el.classList.add('active');
       window.scrollTo(0, 0);
     }
-    // Update URL hash so back button within onboarding works
     if (location.hash !== '#' + screenId) {
       history.pushState({ screen: screenId }, '', '#' + screenId);
     }
@@ -768,19 +736,14 @@ const Onb = {
   },
 
   restoreSelections() {
-    // Restore visually by re-selecting whichever values exist
     if (this.data.purpose) this.markSelected('choices-purpose', this.data.purpose);
     if (this.data.learningFor) this.markSelected('choices-learning-for', this.data.learningFor);
-    if (this.data.accountType) this.markSelected('choices-account-type', this.data.accountType);
     if (this.data.language) this.markSelected('choices-language', this.data.language);
     this.data.goals.forEach(g => this.markSelected('choices-goals', g));
     if (this.data.level) this.markSelected('choices-level', this.data.level);
 
-    // Enable next buttons
-    ['purpose', 'learning-for', 'account-type', 'language', 'level'].forEach(k => {
-      const key = k === 'learning-for' ? 'learningFor'
-                : k === 'account-type' ? 'accountType'
-                : k;
+    ['purpose', 'learning-for', 'language', 'level'].forEach(k => {
+      const key = k === 'learning-for' ? 'learningFor' : k;
       const btn = document.getElementById('next-' + k);
       if (btn && this.data[key]) btn.disabled = false;
     });
@@ -837,24 +800,7 @@ const Onb = {
   },
 
   /* ============================================================
-     STEP 3 — ACCOUNT TYPE
-     ============================================================ */
-  renderAccountType() {
-    const options = [
-      { v: 'personal', icon: '👤', title: 'Just me',     sub: 'Personal learning journey' },
-      { v: 'family',   icon: '👨‍👩‍👧', title: 'My family', sub: 'Shared account with individual learner spaces' }
-    ];
-    this.renderChoices('choices-account-type', options, val => {
-      this.data.accountType = val;
-      this.savePartial();
-      document.getElementById('next-account-type').disabled = false;
-      const note = document.getElementById('family-note');
-      if (note) note.style.display = val === 'family' ? 'block' : 'none';
-    });
-  },
-
-  /* ============================================================
-     STEP 4 — LANGUAGE
+     STEP 3 — LANGUAGE
      ============================================================ */
   renderLanguage() {
     const options = [
@@ -873,7 +819,7 @@ const Onb = {
   },
 
   /* ============================================================
-     STEP 5 — GOALS (multi-select)
+     STEP 4 — GOALS (multi-select)
      ============================================================ */
   renderGoals() {
     const options = [
@@ -907,7 +853,7 @@ const Onb = {
   },
 
   /* ============================================================
-     STEP 6 — LEVEL
+     STEP 5 — LEVEL
      ============================================================ */
   renderLevel() {
     const options = [
@@ -997,21 +943,20 @@ const Onb = {
     const v = this.validateSignup();
     if (!v) return;
 
-    // UI lock
     btn.disabled = true;
     label.innerHTML = '<span class="spinner-inline"></span> Creating your account…';
 
     const referral = document.getElementById('su-referral').value.trim().toUpperCase();
 
+    // NOTE: no `accountType`. The backend derives familyIntent from
+    // learningFor (child / family / both). Family profiles are set up
+    // post-signup by upgrading to Premium/Immersive.
     const payload = {
       fullName: v.fullname,
       email: v.email,
       password: v.password,
-      // Optional fields — backend ignores anything it doesn't recognize,
-      // and each of these has a fallback on the server side.
       primaryLanguage: this.data.language || 'yoruba',
       segment: this.data.purpose || null,
-      accountType: this.data.accountType || 'personal',
       learningFor: this.data.learningFor || 'myself',
       goals: this.data.goals || [],
       level: this.data.level || 'zero'
@@ -1020,14 +965,11 @@ const Onb = {
 
     try {
       const res = await cwSignup(payload);
-      // Contract: { token, user }
       if (!res || !res.token) throw new Error('Unexpected signup response');
 
-      // Success — clear partial onboarding, ship them to the app
       try { localStorage.removeItem('cw_onboarding_partial'); } catch {}
       showToast('Welcome to ClearWords! 🎉', 'success');
 
-      // Give the toast a beat, then go
       setTimeout(() => { location.replace('learn.html'); }, 400);
     } catch (err) {
       console.error('Signup failed:', err);
