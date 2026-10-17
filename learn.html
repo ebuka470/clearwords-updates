@@ -81,7 +81,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 img, svg { display: block; max-width: 100%; }
 ::-webkit-scrollbar { width: 0; height: 0; }
 
-/* ============ HEADER ============ */
 #cw-header {
   position: sticky; top: 0; z-index: 40;
   display: flex; align-items: center; justify-content: space-between;
@@ -111,7 +110,6 @@ img, svg { display: block; max-width: 100%; }
   background: var(--danger); border: 2px solid var(--card);
 }
 
-/* ============ PAGE LAYOUT ============ */
 .page { max-width: 520px; margin: 0 auto; padding: 0 16px; }
 .greeting { padding: 22px 4px 4px; }
 .greeting h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
@@ -127,7 +125,6 @@ img, svg { display: block; max-width: 100%; }
 
 .section-h { font-size: 13px; font-weight: 800; letter-spacing: .08em; color: var(--text-3); text-transform: uppercase; margin: 24px 6px 10px; }
 
-/* ============ STAT TILES + NUDGE (shared look) ============ */
 .stat-row { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 12px; }
 .stat-tile { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 8px 12px; text-align: center; box-shadow: var(--shadow); }
 .stat-ico { font-size: 22px; line-height: 1; }
@@ -146,7 +143,6 @@ img, svg { display: block; max-width: 100%; }
 .nudge-body b { display: block; font-size: 14.5px; margin-bottom: 2px; }
 .nudge-link { color: var(--brand); font-weight: 800; font-size: 13px; white-space: nowrap; }
 
-/* ============ CONTINUE JOURNEY ============ */
 .continue-card { padding: 18px; }
 .continue-row { display: flex; align-items: center; gap: 14px; }
 .continue-emoji {
@@ -175,14 +171,12 @@ img, svg { display: block; max-width: 100%; }
 .btn-sm { padding: 9px 16px; min-height: 36px; font-size: 13px; }
 .btn-block { width: 100%; margin-top: 14px; }
 
-/* ============ PROGRESS CARD ============ */
 .progress-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .progress-lang { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px; }
 .progress-lvl { font-size: 12px; color: var(--text-2); font-weight: 700; }
 .progress-track { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, var(--brand), var(--gold)); border-radius: 4px; transition: width .4s ease; }
 
-/* ============ LEVEL LIST (grouped list, like Settings) ============ */
 .level-list.set-group { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
 .level-card {
   display: flex; align-items: center; gap: 14px;
@@ -209,7 +203,6 @@ img, svg { display: block; max-width: 100%; }
 .level-tags { display: flex; gap: 10px; margin-top: 5px; font-size: 11px; color: var(--text-3); }
 .level-chev { color: var(--text-3); font-size: 20px; }
 
-/* ============ SKELETON ============ */
 .skel { background: linear-gradient(90deg, var(--border) 0%, var(--border-strong) 50%, var(--border) 100%); background-size: 200% 100%; animation: skel 1.2s infinite; border-radius: 8px; }
 .skel-row { height: 14px; margin: 8px 0; }
 .skel-row.w-40 { width: 40%; }
@@ -220,7 +213,6 @@ img, svg { display: block; max-width: 100%; }
 .empty-note { color: var(--text-2); font-size: 14px; text-align: center; padding: 30px 16px; }
 .empty-note strong { color: var(--text); display: block; font-size: 16px; margin-bottom: 6px; }
 
-/* ============ BOTTOM NAV ============ */
 #cw-bottom-nav {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
   display: flex; justify-content: space-around; align-items: center;
@@ -247,7 +239,6 @@ img, svg { display: block; max-width: 100%; }
 }
 @keyframes badgePop { 0% { transform: scale(.4); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
-/* ============ MODALS (bottom sheets) ============ */
 .cw-modal-overlay {
   position: fixed; inset: 0; z-index: 100;
   background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
@@ -302,7 +293,6 @@ img, svg { display: block; max-width: 100%; }
 .cw-toast-error { background: var(--danger); color: #fff; }
 .cw-toast-success { background: var(--brand); color: #fff; }
 
-/* ============ LESSON FLOW ============ */
 #lesson-flow {
   position: fixed; inset: 0; z-index: 80;
   background: var(--bg);
@@ -331,7 +321,6 @@ img, svg { display: block; max-width: 100%; }
   max-width: 520px; margin: 0 auto;
 }
 
-/* Lesson intro */
 .lesson-hero { text-align: center; padding: 20px 0 24px; }
 .lesson-hero-eyebrow { font-size: 12px; font-weight: 800; color: var(--brand); letter-spacing: .1em; text-transform: uppercase; }
 .lesson-hero h2 { font-size: 26px; font-weight: 800; margin: 8px 0 6px; letter-spacing: -0.02em; }
@@ -343,7 +332,6 @@ img, svg { display: block; max-width: 100%; }
 .outline-title { font-weight: 700; font-size: 14.5px; }
 .outline-sub { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
 
-/* Words */
 .word-slide { animation: fade .3s ease; }
 @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .word-card {
@@ -373,7 +361,6 @@ img, svg { display: block; max-width: 100%; }
 .word-save-btn.saved { color: var(--gold); border-color: var(--gold); background: rgba(var(--gold-rgb), 0.08); }
 .word-counter { text-align: center; font-size: 12.5px; color: var(--text-3); font-weight: 700; margin-top: 6px; }
 
-/* Dialogue */
 .dlg-line { display: flex; gap: 12px; margin-bottom: 14px; animation: fade .35s ease; }
 .dlg-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--brand); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0; font-size: 13px; }
 .dlg-bubble { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 4px 14px 14px 14px; padding: 12px 14px; position: relative; }
@@ -383,7 +370,6 @@ img, svg { display: block; max-width: 100%; }
 .dlg-play { position: absolute; right: 10px; top: 10px; width: 30px; height: 30px; border-radius: 50%; background: rgba(var(--brand-rgb), 0.12); color: var(--brand); display: flex; align-items: center; justify-content: center; font-size: 13px; }
 .dlg-play.playing { background: var(--gold); color: #1C1E21; }
 
-/* Context / Grammar */
 .ctx-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
 .ctx-title { font-weight: 800; color: var(--gold); font-size: 14px; display: flex; align-items: center; gap: 8px; }
 .ctx-body { font-size: 14.5px; color: var(--text); margin-top: 8px; line-height: 1.55; }
@@ -391,7 +377,6 @@ img, svg { display: block; max-width: 100%; }
 .grammar-concept { font-weight: 800; color: var(--indigo); font-size: 14px; }
 .grammar-exp { font-size: 14px; color: var(--text-2); margin-top: 6px; line-height: 1.5; }
 
-/* Exercise */
 .ex-question { font-size: 20px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.01em; }
 .ex-prompt { font-size: 14px; color: var(--text-2); margin-bottom: 20px; }
 .ex-options { display: flex; flex-direction: column; gap: 10px; }
@@ -406,7 +391,6 @@ img, svg { display: block; max-width: 100%; }
 .ex-opt.wrong { border-color: var(--danger); background: rgba(229,72,77,0.08); color: var(--danger); }
 .ex-opt:disabled { cursor: default; }
 
-/* Complete */
 .complete-wrap { text-align: center; padding: 20px 0; }
 .complete-emoji { font-size: 72px; animation: pop .5s ease; }
 @keyframes pop { 0% { transform: scale(0); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
@@ -417,7 +401,6 @@ img, svg { display: block; max-width: 100%; }
 .complete-stat-val { font-size: 20px; font-weight: 800; color: var(--brand); }
 .complete-stat-lbl { font-size: 11px; color: var(--text-2); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; font-weight: 700; }
 
-/* first-lesson card prompt */
 .first-card {
   margin: 20px 0 4px; padding: 18px; border-radius: var(--radius-lg); text-align: left;
   background: linear-gradient(135deg, rgba(var(--brand-rgb), .16), rgba(var(--gold-rgb), .18));
@@ -426,7 +409,6 @@ img, svg { display: block; max-width: 100%; }
 .first-card b { display: block; font-size: 16px; }
 .first-card p { font-size: 13.5px; color: var(--text-2); margin-top: 4px; line-height: 1.45; }
 
-/* Custom lesson launcher */
 .custom-trigger {
   display: flex; align-items: center; justify-content: space-between;
   width: 100%; padding: 14px 18px; border-radius: var(--radius-full);
@@ -436,7 +418,6 @@ img, svg { display: block; max-width: 100%; }
 .custom-trigger:active { background: rgba(var(--brand-rgb), 0.05); }
 .custom-trigger .left { display: flex; align-items: center; gap: 8px; }
 
-/* Custom lesson input */
 .topic-input {
   width: 100%; padding: 14px 16px; font-size: 16px;
   border-radius: 12px; background: var(--bg-elev);
@@ -455,7 +436,6 @@ img, svg { display: block; max-width: 100%; }
 .loader-txt { font-size: 14px; color: var(--text-2); }
 .loader-sub { font-size: 12.5px; color: var(--text-3); margin-top: 6px; font-style: italic; }
 
-/* Filter chips */
 .chip-row { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 10px; }
 .chip {
   padding: 8px 14px; border-radius: var(--radius-full);
@@ -487,36 +467,30 @@ img, svg { display: block; max-width: 100%; }
     <p id="hello-sub">A little language today can stay with you for a long time.</p>
   </div>
 
-  <!-- Streak / XP / Level -->
   <div class="stat-row">
     <div class="stat-tile"><div class="stat-ico">🔥</div><div class="stat-val" id="l-streak">0</div><div class="stat-lbl">Day streak</div></div>
     <div class="stat-tile"><div class="stat-ico">⭐</div><div class="stat-val" id="l-xp">0</div><div class="stat-lbl">Total XP</div></div>
     <div class="stat-tile"><div class="stat-ico">🧭</div><div class="stat-val" id="l-level">1</div><div class="stat-lbl">Level</div></div>
   </div>
 
-  <!-- Heritage nudge -->
   <div id="heritage-nudge"></div>
 
-  <!-- Continue Journey -->
   <div class="card card-tint-primary continue-card" id="continue-card">
     <div class="skel skel-row w-40"></div>
     <div class="skel skel-row w-70"></div>
     <div class="skel skel-block" style="margin-top: 12px;"></div>
   </div>
 
-  <!-- Progress summary -->
   <div class="card" id="progress-card">
     <div class="skel skel-row w-40"></div>
     <div class="skel skel-block" style="margin-top: 12px; height: 8px;"></div>
   </div>
 
-  <!-- Instant lesson -->
   <button class="custom-trigger" onclick="Learn.openCustomLesson()">
     <span class="left">⚡ <span>Create an instant lesson</span></span>
     <span style="color: var(--text-3); font-size: 20px;">›</span>
   </button>
 
-  <!-- Level list header + filter -->
   <div class="section-h">Your journey</div>
   <div class="chip-row" id="level-filters">
     <button class="chip active" data-f="all">All</button>
@@ -532,7 +506,6 @@ img, svg { display: block; max-width: 100%; }
   </div>
 </main>
 
-<!-- BOTTOM NAV -->
 <nav id="cw-bottom-nav">
   <button class="tab active" onclick="Nav.go('learn')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -568,7 +541,6 @@ img, svg { display: block; max-width: 100%; }
   </button>
 </nav>
 
-<!-- LESSON FLOW (full-screen) -->
 <div id="lesson-flow">
   <div class="lesson-topbar">
     <button class="lesson-close" onclick="Learn.closeLesson()">✕</button>
@@ -582,17 +554,13 @@ img, svg { display: block; max-width: 100%; }
 <script src="shared.js"></script>
   <script src="sharecards.js"></script>
 <script>
-/* ============================================================
-   LEARN TAB
-   ============================================================ */
 const Learn = {
   curriculum: null,
   progress: null,
   user: null,
-  lessons: [],           // flat list of normalized lessons
+  lessons: [],
   activeFilter: 'all',
 
-  /* ---------- Boot ---------- */
   async init() {
     const ok = await cwBoot();
     if (!ok) return;
@@ -603,7 +571,6 @@ const Learn = {
     this.renderProgressSkeleton();
     this.renderStats();
 
-    // Load curriculum + progress in parallel — neither blocks the other
     const lang = State.currentLanguage;
     const [curr, prog] = await Promise.allSettled([
       State.loadCurriculum(lang),
@@ -620,9 +587,9 @@ const Learn = {
 
     if (prog.status === 'fulfilled') this.progress = prog.value;
 
-    // React to state changes
     State.on('progress:changed', p => { this.progress = p; this.render(); });
     State.on('hydrated', () => { this.user = State.user; this.setGreeting(); this.render(); });
+    State.on('profile:changed', () => { this.user = State.user; this.render(); });
 
     this.bindFilters();
     this.render();
@@ -648,7 +615,6 @@ const Learn = {
     });
   },
 
-  /* ---------- Rendering ---------- */
   renderProgressSkeleton() {
     const cont = document.getElementById('continue-card');
     const prog = document.getElementById('progress-card');
@@ -677,7 +643,6 @@ const Learn = {
     this.renderLevels();
   },
 
-  // streak / XP / level tiles (streak only counts if the last lesson was today or yesterday)
   renderStats() {
     const p = this.progress || State.progress || {};
     const completed = (p.completedLessons || p.completedLevels || []).length;
@@ -688,7 +653,6 @@ const Learn = {
     set('l-level', level);
   },
 
-  // the heritage hook: "talk to your grandmother"
   renderHeritage() {
     const host = document.getElementById('heritage-nudge');
     if (!host) return;
@@ -919,13 +883,11 @@ const Learn = {
     AudioMgr.stop();
     document.getElementById('lesson-flow').classList.remove('active');
     document.body.style.overflow = '';
-    // Refresh progress in background — it may have changed
     State.loadProgress(State.currentLanguage).then(p => {
       if (p) { this.progress = p; this.render(); }
     });
   },
 
-  /* ---------- Intro ---------- */
   renderIntro(body, foot) {
     const lesson = this.activeLesson;
     const langCfg = CW_CONFIG.LANGUAGES[State.currentLanguage];
@@ -959,7 +921,6 @@ const Learn = {
       <button class="btn" onclick="Learn.nextStep()" style="flex: 1;">Start lesson →</button>`;
   },
 
-  /* ---------- Words ---------- */
   wordIndex: 0,
   renderWords(vocab, body, foot) {
     const idx = this.wordIndex || 0;
@@ -1063,7 +1024,6 @@ const Learn = {
       showToast('Saved ★', 'success');
     }
 
-    // Optimistic local update
     if (this.user) this.user.savedWords = updated;
     if (State.user) State.user.savedWords = updated;
     Auth.setUser(State.user || this.user);
@@ -1075,15 +1035,13 @@ const Learn = {
       btn.textContent = nowSaved ? '★ Saved' : '☆ Save';
     }
 
-    // Sync to backend (fire and forget — endpoint may or may not exist)
     try {
       await Backend.updateProfile({ savedWords: updated });
     } catch (e) {
-      // silent — this is a nice-to-have that must not block the lesson
+      // silent
     }
   },
 
-  /* ---------- Dialogue ---------- */
   renderDialogue(dialogue, body, foot) {
     const lines = dialogue.map((d, i) => {
       const initial = (d.speaker || 'A').substring(0, 1).toUpperCase();
@@ -1139,7 +1097,6 @@ const Learn = {
     }
   },
 
-  /* ---------- Context ---------- */
   renderContext(notes, body, foot) {
     const html = notes.map(n => `
       <div class="ctx-card">
@@ -1159,7 +1116,6 @@ const Learn = {
       <button class="btn" onclick="Learn.nextStep()" style="flex: 1;">Continue →</button>`;
   },
 
-  /* ---------- Grammar ---------- */
   renderGrammar(points, body, foot) {
     const html = points.map(p => `
       <div class="grammar-block">
@@ -1179,7 +1135,6 @@ const Learn = {
       <button class="btn" onclick="Learn.nextStep()" style="flex: 1;">Continue →</button>`;
   },
 
-  /* ---------- Practice ---------- */
   practiceIndex: 0,
   renderPractice(exercises, body, foot) {
     const idx = this.practiceIndex || 0;
@@ -1239,7 +1194,6 @@ const Learn = {
     }
   },
 
-  /* ---------- Complete ---------- */
   async renderComplete(body, foot) {
     AudioMgr.stop();
     const lesson = this.activeLesson;
@@ -1262,25 +1216,137 @@ const Learn = {
       <button class="btn btn-ghost" onclick="Learn.closeLesson()" style="flex: 0 0 auto;">Done</button>
       <button class="btn" onclick="Nav.go('practice')" style="flex: 1;">Practice with Timmy →</button>`;
 
-    // Report completion to backend — this is the authoritative XP/streak update
     await this.submitCompletion();
   },
 
-  // After the first lesson, offer the shareable ClearWords card (the meme generator)
+  /**
+   * After the first lesson, offers:
+   *   1. A family prompt (Premium/Immersive; only if familyIntent + no profiles + not dismissed)
+   *   2. The shareable ClearWords card
+   */
   renderShareCta(lessonsDone) {
     const host = document.getElementById('share-cta');
     if (!host || !window.ShareCards || lessonsDone < 1) return;
+
     const u = State.user || {};
+    const profiles = u.familyProfiles || [];
+    const shouldPromptFamily =
+      u.familyIntent === true &&
+      profiles.length === 0 &&
+      !u.familyPromptDismissedAt;
+
     const langName = (CW_CONFIG.LANGUAGES[State.currentLanguage] || {}).name || 'your language';
+
+    let familyBlock = '';
+    if (shouldPromptFamily) {
+      familyBlock = `
+        <div class="first-card" style="border-color: rgba(var(--gold-rgb), .5); background: linear-gradient(135deg, rgba(var(--gold-rgb), .14), rgba(var(--brand-rgb), .12));">
+          <b>👨‍👩‍👧 Add your first learner</b>
+          <p>You chose family learning. Give your kids their own profiles — their own streak, lessons, and Timmy chats.</p>
+          <div style="display: flex; gap: 10px; margin-top: 12px;">
+            <button class="btn" style="flex: 1;" onclick="Learn.addFirstLearner()">Add a learner →</button>
+            <button class="btn btn-ghost" style="flex: 1;" onclick="Learn.dismissFamilyPrompt()">Not now</button>
+          </div>
+        </div>`;
+    }
+
     if (lessonsDone === 1) {
-      host.innerHTML = `
+      host.innerHTML = familyBlock + `
         <div class="first-card">
           <b>🪪 Your first lesson is done. Your ClearWords card is ready!</b>
           <p>${esc(Heritage.firstName(u) || 'Friend')}, you're officially ${esc(ShareCards.art(langName))} ${esc(langName)} learner. See your spirit age and show your family.</p>
           <button class="btn btn-block" onclick="ShareCards.openIdentity()">Make my card →</button>
         </div>`;
     } else {
-      host.innerHTML = `<button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="ShareCards.openIdentity()">🪪 Share my ClearWords card</button>`;
+      host.innerHTML = familyBlock + `<button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="ShareCards.openIdentity()">🪪 Share my ClearWords card</button>`;
+    }
+  },
+
+  async addFirstLearner() {
+    const u = State.user || {};
+    const tier = (u.subscriptionTier || 'free').toLowerCase();
+    const active = !u.subscriptionExpires || new Date(u.subscriptionExpires) > new Date();
+    const eligible = ['premium', 'immersive'].includes(tier) && active;
+
+    if (!eligible) {
+      Paywall.show({
+        feature: 'family',
+        title: 'Family accounts are Premium',
+        message: 'Family profiles are included with Premium and Immersive. Each learner gets their own streak, lessons, and Timmy chats.',
+        ctaLabel: 'See plans'
+      });
+      return;
+    }
+
+    Header._modal('Add your first learner', `
+      <div class="field">
+        <label>Name</label>
+        <input type="text" id="fl-name" maxlength="40" placeholder="e.g. Chika">
+      </div>
+      <div class="field">
+        <label>Emoji</label>
+        <input type="text" id="fl-emoji" maxlength="8" value="🧒">
+      </div>
+      <div class="field">
+        <label>Language</label>
+        <select id="fl-language">
+          ${Object.entries(CW_CONFIG.LANGUAGES).map(([k, c]) =>
+            `<option value="${k}">${c.emoji} ${c.name}</option>`
+          ).join('')}
+        </select>
+      </div>
+      <div class="field-error" id="fl-err"></div>
+      <button class="btn btn-block" id="fl-save" onclick="Learn.submitFirstLearner()">Create profile</button>
+    `);
+  },
+
+  async submitFirstLearner() {
+    const name = document.getElementById('fl-name').value.trim();
+    const emoji = document.getElementById('fl-emoji').value.trim();
+    const language = document.getElementById('fl-language').value;
+    const err = document.getElementById('fl-err');
+    err.textContent = '';
+    if (!name) { err.textContent = 'Name is required.'; return; }
+
+    const btn = document.getElementById('fl-save');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-inline"></span> Creating…';
+
+    try {
+      await Profile.create({ name, emoji, color: '#E8B33C', language });
+      closeModal('cw-generic-modal');
+      showToast(`${name} added! 🎉`, 'success');
+      try {
+        const me = await Backend.me();
+        State.user = me.user || me;
+        Auth.setUser(State.user);
+      } catch {}
+      this.renderShareCta(1);
+    } catch (e) {
+      err.textContent = e.message || 'Could not create profile.';
+      btn.disabled = false;
+      btn.textContent = 'Create profile';
+    }
+  },
+
+  async dismissFamilyPrompt() {
+    try {
+      await Backend.updateProfile({ familyPromptDismissedAt: new Date().toISOString() });
+      if (State.user) State.user.familyPromptDismissedAt = new Date().toISOString();
+      // Re-render share CTA without the family block
+      const host = document.getElementById('share-cta');
+      if (host) {
+        const u = State.user || {};
+        const langName = (CW_CONFIG.LANGUAGES[State.currentLanguage] || {}).name || 'your language';
+        host.innerHTML = `
+          <div class="first-card">
+            <b>🪪 Your first lesson is done. Your ClearWords card is ready!</b>
+            <p>${esc(Heritage.firstName(u) || 'Friend')}, you're officially ${esc(ShareCards.art(langName))} ${esc(langName)} learner. See your spirit age and show your family.</p>
+            <button class="btn btn-block" onclick="ShareCards.openIdentity()">Make my card →</button>
+          </div>`;
+      }
+    } catch (e) {
+      showToast('Could not dismiss prompt.', 'error');
     }
   },
 
@@ -1310,13 +1376,10 @@ const Learn = {
         const streak = res.streak || (this.progress && this.progress.streak);
         statusEl.innerHTML = `Saved · <strong style="color: var(--brand);">+${xp} XP</strong>${streak ? ' · 🔥 ' + streak + ' day streak' : ''}`;
       }
-      // Refresh progress
       const updated = await State.loadProgress(State.currentLanguage);
       if (updated) { this.progress = updated; this.render(); }
-      // Offer the share card (celebrated hard after the very first lesson)
       const done = updated ? Math.max((updated.completedLessons || []).length, (updated.completedLevels || []).length) : 0;
       this.renderShareCta(done);
-      // Refresh user (streak / XP may have been updated)
       Backend.me().then(r => {
         State.user = r.user || r;
         Auth.setUser(State.user);
@@ -1344,7 +1407,6 @@ const Learn = {
       </button>
       <div id="topic-progress" style="margin-top: 20px;"></div>
     `);
-    // Enter key support
     setTimeout(() => {
       const inp = document.getElementById('topic-input');
       if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') Learn.createCustomLesson(); });
@@ -1387,7 +1449,6 @@ const Learn = {
 
       if (!parsed || !parsed.vocabulary) throw new Error('Bad response shape');
 
-      // Build a synthetic lesson and drop it straight into the lesson engine
       const synthetic = {
         id: 'custom-' + Date.now(),
         levelNumber: 999,
@@ -1404,7 +1465,6 @@ const Learn = {
         practiceExercises: (parsed.practiceExercises || []).slice(0, 6)
       };
 
-      // Close modal, drop into lesson engine
       closeModal('cw-generic-modal');
       this.activeLesson = synthetic;
       this.buildSteps(synthetic);
@@ -1420,7 +1480,6 @@ const Learn = {
     } catch (e) {
       console.error('Custom lesson failed:', e);
 
-      // Paywall for custom lesson limit
       if (Paywall.fromError(e)) {
         closeModal('cw-generic-modal');
         if (btn) btn.disabled = false;
@@ -1439,9 +1498,7 @@ const Learn = {
 
   extractJSON(text) {
     if (!text) return null;
-    // Strip code fences
     let s = String(text).replace(/```json|```/g, '').trim();
-    // Find first { and last }
     const start = s.indexOf('{');
     const end = s.lastIndexOf('}');
     if (start === -1 || end === -1) return null;
@@ -1450,9 +1507,6 @@ const Learn = {
   }
 };
 
-/* ============================================================
-   LESSON START TIME TRACKING
-   ============================================================ */
 const origStartLesson = Learn.startLesson.bind(Learn);
 Learn.startLesson = function (lessonId) {
   this._lessonStart = Date.now();
@@ -1461,13 +1515,9 @@ Learn.startLesson = function (lessonId) {
   return origStartLesson(lessonId);
 };
 
-/* ============================================================
-   BOOT
-   ============================================================ */
 document.addEventListener('DOMContentLoaded', () => Learn.init());
 window.Learn = Learn;
 
-  // Register the service worker for offline + installability
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/service-worker.js')
