@@ -1,7 +1,5 @@
 /* ============================================================
    ClearWords — Shared Runtime
-   Loaded by learn.html, practice.html, community.html, profile.html,
-   and onboarding.html.
    ============================================================ */
 
 /* ============================================================
@@ -15,6 +13,7 @@ const CW_CONFIG = {
   THEME_KEY: 'cw_theme',
   ONBOARDING_KEY: 'cw_onboarding',
   LAST_LESSON_KEY: 'cw_last_lesson',
+  PROFILE_KEY: 'cw_profile_id',
   VAPID_PUBLIC_KEY: null,
   SUPABASE_URL: 'https://megxgmsivslzdxaqxxpl.supabase.co',
   SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lZ3hnbXNpdnNsemR4YXF4eHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NzA4MzIsImV4cCI6MjEwMDA0NjgzMn0.hJmwvrXhhGADlHxkciTzq2TgQo25QCdKv142at9_jyw',
@@ -38,6 +37,7 @@ const Auth = {
   clear() {
     localStorage.removeItem(CW_CONFIG.TOKEN_KEY);
     localStorage.removeItem('cw_user');
+    localStorage.removeItem(CW_CONFIG.PROFILE_KEY);
   },
   isLoggedIn() { return !!this.getToken(); },
   getUser() {
@@ -80,6 +80,7 @@ async function apiRequest(path, opts = {}) {
   if (auth) {
     const token = Auth.getToken();
     if (token) headers['Authorization'] = 'Bearer ' + token;
+    if (State.currentProfileId) headers['X-Profile-Id'] = State.currentProfileId;
   }
 
   try {
@@ -260,12 +261,10 @@ const Backend = {
   ttsUsage: () => api.get('/api/tts/usage'),
   ttsCredits: () => api.get('/api/tts/credits', { auth: false }),
 
-  // ---- MESSAGES / POD+PAIR UNREAD ----
   getUnreadCounts: () => api.get('/api/messages/unread'),
   markPodRead: (podId) => api.post('/api/pods/' + podId + '/read'),
   markPairRead: (pairId) => api.post('/api/pairs/' + pairId + '/read'),
 
-  // ---- TIMMY CHATS (per section, per chat) ----
   getTimmySections: (language) =>
     api.get('/api/timmy-chats/sections', { params: { language } }),
 
@@ -305,11 +304,19 @@ const Backend = {
   importTimmyChats: (language, threads) =>
     api.post('/api/timmy-chats/import', { language, threads }),
 
-  // ---- PUSH NOTIFICATIONS ----
   getVapidPublicKey: () => api.get('/api/push/vapid-public-key', { auth: false }),
   subscribeToPush: (subscription) => api.post('/api/push/subscribe', subscription),
   unsubscribeFromPush: (endpoint) => api.delete('/api/push/unsubscribe', { endpoint }),
-  testPush: () => api.post('/api/push/test')
+  testPush: () => api.post('/api/push/test'),
+
+  // ---- FAMILY PROFILES ----
+  listProfiles: () => api.get('/api/profiles'),
+  createProfile: (payload) => api.post('/api/profiles', payload),
+  updateProfileData: (id, payload) => api.patch('/api/profiles/' + id, payload),
+  deleteProfile: (id) => api.delete('/api/profiles/' + id),
+  switchProfile: (id) => api.post('/api/profiles/' + id + '/switch'),
+  getProfileOverview: (id, language) =>
+    api.get('/api/profiles/' + id + '/overview', { params: { language } }),
 };
 
 /* ============================================================
@@ -322,6 +329,7 @@ const State = {
   subscription: null,
   notifications: { items: [], unread: 0 },
   currentLanguage: localStorage.getItem(CW_CONFIG.LANG_KEY) || 'yoruba',
+  currentProfileId: localStorage.getItem(CW_CONFIG.PROFILE_KEY) || null,
   theme: localStorage.getItem(CW_CONFIG.THEME_KEY) || 'light',
 
   _listeners: {},
@@ -355,6 +363,23 @@ const State = {
             localStorage.setItem(CW_CONFIG.LANG_KEY, this.user.language);
           }
         }
+
+        // Validate persisted profileId against server state
+        if (this.currentProfileId) {
+          const exists = (this.user.familyProfiles || []).some(
+            p => p._id.toString() === this.currentProfileId
+          );
+          if (!exists) {
+            this.currentProfileId = null;
+            localStorage.removeItem(CW_CONFIG.PROFILE_KEY);
+          }
+        }
+        // Fall back to activeProfileId if set on server
+        if (!this.currentProfileId && this.user.activeProfileId) {
+          this.currentProfileId = this.user.activeProfileId.toString();
+          localStorage.setItem(CW_CONFIG.PROFILE_KEY, this.currentProfileId);
+        }
+
         this.emit('user:changed', this.user);
       } else if (meRes.reason && meRes.reason.status === 401) {
         Auth.clear();
@@ -438,7 +463,93 @@ const State = {
 };
 
 /* ============================================================
-   5b. LANGUAGE SETUP
+   5b. PROFILE MODULE (NEW)
+   ============================================================ */
+const Profile = {
+  async list() {
+    const res = await Backend.listProfiles();
+    return res;
+  },
+
+  current() {
+    if (!State.currentProfileId) return null;
+    const u = State.user || {};
+    return (u.familyProfiles || []).find(
+      p => p._id.toString() === State.currentProfileId.toString()
+    ) || null;
+  },
+
+  async switchTo(id) {
+    const res = await Backend.switchProfile(id);
+    State.currentProfileId = res.activeProfileId ? res.activeProfileId.toString() : null;
+    if (State.currentProfileId) {
+      localStorage.setItem(CW_CONFIG.PROFILE_KEY, State.currentProfileId);
+    } else {
+      localStorage.removeItem(CW_CONFIG.PROFILE_KEY);
+    }
+
+    // Update user object
+    if (State.user) {
+      State.user.activeProfileId = res.activeProfileId || null;
+      Auth.setUser(State.user);
+    }
+
+    State.emit('profile:changed', { profileId: State.currentProfileId, profile: res.profile });
+
+    // Reload progress for the new profile
+    try {
+      await State.loadProgress(State.currentLanguage);
+    } catch {}
+
+    return res;
+  },
+
+  async create(payload) {
+    const res = await Backend.createProfile(payload);
+    // Refresh user so familyProfiles is up to date
+    try {
+      const me = await Backend.me();
+      State.user = me.user || me;
+      Auth.setUser(State.user);
+    } catch {}
+    State.emit('profile:created', res.profile);
+    return res;
+  },
+
+  async rename(id, data) {
+    const res = await Backend.updateProfileData(id, data);
+    // Refresh user
+    try {
+      const me = await Backend.me();
+      State.user = me.user || me;
+      Auth.setUser(State.user);
+    } catch {}
+    State.emit('profile:updated', res.profile);
+    return res;
+  },
+
+  async remove(id) {
+    const res = await Backend.deleteProfile(id);
+    if (State.currentProfileId === id) {
+      State.currentProfileId = null;
+      localStorage.removeItem(CW_CONFIG.PROFILE_KEY);
+    }
+    try {
+      const me = await Backend.me();
+      State.user = me.user || me;
+      Auth.setUser(State.user);
+    } catch {}
+    State.emit('profile:deleted', id);
+    return res;
+  },
+
+  async overview(id, language) {
+    return Backend.getProfileOverview(id, language || State.currentLanguage);
+  }
+};
+
+/* ============================================================
+   5c. LANGUAGE SETUP (unchanged from original)
    ============================================================ */
 const LanguageSetup = {
   _pendingResolve: null,
@@ -607,7 +718,7 @@ const LanguageSetup = {
 };
 
 /* ============================================================
-   5c. PAYWALL PROMPT
+   5d. PAYWALL PROMPT (unchanged)
    ============================================================ */
 const Paywall = {
   show(opts = {}) {
@@ -740,6 +851,17 @@ const Paywall = {
         message: 'The free plan includes 30 audio clips per day. Premium gives you 300.',
         benefit: 'More audio, unlimited lessons, unlimited Timmy chat.',
         feature: 'tts_limit',
+        ctaLabel: 'See Premium'
+      });
+      return true;
+    }
+
+    if (/family/i.test(message)) {
+      this.show({
+        title: 'Family accounts are Premium',
+        message: 'Family profiles require Premium or Immersive. Each learner gets their own streak, lessons, and Timmy chats.',
+        benefit: 'Up to 6 family profiles, separate progress for each learner.',
+        feature: 'family',
         ctaLabel: 'See Premium'
       });
       return true;
@@ -1232,7 +1354,7 @@ const Header = {
 };
 
 /* ============================================================
-   10b. BADGES — unread counts across the whole app
+   10b. BADGES
    ============================================================ */
 const Badges = {
   _unread: { pods: {}, pairs: {}, timmy: {}, total: 0 },
@@ -1374,8 +1496,7 @@ const Badges = {
 };
 
 /* ============================================================
-   10c. PUSH MANAGER — Web Push notifications
-   Handles permission, subscription, and syncing with the backend.
+   10c. PUSH MANAGER (unchanged)
    ============================================================ */
 const PushManager = {
   _vapidKey: null,
@@ -1396,7 +1517,6 @@ const PushManager = {
     );
   },
 
-  // On iOS, web push ONLY works when the app is installed to home screen.
   needsInstallFirst() {
     const ua = navigator.userAgent;
     const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
@@ -1488,7 +1608,6 @@ const PushManager = {
         userAgent: navigator.userAgent
       });
 
-      // Update local user flag so the profile toggle reflects reality
       if (State.user) {
         State.user.notificationsEnabled = true;
         Auth.setUser(State.user);
@@ -1513,7 +1632,6 @@ const PushManager = {
         try { await Backend.unsubscribeFromPush(endpoint); } catch {}
       }
 
-      // Update local user flag
       if (State.user) {
         State.user.notificationsEnabled = false;
         Auth.setUser(State.user);
@@ -1606,11 +1724,11 @@ function cwLogout() {
   Badges.stop();
   Badges._unread = { pods: {}, pairs: {}, timmy: {}, total: 0 };
 
-  // Best-effort: unsubscribe from push on this device before clearing auth.
   try { PushManager.disable().catch(() => {}); } catch {}
 
   Auth.clear();
   localStorage.removeItem(CW_CONFIG.LANG_KEY);
+  localStorage.removeItem(CW_CONFIG.PROFILE_KEY);
   localStorage.removeItem('cw_onboarding_partial');
   location.href = 'onboarding.html';
 }
@@ -1646,7 +1764,6 @@ async function cwBoot() {
 
   Badges.start();
 
-  // Keep the server's push subscription record fresh (never prompts).
   setTimeout(() => PushManager.syncIfGranted(), 3000);
 
   return true;
@@ -1661,6 +1778,7 @@ window.api = api;
 window.ApiError = ApiError;
 window.Backend = Backend;
 window.State = State;
+window.Profile = Profile;
 window.LanguageSetup = LanguageSetup;
 window.Paywall = Paywall;
 window.Curriculum = Curriculum;
