@@ -1763,57 +1763,122 @@ const Prof = {
   /* ============================================================
      EDIT PROFILE
      ============================================================ */
+    /* ============================================================
+     EDIT PROFILE
+     ============================================================ */
   openEditProfile() {
     const u = this.user || {};
-    Header._modal('Edit profile', `
-      <div class="field">
-        <label>Full name</label>
-        <input type="text" id="ep-fullname" value="${esc(u.fullName || '')}" maxlength="60">
-      </div>
-      <div class="field">
-        <label>Username</label>
-        <input type="text" id="ep-username" value="${esc(u.username || '')}" maxlength="24" placeholder="e.g. ebuka470">
-        <div class="field-hint">Lowercase letters, numbers, dots and underscores.</div>
-      </div>
-      <div class="field">
-        <label>Bio</label>
-        <textarea id="ep-bio" maxlength="120" placeholder="Tell other learners a little about you…">${esc(u.bio || '')}</textarea>
-      </div>
-      <div class="field">
-        <label>Location</label>
-        <input type="text" id="ep-location" value="${esc(u.location || '')}" maxlength="60" placeholder="e.g. Lagos / London">
-      </div>
-      <div class="field-error" id="ep-err"></div>
-      <button class="btn btn-block" id="ep-save-btn" onclick="Prof.saveProfile()">Save changes</button>
-    `);
+    const activeProfile = State.currentProfileId 
+      ? (u.familyProfiles || []).find(pr => String(pr._id) === String(State.currentProfileId))
+      : null;
+
+    if (activeProfile) {
+      // Editing a Child Profile
+      Header._modal('Edit learner', `
+        <div class="field">
+          <label>Name</label>
+          <input type="text" id="ep-child-name" value="${esc(activeProfile.name)}" maxlength="40">
+        </div>
+        <div class="field">
+          <label>Emoji</label>
+          <input type="text" id="ep-child-emoji" value="${esc(activeProfile.emoji || '🧒')}" maxlength="8">
+        </div>
+        <div class="field">
+          <label>Color</label>
+          <input type="text" id="ep-child-color" value="${esc(activeProfile.color || '#E8B33C')}" maxlength="16">
+        </div>
+        <div class="field">
+          <label>Language</label>
+          <select id="ep-child-language">
+            ${Object.entries(CW_CONFIG.LANGUAGES).map(([k, c]) =>
+              `<option value="${k}" ${activeProfile.language === k ? 'selected' : ''}>${c.emoji} ${c.name}</option>`
+            ).join('')}
+          </select>
+        </div>
+        <div class="field-error" id="ep-err"></div>
+        <button class="btn btn-block" id="ep-save-btn" onclick="Prof.saveProfile()">Save changes</button>
+      `);
+    } else {
+      // Editing the Main Account
+      Header._modal('Edit main account', `
+        <div class="field">
+          <label>Full name</label>
+          <input type="text" id="ep-fullname" value="${esc(u.fullName || '')}" maxlength="60">
+        </div>
+        <div class="field">
+          <label>Username</label>
+          <input type="text" id="ep-username" value="${esc(u.username || '')}" maxlength="24" placeholder="e.g. ebuka470">
+          <div class="field-hint">Lowercase letters, numbers, dots and underscores.</div>
+        </div>
+        <div class="field">
+          <label>Bio</label>
+          <textarea id="ep-bio" maxlength="120" placeholder="Tell other learners a little about you…">${esc(u.bio || '')}</textarea>
+        </div>
+        <div class="field">
+          <label>Location</label>
+          <input type="text" id="ep-location" value="${esc(u.location || '')}" maxlength="60" placeholder="e.g. Lagos / London">
+        </div>
+        <div class="field-error" id="ep-err"></div>
+        <button class="btn btn-block" id="ep-save-btn" onclick="Prof.saveProfile()">Save changes</button>
+      `);
+    }
   },
 
   async saveProfile() {
     const btn = $('ep-save-btn');
     const err = $('ep-err');
     err.textContent = '';
-
-    const fullName = $('ep-fullname').value.trim();
-    const username = $('ep-username').value.trim().toLowerCase().replace(/[^a-z0-9_.]/g, '');
-    const bio = $('ep-bio').value.trim();
-    const location = $('ep-location').value.trim();
-
-    if (!fullName) { err.textContent = 'Full name is required.'; return; }
+    
+    const activeProfile = State.currentProfileId 
+      ? (this.user.familyProfiles || []).find(pr => String(pr._id) === String(State.currentProfileId))
+      : null;
 
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-inline"></span> Saving…';
 
     try {
-      await Backend.updateProfile({ fullName, username, bio, location });
+      if (activeProfile) {
+        // Save Child Profile
+        const name = $('ep-child-name').value.trim();
+        const emoji = $('ep-child-emoji').value.trim();
+        const color = $('ep-child-color').value.trim();
+        const language = $('ep-child-language').value;
+
+        if (!name) { err.textContent = 'Name is required.'; btn.disabled = false; btn.textContent = 'Save changes'; return; }
+
+        await Backend.updateProfileData(activeProfile._id, { name, emoji, color, language });
+        
+        // Update local state
+        activeProfile.name = name;
+        activeProfile.emoji = emoji;
+        activeProfile.color = color;
+        activeProfile.language = language;
+        Auth.setUser(State.user);
+        
+      } else {
+        // Save Main Account
+        const fullName = $('ep-fullname').value.trim();
+        const username = $('ep-username').value.trim().toLowerCase().replace(/[^a-z0-9_.]/g, '');
+        const bio = $('ep-bio').value.trim();
+        const location = $('ep-location').value.trim();
+
+        if (!fullName) { err.textContent = 'Full name is required.'; btn.disabled = false; btn.textContent = 'Save changes'; return; }
+
+        await Backend.updateProfile({ fullName, username, bio, location });
+      }
+
+      // Refresh global user state
       const me = await Backend.me();
       State.user = me.user || me;
       Auth.setUser(State.user);
       this.user = State.user;
+      
       this.renderBanner();
       Header.render('profile');
       this.syncHeaderStreak();
       closeModal('cw-generic-modal');
       showToast('Profile updated.', 'success');
+      
     } catch (e) {
       console.warn('Profile update failed:', e);
       err.textContent = e.status === 409 ? 'That username is taken.' : (e.message || 'Could not save.');
