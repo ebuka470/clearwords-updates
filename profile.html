@@ -344,8 +344,6 @@ input, textarea, select { font-family: inherit; }
 .set-sub { font-size: 12px; color: var(--text-2); margin-top: 1px; }
 .set-value { font-size: 13px; color: var(--text-3); font-weight: 600; }
 .set-chev { color: var(--text-3); font-size: 20px; }
-.set-footer { font-size: 12px; color: var(--text-3); margin: 6px 10px 0; line-height: 1.45; }
-.set-danger .set-title { color: var(--danger); }
 
 .toggle { width: 46px; height: 28px; border-radius: 14px; background: var(--border-strong); position: relative; transition: background .2s; flex-shrink: 0; }
 .toggle.on { background: var(--brand); }
@@ -841,24 +839,52 @@ const Prof = {
   renderBanner() {
     const u = this.user || {};
     const p = this.progress || {};
-    const fullName = u.fullName || [u.firstName, u.lastName].filter(Boolean).join(' ') || 'Learner';
-    const username = u.username || (u.email ? u.email.split('@')[0] : 'learner');
-    const langCfg = CW_CONFIG.LANGUAGES[u.primaryLanguage || State.currentLanguage];
+    
+    // Check if we are currently in a child profile
+    const activeProfile = State.currentProfileId 
+      ? (u.familyProfiles || []).find(pr => String(pr._id) === String(State.currentProfileId))
+      : null;
+
+    let displayName = u.fullName || [u.firstName, u.lastName].filter(Boolean).join(' ') || 'Learner';
+    let displayUsername = u.username || (u.email ? u.email.split('@')[0] : 'learner');
+    let displayBio = u.bio || 'Learning Nigerian languages with ClearWords 🇳🇬';
+    let displayLoc = u.location ? '📍 ' + u.location : '📍 Global diaspora';
+    
+    // If on a child profile, use their details
+    if (activeProfile) {
+      displayName = activeProfile.name;
+      displayUsername = ''; // Children don't have usernames
+      displayBio = 'Learning ' + (CW_CONFIG.LANGUAGES[activeProfile.language]?.name || 'languages') + ' with the family account.';
+      displayLoc = '📍 Family Account';
+    }
+
+    const langCfg = CW_CONFIG.LANGUAGES[activeProfile?.language || u.primaryLanguage || State.currentLanguage];
 
     const av = $('p-avatar');
     const url = /^https?:\/\//i.test(u.avatarUrl || '') ? u.avatarUrl : '';
-    if (url) {
+    
+    if (activeProfile) {
+      // Render child avatar
+      av.style.backgroundImage = 'none';
+      av.style.backgroundColor = activeProfile.color || '#2E8B57';
+      av.textContent = activeProfile.emoji || '🧑';
+      av.style.fontSize = '48px';
+    } else if (url) {
       av.style.backgroundImage = `url('${url.replace(/'/g, '%27')}')`;
+      av.style.backgroundColor = 'transparent';
       av.textContent = '';
+      av.style.fontSize = '32px';
     } else {
-      av.style.backgroundImage = this.avatarGradient(fullName);
-      av.textContent = initialsOf(fullName);
+      av.style.backgroundImage = this.avatarGradient(displayName);
+      av.style.backgroundColor = 'transparent';
+      av.textContent = initialsOf(displayName);
+      av.style.fontSize = '32px';
     }
 
-    $('p-name').textContent = fullName;
-    $('p-handle').textContent = '@' + username;
-    $('p-bio').textContent = u.bio || 'Learning Nigerian languages with ClearWords 🇳🇬';
-    $('p-loc').textContent = u.location ? '📍 ' + u.location : '📍 Global diaspora';
+    $('p-name').textContent = displayName;
+    $('p-handle').textContent = displayUsername ? '@' + displayUsername : '';
+    $('p-bio').textContent = displayBio;
+    $('p-loc').textContent = displayLoc;
 
     const level = p.currentLevel || 1;
     const pill = $('p-pill');
@@ -875,7 +901,7 @@ const Prof = {
     this.renderNudge(p, streak);
 
     const goalsHost = $('profile-goals');
-    const goals = u.goals || [];
+    const goals = activeProfile ? [] : (u.goals || []);
     const labels = {
       talk_family: 'Talk with family', understand: 'Understand conversations', speak: 'Speak confidently',
       pronunciation: 'Pronunciation', culture: 'Culture', read_write: 'Read & write',
@@ -1547,21 +1573,30 @@ const Prof = {
       return;
     }
 
+    // We ensure the Owner profile is included at the top of the list.
+    // The API dynamically injects it if it isn't in familyProfiles.
     const currentId = State.currentProfileId;
     const rows = profiles.map(p => {
       const isActive = currentId && String(p._id) === String(currentId);
+      
+      // If this is the owner, we use the parent account's details to make it clear
+      const isOwner = p.role === 'owner';
+      const profileName = isOwner ? u.fullName : p.name;
+      const profileEmoji = p.emoji || (isOwner ? '🧑' : '🧒');
+      const profileColor = p.color || '#2E8B57';
+
       return `
         <button class="lang-option ${isActive ? 'active' : ''}"
                 onclick="Prof.switchProfile('${p._id}')"
                 style="margin-bottom: 6px;">
           <span style="
             width: 40px; height: 40px; border-radius: 50%;
-            background: ${esc(p.color || '#2E8B57')};
+            background: ${esc(profileColor)};
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; flex-shrink: 0;">${esc(p.emoji || '🧑')}</span>
+            font-size: 20px; flex-shrink: 0;">${esc(profileEmoji)}</span>
           <div style="flex: 1; text-align: left; min-width: 0;">
-            <div style="font-weight: 700; font-size: 15px;">${esc(p.name)}</div>
-            <div style="font-size: 12px; color: var(--text-2);">${p.role === 'owner' ? 'Owner' : 'Learner'}</div>
+            <div style="font-weight: 700; font-size: 15px;">${esc(profileName)}</div>
+            <div style="font-size: 12px; color: var(--text-2);">${isOwner ? 'Owner / Main Account' : 'Learner'}</div>
           </div>
           ${isActive
             ? '<span class="lang-check">✓</span>'
