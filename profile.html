@@ -1539,32 +1539,83 @@ const Prof = {
     return u.accountType === 'family' || (u.familyProfiles || []).length > 0;
   },
 
-  maybeShowFamily() {
+   maybeShowFamily() {
     const u = this.user || {};
     const section = $('family-section');
     const card = $('family-card');
     if (!section || !card) return;
 
-    if (!this.isFamilyAccount()) { section.style.display = 'none'; return; }
-    section.style.display = 'block';
+    const tier = (u.subscriptionTier || 'free').toLowerCase();
+    const active = !u.subscriptionExpires || new Date(u.subscriptionExpires) > new Date();
+    const isEligible = ['premium', 'immersive'].includes(tier) && active;
+    const isFamilyAccount = u.accountType === 'family' || (u.familyProfiles || []).length > 0;
 
+    // If they are Free, show an upgrade prompt instead of the family list
+    if (!isEligible) {
+      section.style.display = 'block';
+      card.innerHTML = `
+        <div style="font-weight: 800; font-size: 15px;">Family accounts 👨‍👩‍👧</div>
+        <div style="font-size: 13px; color: var(--text-2); margin-top: 6px; line-height: 1.5;">
+          Give your kids their own profiles — their own streak, lessons, and Timmy chats. Family accounts require Premium or Immersive.
+        </div>
+        <div style="margin-top: 14px;">
+          <button class="btn btn-sm" onclick="Prof.openUpgrade()">See plans →</button>
+        </div>
+      `;
+      return;
+    }
+
+    // If they are Premium or Immersive but haven't set up profiles yet
+    if (!isFamilyAccount) {
+      section.style.display = 'block';
+      card.innerHTML = `
+        <div style="font-weight: 800; font-size: 15px;">Set up your family</div>
+        <div style="font-size: 13px; color: var(--text-2); margin-top: 6px; line-height: 1.5;">
+          You have family access on your plan. Create up to 6 profiles for your household.
+        </div>
+        <div style="margin-top: 14px;">
+          <button class="btn btn-sm" onclick="Prof.openProfileSwitcher()">Add a learner</button>
+        </div>
+      `;
+      return;
+    }
+
+    // If they have profiles, show the list
+    section.style.display = 'block';
     const profiles = u.familyProfiles || [];
-    const listHtml = profiles.map(p => {
-      const isActive = State.currentProfileId && String(p._id) === String(State.currentProfileId);
+    
+    // Add the main account to the list dynamically for display
+    const displayProfiles = [...profiles];
+    const hasOwner = displayProfiles.some(p => p.role === 'owner');
+    if (!hasOwner) {
+      displayProfiles.unshift({
+        _id: u._id,
+        name: u.fullName,
+        emoji: '🧑',
+        color: '#2E8B57',
+        role: 'owner'
+      });
+    }
+
+    const listHtml = displayProfiles.map(p => {
+      const isActive = State.currentProfileId 
+        ? String(p._id) === String(State.currentProfileId) 
+        : (!State.currentProfileId && p.role === 'owner');
+        
       return `
         <div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border);">
           <span style="width:34px;height:34px;border-radius:50%;background:${esc(p.color || '#2E8B57')};display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">${esc(p.emoji || '🧑')}</span>
           <div style="flex:1; min-width:0;">
             <div style="font-weight:700;font-size:14px;">${esc(p.name)}${isActive ? ' <span style="color:var(--brand);font-size:11px;font-weight:800;">• ACTIVE</span>' : ''}</div>
-            <div style="font-size:12px;color:var(--text-2);">${p.role === 'owner' ? 'Owner' : 'Learner'}</div>
+            <div style="font-size:12px;color:var(--text-2);">${p.role === 'owner' ? 'Owner / Main Account' : 'Learner'}</div>
           </div>
         </div>`;
-    }).join('') || '<div style="font-size:13px;color:var(--text-2);padding:8px 0;">No profiles yet.</div>';
+    }).join('');
 
     card.innerHTML = `
       <div style="font-weight: 800; font-size: 15px;">Your family account</div>
       <div style="font-size: 13px; color: var(--text-2); margin-top: 6px; line-height: 1.5;">
-        ${profiles.length} profile${profiles.length === 1 ? '' : 's'} · each with their own streak, lessons, and Timmy chats.
+        ${displayProfiles.length} profile${displayProfiles.length === 1 ? '' : 's'} · each with their own streak, lessons, and Timmy chats.
       </div>
       <div style="margin-top: 10px;">${listHtml}</div>
       <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
