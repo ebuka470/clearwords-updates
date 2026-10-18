@@ -1720,12 +1720,24 @@ const Prof = {
     }
   },
 
-  openCreateProfile() {
+    openCreateProfile() {
     if (!this.isFamilyTier()) {
       closeModal('cw-generic-modal');
       Paywall.show({ feature: 'family' });
       return;
     }
+
+    const langChips = Object.entries(CW_CONFIG.LANGUAGES).map(([k, c]) => {
+      const isSelected = State.currentLanguage === k; // default to current language
+      return `
+        <button type="button" 
+                class="lang-chip ${isSelected ? 'active' : ''}" 
+                onclick="Prof.selectCreateLang('${k}', this)">
+          ${c.emoji} ${c.name}
+        </button>
+      `;
+    }).join('');
+
     Header._modal('Add a learner', `
       <div class="field">
         <label>Name</label>
@@ -1740,23 +1752,22 @@ const Prof = {
         <input type="text" id="np-color" maxlength="16" value="#E8B33C">
       </div>
       <div class="field">
-        <label>Language</label>
-        <select id="np-language">
-          ${Object.entries(CW_CONFIG.LANGUAGES).map(([k, c]) =>
-            `<option value="${k}">${c.emoji} ${c.name}</option>`
-          ).join('')}
-        </select>
+        <label>Learning Language</label>
+        <div class="lang-chips" id="np-lang-chips">
+          ${langChips}
+        </div>
+        <input type="hidden" id="np-language" value="${State.currentLanguage}">
       </div>
       <div class="field-error" id="np-err"></div>
       <button class="btn btn-block" id="np-save" onclick="Prof.createProfile()">Create profile</button>
     `);
   },
 
-  async createProfile() {
+   async createProfile() {
     const name = document.getElementById('np-name').value.trim();
     const emoji = document.getElementById('np-emoji').value.trim();
     const color = document.getElementById('np-color').value.trim();
-    const language = document.getElementById('np-language').value;
+    const language = document.getElementById('np-language').value; // reads hidden input
     const err = document.getElementById('np-err');
     err.textContent = '';
 
@@ -1778,6 +1789,15 @@ const Prof = {
       btn.disabled = false;
       btn.textContent = 'Create profile';
     }
+  },
+
+    selectCreateLang(lang, btnEl) {
+    const container = document.getElementById('np-lang-chips');
+    if (container) {
+      container.querySelectorAll('.lang-chip').forEach(c => c.classList.remove('active'));
+    }
+    btnEl.classList.add('active');
+    document.getElementById('np-language').value = lang;
   },
 
   async openFamilyOverview() {
