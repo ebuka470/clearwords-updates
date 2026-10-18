@@ -470,8 +470,9 @@ const Profile = {
     ) || null;
   },
 
-  async switchTo(id) {
+   async switchTo(id) {
     const res = await Backend.switchProfile(id);
+    
     State.currentProfileId = res.activeProfileId ? res.activeProfileId.toString() : null;
     if (State.currentProfileId) {
       localStorage.setItem(CW_CONFIG.PROFILE_KEY, State.currentProfileId);
@@ -483,6 +484,16 @@ const Profile = {
       State.user.activeProfileId = res.activeProfileId || null;
       Auth.setUser(State.user);
     }
+
+    // --- CLEAR CACHED BADGES & STREAKS ---
+    // This prevents the main account's data from leaking into the child's view
+    Badges._unread = { pods: {}, pairs: {}, timmy: {}, total: 0 };
+    Badges.renderAll(); 
+    
+    // Clear streak cache
+    Object.keys(localStorage).forEach(k => {
+      if (k.startsWith('cw_streak_')) localStorage.removeItem(k);
+    });
 
     State.emit('profile:changed', { profileId: State.currentProfileId, profile: res.profile });
 
