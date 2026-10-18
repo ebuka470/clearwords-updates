@@ -862,7 +862,7 @@ const Paywall = {
       return true;
     }
 
-    if (/family/i.test(message)) {
+        if (/family/i.test(message)) {
       this.show({
         title: 'Family accounts are Premium',
         message: 'Family profiles are included with Premium and Immersive. Each learner gets their own streak, lessons, and Timmy chats.',
