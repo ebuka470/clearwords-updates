@@ -1275,7 +1275,7 @@ const Learn = {
     }
   },
 
-  async addFirstLearner() {
+   async addFirstLearner() {
     const u = State.user || {};
     const tier = (u.subscriptionTier || 'free').toLowerCase();
     const active = !u.subscriptionExpires || new Date(u.subscriptionExpires) > new Date();
