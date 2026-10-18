@@ -1275,7 +1275,7 @@ const Learn = {
     }
   },
 
-   async addFirstLearner() {
+     async addFirstLearner() {
     const u = State.user || {};
     const tier = (u.subscriptionTier || 'free').toLowerCase();
     const active = !u.subscriptionExpires || new Date(u.subscriptionExpires) > new Date();
@@ -1291,6 +1291,17 @@ const Learn = {
       return;
     }
 
+    const langChips = Object.entries(CW_CONFIG.LANGUAGES).map(([k, c]) => {
+      const isSelected = State.currentLanguage === k;
+      return `
+        <button type="button" 
+                class="lang-chip ${isSelected ? 'active' : ''}" 
+                onclick="Learn.selectFirstLang('${k}', this)">
+          ${c.emoji} ${c.name}
+        </button>
+      `;
+    }).join('');
+
     Header._modal('Add your first learner', `
       <div class="field">
         <label>Name</label>
@@ -1301,22 +1312,21 @@ const Learn = {
         <input type="text" id="fl-emoji" maxlength="8" value="🧒">
       </div>
       <div class="field">
-        <label>Language</label>
-        <select id="fl-language">
-          ${Object.entries(CW_CONFIG.LANGUAGES).map(([k, c]) =>
-            `<option value="${k}">${c.emoji} ${c.name}</option>`
-          ).join('')}
-        </select>
+        <label>Learning Language</label>
+        <div class="lang-chips" id="fl-lang-chips">
+          ${langChips}
+        </div>
+        <input type="hidden" id="fl-language" value="${State.currentLanguage}">
       </div>
       <div class="field-error" id="fl-err"></div>
       <button class="btn btn-block" id="fl-save" onclick="Learn.submitFirstLearner()">Create profile</button>
     `);
   },
 
-  async submitFirstLearner() {
+    async submitFirstLearner() {
     const name = document.getElementById('fl-name').value.trim();
     const emoji = document.getElementById('fl-emoji').value.trim();
-    const language = document.getElementById('fl-language').value;
+    const language = document.getElementById('fl-language').value; // reads hidden input
     const err = document.getElementById('fl-err');
     err.textContent = '';
     if (!name) { err.textContent = 'Name is required.'; return; }
@@ -1340,6 +1350,15 @@ const Learn = {
       btn.disabled = false;
       btn.textContent = 'Create profile';
     }
+  },
+  
+        selectFirstLang(lang, btnEl) {
+    const container = document.getElementById('fl-lang-chips');
+    if (container) {
+      container.querySelectorAll('.lang-chip').forEach(c => c.classList.remove('active'));
+    }
+    btnEl.classList.add('active');
+    document.getElementById('fl-language').value = lang;
   },
 
     async dismissFamilyPrompt() {
