@@ -427,9 +427,11 @@ const State = {
     return (last === key(0) || last === key(1)) ? s : 0;
   },
 
-  async loadProgress(language) {
+   async loadProgress(language) {
     if (!Auth.isLoggedIn()) return null;
     try {
+      // The apiRequest function in shared.js automatically adds X-Profile-Id
+      // if State.currentProfileId is set. We just need to make sure it's called.
       const data = await Backend.getProgress(language);
       this.progress = this.normProgress(data);
       this.emit('progress:changed', this.progress);
@@ -1765,20 +1767,21 @@ async function cwBoot() {
 
   State.user = Auth.getUser();
 
-  State.hydrate().then(ok => {
-    if (!ok) {
-      Auth.clear();
-      localStorage.removeItem(CW_CONFIG.LANG_KEY);
-      location.href = 'onboarding.html';
-      return;
-    }
-    State.emit('hydrated');
-  });
+  const hydrated = await State.hydrate();
+  if (!hydrated) {
+    Auth.clear();
+    localStorage.removeItem(CW_CONFIG.LANG_KEY);
+    location.href = 'onboarding.html';
+    return false;
+  }
+  
+  State.emit('hydrated');
 
   window.addEventListener('cw:auth-expired', () => {
     location.href = 'onboarding.html';
   });
 
+  // Start badges ONLY after hydration is complete
   Badges.start();
 
   setTimeout(() => PushManager.syncIfGranted(), 3000);
