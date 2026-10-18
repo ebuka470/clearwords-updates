@@ -1224,18 +1224,31 @@ const Learn = {
    *   1. A family prompt (Premium/Immersive; only if familyIntent + no profiles + not dismissed)
    *   2. The shareable ClearWords card
    */
-  renderShareCta(lessonsDone) {
+    renderShareCta(lessonsDone) {
     const host = document.getElementById('share-cta');
     if (!host || !window.ShareCards || lessonsDone < 1) return;
 
     const u = State.user || {};
     const profiles = u.familyProfiles || [];
+    
     const shouldPromptFamily =
       u.familyIntent === true &&
       profiles.length === 0 &&
       !u.familyPromptDismissedAt;
 
     const langName = (CW_CONFIG.LANGUAGES[State.currentLanguage] || {}).name || 'your language';
+
+    // Defensive check: if Heritage is not defined, fall back to a generic name
+    let firstName = 'Friend';
+    try {
+      if (typeof Heritage !== 'undefined' && Heritage.firstName) {
+        firstName = Heritage.firstName(u) || 'Friend';
+      } else if (u.fullName) {
+        firstName = u.fullName.split(' ')[0];
+      }
+    } catch (e) {
+      console.warn('Heritage fallback triggered:', e);
+    }
 
     let familyBlock = '';
     if (shouldPromptFamily) {
@@ -1254,7 +1267,7 @@ const Learn = {
       host.innerHTML = familyBlock + `
         <div class="first-card">
           <b>🪪 Your first lesson is done. Your ClearWords card is ready!</b>
-          <p>${esc(Heritage.firstName(u) || 'Friend')}, you're officially ${esc(ShareCards.art(langName))} ${esc(langName)} learner. See your spirit age and show your family.</p>
+          <p>${esc(firstName)}, you're officially ${esc(ShareCards.art(langName))} ${esc(langName)} learner. See your spirit age and show your family.</p>
           <button class="btn btn-block" onclick="ShareCards.openIdentity()">Make my card →</button>
         </div>`;
     } else {
