@@ -1336,13 +1336,20 @@ const Prof = {
     this.celebrateNew();
   },
 
-  celebrateNew() {
+    celebrateNew() {
     const uid = (this.user && (this.user.id || this.user._id)) || 'me';
-    const key = 'cw_ach_seen_' + uid;
+    // Include the Profile ID in the cache key so each child has their own achievements
+    const profileKey = State.currentProfileId || 'main';
+    const key = `cw_ach_seen_${uid}_${profileKey}`;
+    
     const unlocked = this.achievements.filter(a => a.done).map(a => a.id);
     let seen = null;
     try { seen = JSON.parse(localStorage.getItem(key)); } catch {}
-    if (!Array.isArray(seen)) { try { localStorage.setItem(key, JSON.stringify(unlocked)); } catch {} return; }
+    
+    if (!Array.isArray(seen)) { 
+      try { localStorage.setItem(key, JSON.stringify(unlocked)); } catch {} 
+      return; 
+    }
 
     const fresh = this.achievements.filter(a => a.done && !seen.includes(a.id));
     if (!fresh.length) return;
