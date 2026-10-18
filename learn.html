@@ -588,8 +588,12 @@ const Learn = {
     if (prog.status === 'fulfilled') this.progress = prog.value;
 
     State.on('progress:changed', p => { this.progress = p; this.render(); });
-    State.on('hydrated', () => { this.user = State.user; this.setGreeting(); this.render(); });
-    State.on('profile:changed', () => { this.user = State.user; this.render(); });
+    State.on('hydrated', () => { this.user = State.user; this.setGreeting(); this.render(); });   
+    State.on('profile:changed', () => { 
+      this.user = State.user; 
+      this.progress = null; // Reset
+      this.render(); 
+    });
 
     this.bindFilters();
     this.render();
