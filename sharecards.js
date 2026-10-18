@@ -142,7 +142,12 @@
     return 'Elder';
   }
 
-  function firstName(user) {
+    function firstName(user) {
+    const state = (typeof window !== 'undefined' && window.State) ? window.State : null;
+    if (state && state.currentProfileId && state.user && state.user.familyProfiles) {
+      const active = state.user.familyProfiles.find(p => String(p._id) === String(state.currentProfileId));
+      if (active) return active.name;
+    }
     const u = user || {};
     const name = u.fullName || [u.firstName, u.lastName].filter(Boolean).join(' ') || '';
     if (!name) return 'Friend';
@@ -169,9 +174,17 @@
      GATHER — read stats from the running app
      ============================================================ */
 
-  async function gather() {
+   async function gather() {
     const { user, progress, language } = loadState();
     if (!user) return null;
+
+    const state = (typeof window !== 'undefined' && window.State) ? window.State : null;
+    let activeProfile = null;
+    
+    // Check if we are currently inside a child profile
+    if (state && state.currentProfileId && user.familyProfiles) {
+      activeProfile = user.familyProfiles.find(p => String(p._id) === String(state.currentProfileId));
+    }
 
     const p = progress || {};
     const completed = (p.completedLessons || p.completedLevels || []).length;
@@ -193,15 +206,22 @@
     const xp = p.totalXP || user.totalXP || 0;
     const level = p.currentLevel || user.currentLevel || 1;
     const savedWords = (user.savedWords || []).length;
-    const name = user.fullName || [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Learner';
-    const username = user.username || (user.email ? user.email.split('@')[0] : 'learner');
+    
+    // Use active profile details if available
+    const name = activeProfile 
+      ? activeProfile.name 
+      : (user.fullName || [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Learner');
+      
+    const username = activeProfile 
+      ? activeProfile.name.toLowerCase().replace(/\s+/g, '') 
+      : (user.username || (user.email ? user.email.split('@')[0] : 'learner'));
 
     return {
       name,
       username,
-      language,
-      langName: langName(language),
-      langEmoji: langEmoji(language),
+      language: activeProfile ? activeProfile.language : language,
+      langName: langName(activeProfile ? activeProfile.language : language),
+      langEmoji: langEmoji(activeProfile ? activeProfile.language : language),
       lessons,
       streak,
       xp,
