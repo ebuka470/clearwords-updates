@@ -510,7 +510,7 @@ input, textarea, select { font-family: inherit; }
       <div class="hero-goals" id="profile-goals"></div>
       <div class="hero-actions">
         <button class="btn btn-ghost btn-sm" onclick="Prof.openEditProfile()">Edit profile</button>
-        <button class="btn btn-ghost btn-sm" onclick="ShareCards.openIdentity()">🪪 My card</button>
+        <button class="btn btn-ghost btn-sm" onclick="ShareCards.openIdentity(Prof.getActiveName())">🪪 My card</button>
         <button class="btn btn-sm" onclick="Prof.copyReferral()">Invite</button>
       </div>
     </div>
@@ -1914,6 +1914,15 @@ const Prof = {
       btn.disabled = false;
       btn.textContent = 'Save changes';
     }
+  },
+
+     getActiveName() {
+    const u = this.user || State.user || {};
+    const activeProfile = State.currentProfileId 
+      ? (u.familyProfiles || []).find(pr => String(pr._id) === String(State.currentProfileId))
+      : null;
+      
+    return activeProfile ? activeProfile.name : u.fullName;
   },
 
   /* ============================================================
