@@ -770,13 +770,20 @@ const Prof = {
       this.syncPushToggle();
     });
 
-    State.on('profile:changed', () => {
+       State.on('profile:changed', () => {
       this.user = State.user;
+      // Wipe local cached profile data
+      this.progress = null;
+      this.achievements = [];
+      this.progressLoaded = false;
+      
       this.renderBanner();
-      this.loadProgress();
+      this.loadProgress();   // Fetches the new child's progress
+      this.loadFreezes();    // Fetches the new child's freezes
       this.maybeShowFamily();
+      Header.render('profile'); // Re-renders the header (clears the streak badge)
     });
-
+    
     State.on('push:enabled',  () => this.syncPushToggle());
     State.on('push:disabled', () => this.syncPushToggle());
 
