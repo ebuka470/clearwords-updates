@@ -1716,12 +1716,20 @@ const Prof = {
     Header._modal('Switch profile', rows + footer);
   },
 
-  async switchProfile(profileId) {
+    async switchProfile(profileId) {
     try {
+      // Show a loading toast
+      showToast('Switching…', 'info');
+      
+      // Perform the switch
       const res = await Profile.switchTo(profileId);
+      
+      // Close the modal
       closeModal('cw-generic-modal');
-      showToast(`Switched to ${res.profile?.name || 'profile'}`, 'success');
-      setTimeout(() => location.reload(), 250);
+      
+      // FORCE a hard reload to clear all JS state
+      location.reload();
+      
     } catch (e) {
       showToast(e.message || 'Could not switch profile.', 'error');
     }
