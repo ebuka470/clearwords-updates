@@ -1342,19 +1342,29 @@ const Learn = {
     }
   },
 
-  async dismissFamilyPrompt() {
+    async dismissFamilyPrompt() {
     try {
       await Backend.updateProfile({ familyPromptDismissedAt: new Date().toISOString() });
       if (State.user) State.user.familyPromptDismissedAt = new Date().toISOString();
-      // Re-render share CTA without the family block
+      
       const host = document.getElementById('share-cta');
       if (host) {
         const u = State.user || {};
         const langName = (CW_CONFIG.LANGUAGES[State.currentLanguage] || {}).name || 'your language';
+        
+        let firstName = 'Friend';
+        try {
+          if (typeof Heritage !== 'undefined' && Heritage.firstName) {
+            firstName = Heritage.firstName(u) || 'Friend';
+          } else if (u.fullName) {
+            firstName = u.fullName.split(' ')[0];
+          }
+        } catch (e) {}
+
         host.innerHTML = `
           <div class="first-card">
             <b>🪪 Your first lesson is done. Your ClearWords card is ready!</b>
-            <p>${esc(Heritage.firstName(u) || 'Friend')}, you're officially ${esc(ShareCards.art(langName))} ${esc(langName)} learner. See your spirit age and show your family.</p>
+            <p>${esc(firstName)}, you're officially ${esc(ShareCards.art(langName))} ${esc(langName)} learner. See your spirit age and show your family.</p>
             <button class="btn btn-block" onclick="ShareCards.openIdentity()">Make my card →</button>
           </div>`;
       }
