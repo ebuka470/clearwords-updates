@@ -1565,7 +1565,7 @@ const Prof = {
       return;
     }
 
-    // If they are Premium or Immersive but haven't set up profiles yet
+       // If they are Premium or Immersive but haven't set up profiles yet
     if (!isFamilyAccount) {
       section.style.display = 'block';
       card.innerHTML = `
@@ -1574,7 +1574,8 @@ const Prof = {
           You have family access on your plan. Create up to 6 profiles for your household.
         </div>
         <div style="margin-top: 14px;">
-          <button class="btn btn-sm" onclick="Prof.openProfileSwitcher()">Add a learner</button>
+          <!-- Changed this from openProfileSwitcher to openCreateProfile -->
+          <button class="btn btn-sm" onclick="Prof.openCreateProfile()">+ Add a learner</button>
         </div>
       `;
       return;
@@ -1625,12 +1626,18 @@ const Prof = {
   },
 
   /* ---------- Profile switcher ---------- */
-    openProfileSwitcher() {
+      openProfileSwitcher() {
     const u = this.user || State.user || {};
     const profiles = u.familyProfiles || [];
 
+    // If no profiles exist but they are eligible, open the create modal
+    if (!profiles.length && this.isFamilyTier()) {
+      this.openCreateProfile();
+      return;
+    }
+
     if (!profiles.length) {
-      // Personal account — keep the old behavior
+      // Personal account (non-family) — keep the old behavior
       this.openEditProfile();
       return;
     }
