@@ -602,7 +602,10 @@ const Learn = {
   setGreeting() {
     const h = new Date().getHours();
     const greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-    const name = (this.user && (this.user.fullName || this.user.name || this.user.firstName)) || 'friend';
+   const activeProfile = State.currentProfile;  // set by the Profile module
+const name = activeProfile?.name 
+  || (this.user && (this.user.fullName || this.user.name || this.user.firstName)) 
+  || 'friend';
     const first = String(name).split(' ')[0];
     document.getElementById('hello').textContent = greeting + ', ' + first + '.';
     document.getElementById('hello-sub').textContent = 'A little language today can stay with you for a long time.';
