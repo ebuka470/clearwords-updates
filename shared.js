@@ -1004,6 +1004,14 @@ const Curriculum = {
     return progress.completedLessons || progress.completedLevels || [];
   },
 
+   getMilestoneText(level, languageName = 'their language') {
+    if (level >= 20) return `They can hold full conversations in ${languageName}. The ancestors are smiling.`;
+    if (level >= 10) return `They can share stories and jokes in ${languageName}. The language is truly alive in them.`;
+    if (level >= 5)  return `They can speak comfortably with grandparents and elders in ${languageName}.`;
+    if (level >= 2)  return `They can greet family and share their name in ${languageName}.`;
+    return `Every journey starts with a single word. They've taken the first step in ${languageName}.`;
+  },
+
   nextIncompleteLesson(curriculum, progress) {
     const done = this.completedLessonIds(progress);
     const all = this.allLessons(curriculum);
