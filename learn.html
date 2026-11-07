@@ -591,6 +591,7 @@ const Learn = {
     State.on('hydrated', () => { this.user = State.user; this.setGreeting(); this.render(); });   
     State.on('profile:changed', () => { 
       this.user = State.user; 
+      this.setGreeting();
       this.progress = null; // Reset
       this.render(); 
     });
@@ -599,14 +600,14 @@ const Learn = {
     this.render();
   },
 
-    setGreeting() {
+      setGreeting() {
     const h = new Date().getHours();
     const greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
 
-    // Prefer the active family profile, fall back to the account owner.
+    // Prefer the child profile's name over the parent's fullName
     const activeProfile = State.currentProfile;
-    const name = activeProfile?.name
-      || (this.user && (this.user.fullName || this.user.name || this.user.firstName))
+    const name = activeProfile?.name 
+      || (this.user && (this.user.fullName || this.user.firstName)) 
       || 'friend';
 
     const first = String(name).split(' ')[0];
