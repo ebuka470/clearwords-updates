@@ -1258,30 +1258,26 @@ const Prof = {
   /* ============================================================
      ACHIEVEMENTS
      ============================================================ */
-    achStats() {
+      achStats() {
     const p = this.progress || {};
-    const u = this.user || {};
     const activeProfile = State.currentProfile;
+    const u = this.user || {};
 
-    // When a child/family profile is active, community counters come from
-    // the profile subdocument. Personal accounts (no profile) still read
-    // from the account-level fields exactly as before.
-    const pods    = activeProfile ? (activeProfile.podsJoined    || 0) : (u.podsJoined    || 0);
-    const pairs   = activeProfile ? (activeProfile.activePairs   || 0) : (u.activePairs   || 0);
-    const cards   = activeProfile ? (activeProfile.cardsShared   || 0) : (u.cardsShared   || 0);
-    const refs    = activeProfile ? (activeProfile.referralCount || 0) : (u.referralCount || 0);
-
+    // If a child profile is active, use their specific counters (or 0 if none exist yet)
+    // Otherwise, fallback to the parent account
     return {
       lessons: Math.max((p.completedLessons || []).length, (p.completedLevels || []).length),
       level: p.currentLevel || 1,
       xp: p.totalXP || 0,
       perfect: p.perfectScores || 0,
       longestStreak: Math.max(p.longestStreak || 0, p.streak || 0),
-      words: (u.savedWords || []).length,
-      pods,
-      pairs,
-      cards,
-      referrals: refs
+      words: (u.savedWords || []).length, // You can move saved words to profiles too later
+      
+      // These are the ones failing right now:
+      pods: activeProfile ? (activeProfile.podsJoined || 0) : (u.podsJoined || 0),
+      pairs: activeProfile ? (activeProfile.activePairs || 0) : (u.activePairs || 0),
+      cards: activeProfile ? (activeProfile.cardsShared || 0) : (u.cardsShared || 0),
+      referrals: activeProfile ? (activeProfile.referralCount || 0) : (u.referralCount || 0)
     };
   },
 
