@@ -561,13 +561,13 @@ const Learn = {
   lessons: [],
   activeFilter: 'all',
 
-  async init() {
+    async init() {
     const ok = await cwBoot();
     if (!ok) return;
 
     Header.render('learn');
     this.user = State.user;
-    this.setGreeting(); // <-- Renders immediately
+    this.setGreeting(); 
     this.renderProgressSkeleton();
     this.renderStats();
 
@@ -588,11 +588,18 @@ const Learn = {
     if (prog.status === 'fulfilled') this.progress = prog.value;
 
     State.on('progress:changed', p => { this.progress = p; this.render(); });
-    State.on('hydrated', () => { this.user = State.user; this.setGreeting(); this.render(); });   
+    
+    // These force the greeting to re-render if hydration or profile switching happens late
+    State.on('hydrated', () => { 
+        this.user = State.user; 
+        this.setGreeting(); 
+        this.render(); 
+    });   
+    
     State.on('profile:changed', () => { 
       this.user = State.user; 
       this.progress = null; 
-      this.setGreeting(); // <-- Updates when switching profiles
+      this.setGreeting(); 
       this.render(); 
     });
 
@@ -600,11 +607,14 @@ const Learn = {
     this.render();
   },
 
-  setGreeting() {
+    setGreeting() {
     const h = new Date().getHours();
     const greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
 
-    const activeProfile = State.currentProfile;
+    // 1. Try State.currentProfile
+    // 2. Fallback to the active profile object
+    // 3. Fallback to this.user.fullName (which is now the child's name via the backend fix above)
+    const activeProfile = State.currentProfile || (window.Profile ? Profile.current() : null);
     const name = activeProfile?.name 
       || (this.user && (this.user.fullName || this.user.firstName)) 
       || 'friend';
