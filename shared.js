@@ -1,5 +1,7 @@
 /* ============================================================
    ClearWords — Shared Runtime
+   Loaded by learn.html, practice.html, community.html, profile.html,
+   and onboarding.html.
    ============================================================ */
 
 /* ============================================================
@@ -16,7 +18,7 @@ const CW_CONFIG = {
   PROFILE_KEY: 'cw_profile_id',
   VAPID_PUBLIC_KEY: null,
   SUPABASE_URL: 'https://megxgmsivslzdxaqxxpl.supabase.co',
-  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...', // (your key)
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lZ3hnbXNpdnNsemR4YXF4eHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NzA4MzIsImV4cCI6MjEwMDA0NjgzMn0.hJmwvrXhhGADlHxkciTzq2TgQo25QCdKv142at9_jyw',
   SUPABASE_BUCKET: 'audio',
   LANGUAGES: {
     yoruba:  { name: 'Yorùbá',  emoji: '👑', voice: 'titilayo_yo', speaker: 'titilayo_yo', ttsLang: 'yo-NG' },
@@ -144,12 +146,12 @@ const api = {
    4. NAMED BACKEND ENDPOINTS
    ============================================================ */
 const Backend = {
-  // ... (all your existing endpoints — unchanged) ...
   signup: (payload) => api.post('/api/auth/signup', payload, { auth: false }),
   login:  (email, password) => api.post('/api/auth/login', { email, password }, { auth: false }),
   me:     () => api.get('/api/auth/me'),
   changePassword: (currentPassword, newPassword) =>
     api.post('/api/auth/change-password', { currentPassword, newPassword }),
+
   updateProfile: (payload) => api.put('/api/users/profile', payload),
   getUser: (identifier) => api.get('/api/users/' + encodeURIComponent(identifier)),
   getUserStats: (userId) => api.get('/api/users/' + userId + '/stats', { auth: false }),
@@ -176,13 +178,23 @@ const Backend = {
   aiChat: (prompt, context) => {
     const tz = -new Date().getTimezoneOffset();
     const fullPrompt = context ? context + '\n\n' + prompt : prompt;
-    return api.post('/api/ai/chat', { prompt: fullPrompt, timezoneOffsetMinutes: tz }, { timeout: 60000 });
+    return api.post(
+      '/api/ai/chat',
+      { prompt: fullPrompt, timezoneOffsetMinutes: tz },
+      { timeout: 60000 }
+    );
   },
   generateCustomLesson: (payload) => {
     const tz = -new Date().getTimezoneOffset();
     const body = typeof payload === 'string'
       ? { prompt: payload, timezoneOffsetMinutes: tz }
-      : { topic: payload.topic, language: payload.language || State.currentLanguage, level: payload.level || 'beginner', context: payload.context, timezoneOffsetMinutes: tz };
+      : {
+          topic: payload.topic,
+          language: payload.language || State.currentLanguage,
+          level: payload.level || 'beginner',
+          context: payload.context,
+          timezoneOffsetMinutes: tz
+        };
     return api.post('/api/ai/custom-lesson', body, { timeout: 60000 });
   },
   getAIUsage: () => api.get('/api/ai/usage'),
@@ -195,12 +207,17 @@ const Backend = {
   leavePod: (podId) => api.delete('/api/pods/' + podId + '/leave'),
   getPodMessages: (podId, params) => api.get('/api/pods/' + podId + '/messages', { params }),
   sendPodMessage: (podId, content) => api.post('/api/pods/' + podId + '/messages', { text: content }),
-  podCheckin: (podId, lessonsCompleted) => api.post('/api/pods/' + podId + '/checkin', { lessonsCompleted: lessonsCompleted || 0 }),
+  podCheckin: (podId, lessonsCompleted) =>
+    api.post('/api/pods/' + podId + '/checkin', { lessonsCompleted: lessonsCompleted || 0 }),
   podLeaderboard: (podId) => api.get('/api/pods/' + podId + '/leaderboard'),
 
   listPairs: () => api.get('/api/pairs'),
   requestPair: (targetUserId, languageA, languageB) =>
-    api.post('/api/pairs/request', { targetUserId, languageA: languageA || State.currentLanguage, languageB: languageB || 'english' }),
+    api.post('/api/pairs/request', {
+      targetUserId,
+      languageA: languageA || State.currentLanguage,
+      languageB: languageB || 'english'
+    }),
   matchPair: (payload) => api.post('/api/pairs/match', payload || {}),
   acceptPair: (pairId) => api.post('/api/pairs/' + pairId + '/accept'),
   endPair: (pairId) => api.delete('/api/pairs/' + pairId),
@@ -225,7 +242,8 @@ const Backend = {
 
   getSubscription: () => api.get('/api/subscription'),
   getPlans: () => api.get('/api/subscription/plans', { auth: false }),
-  initPayment: (tier, billingCycle = 'monthly', currency = 'NGN') => api.post('/api/subscription/initialize', { tier, billingCycle, currency }),
+  initPayment: (tier, billingCycle = 'monthly', currency = 'NGN') =>
+    api.post('/api/subscription/initialize', { tier, billingCycle, currency }),
   verifyPayment: (reference) => api.post('/api/subscription/verify/' + reference),
 
   myReferrals: () => api.get('/api/referrals/me'),
@@ -237,7 +255,11 @@ const Backend = {
   toggleAutoFreeze: (autoApply) => api.post('/api/streak/freezes/toggle-auto', { autoApply }),
   recoverStreak: (language) => api.post('/api/streak/recover', { language }),
 
-  tts: (text, voice) => api.raw('/api/tts', { method: 'POST', body: { text, voice: voice || 'titilayo_yo', response_format: 'mp3' }, timeout: 25000 }),
+  tts: (text, voice) => api.raw('/api/tts', {
+    method: 'POST',
+    body: { text, voice: voice || 'titilayo_yo', response_format: 'mp3' },
+    timeout: 25000
+  }),
   ttsUsage: () => api.get('/api/tts/usage'),
   ttsCredits: () => api.get('/api/tts/credits', { auth: false }),
 
@@ -245,30 +267,47 @@ const Backend = {
   markPodRead: (podId) => api.post('/api/pods/' + podId + '/read'),
   markPairRead: (pairId) => api.post('/api/pairs/' + pairId + '/read'),
 
-  getTimmySections: (language) => api.get('/api/timmy-chats/sections', { params: { language } }),
-  listTimmyChats: (sectionId, language) => api.get('/api/timmy-chats', { params: { section: sectionId, language } }),
-  getTimmyChat: (sectionId, chatId) => api.get(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`),
+  getTimmySections: (language) =>
+    api.get('/api/timmy-chats/sections', { params: { language } }),
+  listTimmyChats: (sectionId, language) =>
+    api.get('/api/timmy-chats', { params: { section: sectionId, language } }),
+  getTimmyChat: (sectionId, chatId) =>
+    api.get(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`),
   createTimmyChat: (payload) => api.post('/api/timmy-chats', payload),
   appendTimmyChatMessage: (sectionId, chatId, role, content, isError) =>
-    api.post(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}/message`, { role, content, isError: !!isError }),
-  markTimmyChatRead: (sectionId, chatId) => api.post(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}/read`),
-  markTimmySectionRead: (sectionId) => api.post(`/api/timmy-chats/${encodeURIComponent(sectionId)}/read-all`),
-  renameTimmyChat: (sectionId, chatId, title) => api.patch(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`, { title }),
-  deleteTimmyChat: (sectionId, chatId) => api.delete(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`),
-  deleteTimmySection: (sectionId) => api.delete(`/api/timmy-chats/section/${encodeURIComponent(sectionId)}`),
-  importTimmyChats: (language, threads) => api.post('/api/timmy-chats/import', { language, threads }),
+    api.post(
+      `/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}/message`,
+      { role, content, isError: !!isError }
+    ),
+  markTimmyChatRead: (sectionId, chatId) =>
+    api.post(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}/read`),
+  markTimmySectionRead: (sectionId) =>
+    api.post(`/api/timmy-chats/${encodeURIComponent(sectionId)}/read-all`),
+  renameTimmyChat: (sectionId, chatId, title) =>
+    api.patch(
+      `/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`,
+      { title }
+    ),
+  deleteTimmyChat: (sectionId, chatId) =>
+    api.delete(`/api/timmy-chats/${encodeURIComponent(sectionId)}/${encodeURIComponent(chatId)}`),
+  deleteTimmySection: (sectionId) =>
+    api.delete(`/api/timmy-chats/section/${encodeURIComponent(sectionId)}`),
+  importTimmyChats: (language, threads) =>
+    api.post('/api/timmy-chats/import', { language, threads }),
 
   getVapidPublicKey: () => api.get('/api/push/vapid-public-key', { auth: false }),
   subscribeToPush: (subscription) => api.post('/api/push/subscribe', subscription),
   unsubscribeFromPush: (endpoint) => api.delete('/api/push/unsubscribe', { endpoint }),
   testPush: () => api.post('/api/push/test'),
 
+  // ---- FAMILY PROFILES ----
   listProfiles: () => api.get('/api/profiles'),
   createProfile: (payload) => api.post('/api/profiles', payload),
   updateProfileData: (id, payload) => api.patch('/api/profiles/' + id, payload),
   deleteProfile: (id) => api.delete('/api/profiles/' + id),
   switchProfile: (id) => api.post('/api/profiles/' + id + '/switch'),
-  getProfileOverview: (id, language) => api.get('/api/profiles/' + id + '/overview', { params: { language } }),
+  getProfileOverview: (id, language) =>
+    api.get('/api/profiles/' + id + '/overview', { params: { language } }),
   enableFamily: () => api.post('/api/profiles/enable-family'),
 };
 
@@ -298,28 +337,6 @@ const State = {
     });
   },
 
-  // --- Current profile (the one active on this device) ---
-  get currentProfile() {
-    if (!this.currentProfileId) return null;
-    const u = this.user || {};
-    return (u.familyProfiles || []).find(
-      p => p._id.toString() === this.currentProfileId.toString()
-    ) || null;
-  },
-
-  // The single source of truth for "who is this"
-  getDisplayName() {
-    const p = this.currentProfile;
-    if (p && p.name) return p.name;
-    return this.user?.fullName || 'Learner';
-  },
-
-  getDisplayEmoji() {
-    const p = this.currentProfile;
-    if (p && p.emoji) return p.emoji;
-    return null; // caller decides (usually initials or avatarUrl)
-  },
-
   async hydrate() {
     if (!Auth.isLoggedIn()) return false;
     try {
@@ -339,16 +356,17 @@ const State = {
           }
         }
 
-        // Validate persisted profileId
+        // Validate persisted profileId against server state
         if (this.currentProfileId) {
           const exists = (this.user.familyProfiles || []).some(
-            p => p._id.toString() === this.currentProfileId.toString()
+            p => p._id.toString() === this.currentProfileId
           );
           if (!exists) {
             this.currentProfileId = null;
             localStorage.removeItem(CW_CONFIG.PROFILE_KEY);
           }
         }
+        // Fall back to activeProfileId if set on server
         if (!this.currentProfileId && this.user.activeProfileId) {
           this.currentProfileId = this.user.activeProfileId.toString();
           localStorage.setItem(CW_CONFIG.PROFILE_KEY, this.currentProfileId);
@@ -373,13 +391,47 @@ const State = {
     }
   },
 
-  async loadCurriculum(language) { /* unchanged */ },
-  normProgress(raw) { /* unchanged */ },
-  effectiveStreak(p) { /* unchanged */ },
+  async loadCurriculum(language) {
+    if (this.curriculumCache[language]) return this.curriculumCache[language];
+    try {
+      const raw = await Backend.getCurriculum(language);
+      const normalized = Curriculum.normalize(raw, language);
+      this.curriculumCache[language] = normalized;
+      this.emit('curriculum:loaded', { language, curriculum: normalized });
+      return normalized;
+    } catch (e) {
+      console.warn('Curriculum load failed for ' + language + ':', e);
+      return null;
+    }
+  },
 
-  async loadProgress(language) {
+  normProgress(raw) {
+    if (!raw || typeof raw !== 'object') return raw;
+    const has = o => o && typeof o === 'object' &&
+      (o.totalXP !== undefined || Array.isArray(o.completedLessons) || o.streak !== undefined);
+    if (has(raw)) return raw;
+    if (has(raw.data)) return raw.data;
+    if (has(raw.progress)) return raw.progress;
+    return raw.progress || raw;
+  },
+
+  effectiveStreak(p) {
+    const s = (p && p.streak) || 0;
+    if (!s) return 0;
+    const last = p.lastCompletedDate;
+    if (!last) return s;
+    const key = off => {
+      const d = new Date(Date.now() - off * 86400000);
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    };
+    return (last === key(0) || last === key(1)) ? s : 0;
+  },
+
+   async loadProgress(language) {
     if (!Auth.isLoggedIn()) return null;
     try {
+      // The apiRequest function in shared.js automatically adds X-Profile-Id
+      // if State.currentProfileId is set. We just need to make sure it's called.
       const data = await Backend.getProgress(language);
       this.progress = this.normProgress(data);
       this.emit('progress:changed', this.progress);
@@ -390,20 +442,39 @@ const State = {
     }
   },
 
-  setLanguage(lang) { /* unchanged */ },
-  setTheme(theme) { /* unchanged */ }
+  setLanguage(lang) {
+    this.currentLanguage = lang;
+    localStorage.setItem(CW_CONFIG.LANG_KEY, lang);
+    this.emit('language:changed', lang);
+  },
+
+  setTheme(theme) {
+    this.theme = theme;
+    localStorage.setItem(CW_CONFIG.THEME_KEY, theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    this.emit('theme:changed', theme);
+  }
 };
 
 /* ============================================================
-   5b. PROFILE MODULE
+   5b. PROFILE MODULE (family accounts)
    ============================================================ */
 const Profile = {
-  async list() { return Backend.listProfiles(); },
+  async list() {
+    return Backend.listProfiles();
+  },
 
-  current() { return State.currentProfile; },
+  current() {
+    if (!State.currentProfileId) return null;
+    const u = State.user || {};
+    return (u.familyProfiles || []).find(
+      p => p._id.toString() === State.currentProfileId.toString()
+    ) || null;
+  },
 
-  async switchTo(id) {
+   async switchTo(id) {
     const res = await Backend.switchProfile(id);
+    
     State.currentProfileId = res.activeProfileId ? res.activeProfileId.toString() : null;
     if (State.currentProfileId) {
       localStorage.setItem(CW_CONFIG.PROFILE_KEY, State.currentProfileId);
@@ -416,15 +487,21 @@ const Profile = {
       Auth.setUser(State.user);
     }
 
-    // Clear caches so the new profile starts clean
+    // --- CLEAR CACHED BADGES & STREAKS ---
+    // This prevents the main account's data from leaking into the child's view
     Badges._unread = { pods: {}, pairs: {}, timmy: {}, total: 0 };
-    Badges.renderAll();
+    Badges.renderAll(); 
+    
+    // Clear streak cache
     Object.keys(localStorage).forEach(k => {
       if (k.startsWith('cw_streak_')) localStorage.removeItem(k);
     });
 
     State.emit('profile:changed', { profileId: State.currentProfileId, profile: res.profile });
-    try { await State.loadProgress(State.currentLanguage); } catch {}
+
+    try {
+      await State.loadProgress(State.currentLanguage);
+    } catch {}
 
     return res;
   },
@@ -440,10 +517,37 @@ const Profile = {
     return res;
   },
 
-  async rename(id, data) { /* ... */ },
-  async remove(id) { /* ... */ },
-  async overview(id, language) { return Backend.getProfileOverview(id, language || State.currentLanguage); },
+  async rename(id, data) {
+    const res = await Backend.updateProfileData(id, data);
+    try {
+      const me = await Backend.me();
+      State.user = me.user || me;
+      Auth.setUser(State.user);
+    } catch {}
+    State.emit('profile:updated', res.profile);
+    return res;
+  },
 
+  async remove(id) {
+    const res = await Backend.deleteProfile(id);
+    if (State.currentProfileId === id) {
+      State.currentProfileId = null;
+      localStorage.removeItem(CW_CONFIG.PROFILE_KEY);
+    }
+    try {
+      const me = await Backend.me();
+      State.user = me.user || me;
+      Auth.setUser(State.user);
+    } catch {}
+    State.emit('profile:deleted', id);
+    return res;
+  },
+
+  async overview(id, language) {
+    return Backend.getProfileOverview(id, language || State.currentLanguage);
+  },
+
+  /** One-time migration: enable family on a personal Premium/Immersive account. */
   async enableFamily() {
     const res = await Backend.enableFamily();
     if (res && res.activeProfileId) {
@@ -455,7 +559,10 @@ const Profile = {
       State.user = me.user || me;
       Auth.setUser(State.user);
     } catch {}
-    State.emit('profile:changed', { profileId: State.currentProfileId, profile: this.current() });
+    State.emit('profile:changed', {
+      profileId: State.currentProfileId,
+      profile: this.current()
+    });
     return res;
   }
 };
