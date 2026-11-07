@@ -1867,24 +1867,65 @@ const Prof = {
       const body = document.querySelector('#cw-generic-modal .cw-modal-body');
       
       // Helper to convert dry levels/XP into emotional milestones
-      const getMilestone = (level) => {
-        if (level >= 20) return "They can hold full conversations. The ancestors are smiling.";
-        if (level >= 10) return "They can share stories and jokes. The language is truly alive in them.";
-        if (level >= 5)  return "They can speak comfortably with grandparents and elders.";
-        if (level >= 2)  return "They can greet family, share their name, and say please and thank you.";
-        return "Every journey starts with a single word. They've taken the first step.";
+            // Helper to convert dry levels/XP into culturally nuanced milestones
+      const getMilestone = (level, lang) => {
+        const culturalContext = {
+          yoruba: {
+            greet: "They can greet elders with the right respect (Ẹ káàrọ̀).",
+            connect: "They can share a meal and exchange pleasantries with family in Lagos or Ibadan.",
+            speak: "They can hold their own in a conversation with grandparents. The ancestors are smiling.",
+            stories: "They can understand the deep meanings inside Yorùbá proverbs (òwe).",
+            master: "They are fluent enough to pass the language on to the next generation."
+          },
+          igbo: {
+            greet: "They can greet with 'Kedu' and show respect to their elders.",
+            connect: "They can talk about family, food, and home with relatives in Enugu or Anambra.",
+            speak: "They can joke and share stories with their grandparents. The language is alive in them.",
+            stories: "They can grasp the wisdom hidden in Igbo proverbs (ilu).",
+            master: "They are a true guardian of the Igbo language and culture."
+          },
+          hausa: {
+            greet: "They can greet with 'Sannu' and show proper respect to elders.",
+            connect: "They can chat with relatives and understand the rhythm of Hausa conversation.",
+            speak: "They can share stories and laughter with their grandparents in Kano or Kaduna.",
+            stories: "They can understand the deep poetry and proverbs of the North.",
+            master: "They are fluent enough to carry the Hausa heritage with pride."
+          },
+          pidgin: {
+            greet: "They can say 'How far?' and greet with the right vibe.",
+            connect: "They can flow in everyday conversation and understand the energy of Naija.",
+            speak: "They can gist and joke with family effortlessly.",
+            stories: "They can understand the deeper meaning in Naija slang and stories.",
+            master: "They can express themselves fully in the language of the people."
+          }
+        };
+
+        const ctx = culturalContext[lang] || culturalContext.yoruba;
+
+        if (level >= 50) return `A true guardian of the culture. ${ctx.master}`;
+        if (level >= 40) return `They are practically fluent. ${ctx.stories}`;
+        if (level >= 30) return `They can hold deep conversations. ${ctx.stories}`;
+        if (level >= 20) return `They can share stories and jokes. ${ctx.speak}`;
+        if (level >= 15) return `They can understand nuanced conversations with family. ${ctx.connect}`;
+        if (level >= 10) return `They can speak comfortably with grandparents and elders. ${ctx.speak}`;
+        if (level >= 5)  return `They can talk about their day and their family. ${ctx.connect}`;
+        if (level >= 3)  return `They can introduce themselves and ask simple questions. ${ctx.greet}`;
+        
+        return `Every journey starts with a single word. They've taken the first step in ${lang}.`;
       };
 
-      const cards = await Promise.all(others.map(async p => {
+            const cards = await Promise.all(others.map(async p => {
         try {
-          // Ensure we request the language the child is actually learning
           const data = await Profile.overview(p._id, p.language || State.currentLanguage);
           const level = data.level || 1;
-          const langName = (CW_CONFIG.LANGUAGES[data.language] || CW_CONFIG.LANGUAGES.yoruba).name;
+          const langKey = data.language || 'yoruba';
+          const langName = (CW_CONFIG.LANGUAGES[langKey] || CW_CONFIG.LANGUAGES.yoruba).name;
           
           // Calculate streak text
           const streak = data.streak || 0;
-          const streakText = streak > 0 ? `A ${streak}-day streak of learning ${langName}.` : `Building a new habit in ${langName}.`;
+          let streakText = `Building a new habit in ${langName}.`;
+          if (streak === 1) streakText = `A 1-day streak. Today is the first day of the rest of their journey.`;
+          else if (streak > 1) streakText = `A ${streak}-day streak of learning ${langName}. Keep the fire burning.`;
 
           return `
             <div class="card" style="margin-bottom: 12px;">
@@ -1901,7 +1942,7 @@ const Prof = {
               </div>
               
               <div class="milestone-text">
-                "${getMilestone(level)}"
+                "${getMilestone(level, langKey)}"
               </div>
               
               <div style="font-size: 12px; color: var(--text-3); margin-top: 12px; display: flex; align-items: center; gap: 6px;">
