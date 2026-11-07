@@ -1258,9 +1258,19 @@ const Prof = {
   /* ============================================================
      ACHIEVEMENTS
      ============================================================ */
-  achStats() {
+    achStats() {
     const p = this.progress || {};
     const u = this.user || {};
+    const activeProfile = State.currentProfile;
+
+    // When a child/family profile is active, community counters come from
+    // the profile subdocument. Personal accounts (no profile) still read
+    // from the account-level fields exactly as before.
+    const pods    = activeProfile ? (activeProfile.podsJoined    || 0) : (u.podsJoined    || 0);
+    const pairs   = activeProfile ? (activeProfile.activePairs   || 0) : (u.activePairs   || 0);
+    const cards   = activeProfile ? (activeProfile.cardsShared   || 0) : (u.cardsShared   || 0);
+    const refs    = activeProfile ? (activeProfile.referralCount || 0) : (u.referralCount || 0);
+
     return {
       lessons: Math.max((p.completedLessons || []).length, (p.completedLevels || []).length),
       level: p.currentLevel || 1,
@@ -1268,10 +1278,10 @@ const Prof = {
       perfect: p.perfectScores || 0,
       longestStreak: Math.max(p.longestStreak || 0, p.streak || 0),
       words: (u.savedWords || []).length,
-      pods: u.podsJoined || 0,
-      pairs: u.activePairs || 0,
-      cards: u.cardsShared || 0,
-      referrals: u.referralCount || 0
+      pods,
+      pairs,
+      cards,
+      referrals: refs
     };
   },
 
