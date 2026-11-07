@@ -366,11 +366,6 @@ const State = {
             localStorage.removeItem(CW_CONFIG.PROFILE_KEY);
           }
         }
-        // Fall back to activeProfileId if set on server
-        if (!this.currentProfileId && this.user.activeProfileId) {
-          this.currentProfileId = this.user.activeProfileId.toString();
-          localStorage.setItem(CW_CONFIG.PROFILE_KEY, this.currentProfileId);
-        }
 
         this.emit('user:changed', this.user);
       } else if (meRes.reason && meRes.reason.status === 401) {
