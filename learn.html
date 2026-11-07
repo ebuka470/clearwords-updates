@@ -567,7 +567,7 @@ const Learn = {
 
     Header.render('learn');
     this.user = State.user;
-    this.setGreeting();
+    this.setGreeting(); // <-- Renders immediately
     this.renderProgressSkeleton();
     this.renderStats();
 
@@ -591,8 +591,8 @@ const Learn = {
     State.on('hydrated', () => { this.user = State.user; this.setGreeting(); this.render(); });   
     State.on('profile:changed', () => { 
       this.user = State.user; 
-      this.setGreeting();
-      this.progress = null; // Reset
+      this.progress = null; 
+      this.setGreeting(); // <-- Updates when switching profiles
       this.render(); 
     });
 
@@ -600,11 +600,10 @@ const Learn = {
     this.render();
   },
 
-      setGreeting() {
+  setGreeting() {
     const h = new Date().getHours();
     const greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
 
-    // Prefer the child profile's name over the parent's fullName
     const activeProfile = State.currentProfile;
     const name = activeProfile?.name 
       || (this.user && (this.user.fullName || this.user.firstName)) 
