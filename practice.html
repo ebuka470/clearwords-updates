@@ -467,7 +467,13 @@ const Drill = (() => {
     const bot = (t, c) => `<div class="msg-row bot"><div class="bubble">${c ? `<strong>${esc(c.term)}</strong> <em style="color:var(--text-3)">${esc(c.pron || '')}</em><br>` : ''}${esc(t)}</div></div>`;
     const me = c => `<div class="msg-row user"><div class="bubble">${esc(c.term)}<div style="font-size:11.5px;opacity:.85;margin-top:2px">${esc(c.en)}</div></div></div>`;
     const note = t => `<div class="msg-meta" style="padding:0 8px 4px;font-style:italic">${esc(t)}</div>`;
-    const first = s.nodes[s.start]; let node = s.start, pts = 0, hint = false, busy = false, opts = sh(first.replies), log = [bot(first.en, first.c != null ? d.cards[first.c] : null)];
+    const first = s.nodes[s.start]; let node = s.start, pts = 0, hint = false, busy = false, attempts = 0, opts = sh(first.replies), log = [bot(first.en, first.c != null ? d.cards[first.c] : null)];
+    const advance = next => {
+      node = next; const nd = s.nodes[node]; attempts = 0;
+      log.push(bot(nd.en, nd.c != null ? d.cards[nd.c] : null)); opts = sh(nd.replies || []); hint = false; busy = false;
+      if (nd.end) { pr.scenes[s.id] = Math.max(pr.scenes[s.id] || 0, pts); pr.sceneDone = pr.sceneDone || {}; pr.sceneDone[s.id] = true; markSceneToday(s.id); save(); }
+      draw();
+    };
     const draw = () => {
       const nd = s.nodes[node]; let tail = '';
       if (nd.end) {
@@ -475,7 +481,8 @@ const Drill = (() => {
           + `<div class="section-h">Words in this scene</div>` + s.words.map(w => { const c = d.cards[w]; return `<div class="word-row"><div class="word-row-body"><div class="word-row-term">${esc(c.term)}</div><div class="word-row-pron">${esc(c.pron || '')}</div><div class="word-row-trans">${esc(c.en)}</div></div></div>`; }).join('')
           + `<button class="btn btn-block" onclick="Drill.a('savew')">Save words to flashcards</button><button class="btn btn-ghost btn-block" onclick="Drill.play(${i})">Replay</button><button class="btn btn-ghost btn-block" onclick="Drill.exit()">Back to path</button>`;
       } else if (!busy) {
-        tail = `<div class="scaffold-row" style="flex-wrap:wrap;border:0;padding:14px 0 0">${opts.map((r, k) => { const c = d.cards[r.c]; return `<button class="scaffold-chip" style="text-align:left" onclick="Drill.a('say',${k})">${esc(c.term)}${hint ? `<br><span style="font-weight:500;font-size:11.5px;color:var(--text-2)">${esc(c.en)}</span>` : ''}</button>`; }).join('')}</div><button class="chip-btn" style="margin-top:6px" onclick="Drill.a('hint')">Show meanings</button>`;
+        tail = (attempts === 1 ? tim('Not quite. Take another look at the conversation and try once more.') : '')
+          + `<div class="scaffold-row" style="flex-wrap:wrap;border:0;padding:14px 0 0">${opts.map((r, k) => { const c = d.cards[r.c]; return `<button class="scaffold-chip" style="text-align:left" onclick="Drill.a('say',${k})">${esc(c.term)}${hint ? `<br><span style="font-weight:500;font-size:11.5px;color:var(--text-2)">${esc(c.en)}</span>` : ''}</button>`; }).join('')}</div><button class="chip-btn" style="margin-top:6px" onclick="Drill.a('hint')">Show meanings</button>`;
       }
       body(`<div class="path-sub" style="margin-bottom:8px">After Level ${s.lvl} · ${esc(s.topic)}</div>${tim(`${esc(s.goal)}. Pick the best reply each time. <b>${pts}/${max}</b>`)}<div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">${log.join('')}</div>${tail}`);
       $('dr-body').scrollTop = $('dr-body').scrollHeight;
@@ -483,12 +490,29 @@ const Drill = (() => {
     H.hint = () => { hint = true; draw(); };
     H.savew = () => saveWords(s.words.map(w => d.cards[w]));
     H.say = k => {
-      if (busy) return; busy = true; const r = opts[k]; pts += r.ok; log.push(me(d.cards[r.c]), note(r.fb)); draw();
-      setTimeout(() => {
-        node = r.next; const nd = s.nodes[node]; log.push(bot(nd.en, nd.c != null ? d.cards[nd.c] : null)); opts = sh(nd.replies || []); hint = false; busy = false;
-        if (nd.end) { pr.scenes[s.id] = Math.max(pr.scenes[s.id] || 0, pts); pr.sceneDone = pr.sceneDone || {}; pr.sceneDone[s.id] = true; markSceneToday(s.id); save(); }
-        draw();
-      }, 550);
+      if (busy) return;
+      const r = opts[k]; if (!r) return;
+      const correct = opts.find(x => Number(x.ok) > 0);
+      if (Number(r.ok) > 0) {
+        busy = true; pts += Number(r.ok) || 0; log.push(me(d.cards[r.c]), note(r.fb || 'That response fits the situation well.'));
+        draw(); setTimeout(() => advance(r.next), 550); return;
+      }
+      log.push(me(d.cards[r.c]));
+      if (attempts === 0) {
+        attempts = 1; log.push(note(r.fb || 'That response does not quite fit here. Try again.'));
+        draw(); return;
+      }
+      busy = true;
+      log.push(note(r.fb || 'That response does not fit the situation.'));
+      if (correct) {
+        const answer = d.cards[correct.c];
+        log.push(bot(`A better response would be: ${answer.term}${answer.en ? ` — ${answer.en}` : ''}`));
+        log.push(note(correct.fb || 'This response fits the context of the conversation.'));
+      } else {
+        log.push(note('Let’s continue and learn from the next part of the conversation.'));
+      }
+      draw();
+      setTimeout(() => advance(correct ? correct.next : r.next), 1200);
     };
     draw();
   }
