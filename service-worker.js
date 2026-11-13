@@ -4,7 +4,7 @@
    plus Web Push notifications.
    ============================================================ */
 
-const VERSION = 'v3.0.1';
+const VERSION = 'v3.0.4';
 const STATIC_CACHE = `cw-static-${VERSION}`;
 const RUNTIME_CACHE = `cw-runtime-${VERSION}`;
 const API_CACHE = `cw-api-${VERSION}`;
@@ -25,7 +25,8 @@ const APP_SHELL = [
 const OPTIONAL_ASSETS = [
   '/onboarding.html',
   '/logo.jpg',
-  '/og-image.jpg'
+  '/og-image.jpg',
+  '/practice.json'
 ];
 
 const API_ORIGIN = 'https://clearwords-backend.onrender.com';
