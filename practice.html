@@ -255,6 +255,22 @@ body{-webkit-font-smoothing:antialiased;overscroll-behavior-y:contain}
 .path-title{font-weight:800;font-size:15px}.path-node.locked .path-title{color:var(--text-3)}
 .path-sub{font-size:12px;color:var(--text-2)}.path-stars{color:var(--gold);font-size:14px;letter-spacing:2px;margin-top:2px}
 
+
+/* Flashcard 3D reveal */
+.flash-stage{perspective:1100px;margin:8px 0 16px;}
+.flash-card{position:relative;min-height:250px;transform-style:preserve-3d;transition:transform .68s cubic-bezier(.2,.72,.2,1);border-radius:22px;}
+.flash-card.is-flipped{transform:rotateY(180deg)}
+.flash-face{position:absolute;inset:0;min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 22px;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:22px;box-shadow:var(--shadow);backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow-wrap:anywhere;}
+.flash-face.back{transform:rotateY(180deg);background:linear-gradient(145deg,rgba(var(--brand-rgb),.09),var(--card) 65%);border-color:rgba(var(--brand-rgb),.3)}
+.flash-kicker{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:16px}
+.flash-face .speak-word{font-size:clamp(28px,8vw,38px);}
+.flash-face .speak-trans{font-size:clamp(20px,5vw,25px);font-weight:700;color:var(--text);margin-top:0;line-height:1.35}
+.flash-face .word-row-play{margin-top:16px}
+.flash-actions{display:grid;gap:10px}
+.flash-switch{width:100%;min-height:44px;border-radius:999px;border:1.5px solid var(--border);font-size:13px;font-weight:700;color:var(--text-2);background:var(--card)}
+.flash-switch:active{transform:scale(.98)}
+@media(prefers-reduced-motion:reduce){.flash-card{transition:none}}
+
 </style>
 </head>
 <body>
@@ -374,13 +390,20 @@ const Drill = (() => {
     const pick = () => { flip = false; const r = st.s[cards[q[n]].id]; rev = !!r && (r.reps || 0) >= 2 && Math.random() < .5; };
     const draw = () => {
       if (n >= q.length) { body(done('✅', 'Session done', `You reviewed ${seen} card${seen === 1 ? '' : 's'}. Come back tomorrow to keep your streak.`)); return; }
-      const i = q[n], c = cards[i], term = `<div class="speak-word"${rev ? ' style="margin-top:18px"' : ''}>${esc(c.term)}</div><div class="speak-pron">${esc(c.pron)}</div>${spk(i)}`;
-      const front = rev ? `<div class="speak-trans" style="margin:0;font-size:22px;color:var(--text)">${esc(c.en)}</div><div class="speak-pron">Say it in ${esc(LN())}</div>` : term;
-      body(prog(n / q.length) + `<div class="speak-card">${front}${flip ? (rev ? term : `<div class="speak-trans">${esc(c.en)}</div>`) : ''}</div>` + (flip
-        ? `<div class="dr-rate">${['Again', 'Hard', 'Good', 'Easy'].map((t, k) => `<button class="chip-btn" onclick="Drill.a('rate',${k})">${t}</button>`).join('')}</div>`
-        : `<button class="btn btn-block" onclick="Drill.a('flip')">${rev ? 'Show answer' : 'Show meaning'}</button>`));
+      const i = q[n], c = cards[i];
+      const original = rev
+        ? `<div class="speak-trans">${esc(c.en || 'Translation unavailable')}</div><div class="speak-pron">Translate into ${esc(LN())}</div>`
+        : `<div class="speak-word">${esc(c.term)}</div><div class="speak-pron">${esc(c.pron)}</div>${spk(i)}`;
+      const answer = rev
+        ? `<div class="speak-word">${esc(c.term)}</div><div class="speak-pron">${esc(c.pron)}</div>${spk(i)}`
+        : `<div class="speak-trans">${esc(c.en || 'Translation unavailable')}</div>`;
+      body(prog(n / q.length) + `<div class="flash-stage"><div class="flash-card ${flip ? 'is-flipped' : ''}"><div class="flash-face front"><div class="flash-kicker">${rev ? 'Meaning → word' : 'Word → meaning'}</div>${original}</div><div class="flash-face back"><div class="flash-kicker">${rev ? 'Your answer' : 'Translation'}</div>${answer}</div></div></div>`
+        + (flip
+          ? `<div class="flash-actions"><button class="flash-switch" onclick="Drill.a('unflip')">↩ Show original side</button><div class="dr-rate">${['Again', 'Hard', 'Good', 'Easy'].map((t, k) => `<button class="chip-btn" onclick="Drill.a('rate',${k})">${t}</button>`).join('')}</div></div>`
+          : `<button class="btn btn-block" onclick="Drill.a('flip')">See translation ↻</button>`));
     };
     H.flip = () => { flip = true; draw(); };
+    H.unflip = () => { flip = false; draw(); };
     H.rate = k => { const i = q[n]; rateCard(cards[i].id, k); bump('c'); seen++; if (k === 0 && !q.slice(n + 1).includes(i)) q.push(i); n++; if (n < q.length) pick(); draw(); };
     pick(); draw();
   }
