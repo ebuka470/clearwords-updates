@@ -231,6 +231,19 @@ body{-webkit-font-smoothing:antialiased;overscroll-behavior-y:contain}
 .today-ico{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;background:rgba(var(--brand-rgb),.12);flex-shrink:0}
 .today-row.ok .today-ico{background:var(--brand);color:#fff;font-weight:800}
 .today-body{flex:1;min-width:0}.today-body b{display:block;font-size:14.5px}.today-body small{font-size:12px;color:var(--text-2)}
+
+/* Progress dashboard: metrics explain what they represent */
+.progress-overview{padding:16px;margin:0 0 14px}
+.progress-overview-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.progress-overview-title{font-size:15px;font-weight:800}
+.progress-overview-copy{font-size:12px;color:var(--text-2);margin-top:3px;line-height:1.45}
+.progress-overview-count{font-size:17px;font-weight:800;white-space:nowrap;color:var(--brand)}
+.progress-track{height:8px;border-radius:99px;background:var(--border);overflow:hidden;margin-top:13px}
+.progress-track i{display:block;height:100%;border-radius:inherit;background:var(--brand);transition:width .25s ease}
+.progress-foot{display:flex;justify-content:space-between;gap:10px;margin-top:8px;font-size:11.5px;color:var(--text-2)}
+.stat-detail{display:block;font-size:10.5px;color:var(--text-3);margin-top:3px;line-height:1.3}
+.today-summary{font-size:12px;color:var(--text-2);margin:0 2px 8px}
+@media(max-width:360px){.stat-row{gap:6px}.stat-tile{padding-left:5px;padding-right:5px}.stat-detail{font-size:9.5px}}
 .path{position:relative;padding:4px 0 8px}
 .path::before{content:'';position:absolute;left:32px;top:20px;bottom:20px;width:3px;background:var(--border);border-radius:2px}
 .path-node{position:relative;display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:10px 8px;margin-bottom:6px;border-radius:var(--radius)}
@@ -289,13 +302,17 @@ const Drill = (() => {
     async get(l) { if (window.Backend && Backend.getDrillProgress) { const r = await Backend.getDrillProgress(l); return r && r.progress; } return null; },
     async put(l, p) { if (window.Backend && Backend.saveDrillProgress) return Backend.saveDrillProgress(l, p); throw new Error('Backend.saveDrillProgress missing'); }
   };
-  const blank = () => ({ srs: {}, moments: {}, scenes: {}, days: {} });
+  const blank = () => ({ srs: {}, moments: {}, scenes: {}, sceneDone: {}, days: {} });
   const mx = (X, Y) => { const o = {}; for (const k of new Set([...Object.keys(X || {}), ...Object.keys(Y || {})])) o[k] = Math.max((X || {})[k] || 0, (Y || {})[k] || 0); return o; };
   const merge = (a, b) => {
     const o = blank(), A = a.srs || {}, B = b.srs || {};
     for (const id of new Set([...Object.keys(A), ...Object.keys(B)])) { const x = A[id], y = B[id]; o.srs[id] = !y || (x && (x.u || 0) >= (y.u || 0)) ? x : y; }
     o.moments = mx(a.moments, b.moments); o.scenes = mx(a.scenes, b.scenes);
-    for (const k of new Set([...Object.keys(a.days || {}), ...Object.keys(b.days || {})])) o.days[k] = { m: 0, s: 0, c: 0, ...{ m: mx(a.days && a.days[k], b.days && b.days[k]).m, s: mx(a.days && a.days[k], b.days && b.days[k]).s, c: mx(a.days && a.days[k], b.days && b.days[k]).c } };
+    o.sceneDone = { ...(a.sceneDone || {}), ...(b.sceneDone || {}) };
+    for (const k of new Set([...Object.keys(a.days || {}), ...Object.keys(b.days || {})])) {
+      const x = (a.days || {})[k] || {}, y = (b.days || {})[k] || {};
+      o.days[k] = { m: Math.max(x.m || 0, y.m || 0), s: Math.max(x.s || 0, y.s || 0), c: Math.max(x.c || 0, y.c || 0), sceneIds: [...new Set([...(x.sceneIds || []), ...(y.sceneIds || [])])] };
+    }
     return o;
   };
   let P = null, tm = null, dirty = false;
@@ -313,6 +330,7 @@ const Drill = (() => {
   window.addEventListener('pagehide', push);
   const dayRec = () => P.d.days[today()] || (P.d.days[today()] = { m: 0, s: 0, c: 0 });
   const bump = k => { dayRec()[k]++; save(); };
+  const markSceneToday = id => { const d = dayRec(); d.sceneIds = Array.isArray(d.sceneIds) ? d.sceneIds : []; if (!d.sceneIds.includes(id)) { d.sceneIds.push(id); d.s = Math.max(d.s || 0, d.sceneIds.length); save(); } };
 
   /* ----- lessons ----- */
   const doneLv = n => !n || Curriculum.completedLessonIds(State.progress).some(x => { const s = String(x); return s === 'level-' + n || s === String(n) || s.startsWith(n + '-'); });
@@ -342,7 +360,7 @@ const Drill = (() => {
   const prog = p => `<div class="dr-prog"><i style="width:${Math.round(p * 100)}%"></i></div>`;
   const tim = t => `<div class="speak-result info"><b>🤓 Timmy:</b> ${t}</div>`;
   const done = (emoji, title, sub, extra) => `<div class="chat-empty"><div class="chat-empty-emoji">${emoji}</div><div class="chat-empty-title">${title}</div><div class="chat-empty-sub">${sub}</div>${extra || ''}<button class="btn" onclick="Drill.exit()">Done</button></div>`;
-  const stars = (pts, s) => { const r = pts / (Object.keys(s.nodes).length - 1), n = r >= 1 ? 3 : r >= .67 ? 2 : 1; return '★'.repeat(n) + '☆'.repeat(3 - n); };
+  const stars = (pts, s) => { const r = pts / Math.max(1, Object.keys(s.nodes).length - 1), n = r >= 1 ? 3 : r >= .67 ? 2 : r > 0 ? 1 : 0; return '★'.repeat(n) + '☆'.repeat(3 - n); };
 
   /* ----- flashcards (from saved words) ----- */
   const spk = i => window.AudioMgr ? `<button class="word-row-play" style="margin:14px auto 0;width:44px;height:44px" onclick="Drill.a('speak',${i})">🔊</button>` : '';
@@ -371,6 +389,7 @@ const Drill = (() => {
   async function moments() {
     const d = await need(); if (!d) return; const pr = await progress();
     const pool = d.moments.filter(m => doneLv(m.after)), w = m => pr.moments[m.id] == null ? 0 : pr.moments[m.id] < 2 ? 1 : 2;
+    if (!pool.length) { show('Daily Moments'); body(done('🔒', 'Daily Moments unlock as you learn', 'Complete more lessons to unlock short, real-life situations to practise.')); return; }
     const qs = pool.map(m => ({ m, k: w(m) + Math.random() * .9 })).sort((a, b) => a.k - b.k).slice(0, 5).map(x => x.m);
     const lbl = { best: 'Best', okay: 'Okay', off: 'Off' }, pts = { best: 2, okay: 1, off: 0 }, missed = [];
     let n = 0, score = 0, picked = false, hint = false, pk = -1, opts = [], mo = null;
@@ -444,7 +463,7 @@ const Drill = (() => {
       if (busy) return; busy = true; const r = opts[k]; pts += r.ok; log.push(me(d.cards[r.c]), note(r.fb)); draw();
       setTimeout(() => {
         node = r.next; const nd = s.nodes[node]; log.push(bot(nd.en, nd.c != null ? d.cards[nd.c] : null)); opts = sh(nd.replies || []); hint = false; busy = false;
-        if (nd.end) { pr.scenes[s.id] = Math.max(pr.scenes[s.id] || 0, pts); bump('s'); }
+        if (nd.end) { pr.scenes[s.id] = Math.max(pr.scenes[s.id] || 0, pts); pr.sceneDone = pr.sceneDone || {}; pr.sceneDone[s.id] = true; markSceneToday(s.id); save(); }
         draw();
       }, 550);
     };
@@ -455,32 +474,55 @@ const Drill = (() => {
   async function render() {
     const root = $('home-root'); if (!root || !window.State || !State.currentLanguage) return;
     const d = await data(); if (!d) { root.innerHTML = `<div class="empty-note"><strong>Coming soon</strong>Practice for ${esc(LN())} is on the way.</div>`; return; }
-    cur = d; const pr = await progress(), cards = deck(), st = stats(cards, pr.srs), dr = pr.days[today()] || { m: 0, s: 0, c: 0 };
-    const sc = d.scenes, open = sc.map(s => doneLv(s.after)), fin = sc.map(s => (pr.scenes[s.id] || 0) > 0);
-    let next = sc.findIndex((s, i) => open[i] && !fin[i]); const allDone = next < 0; if (allDone) next = 0;
+    cur = d;
+    const pr = await progress(), cards = deck(), st = stats(cards, pr.srs);
+    const dr = pr.days[today()] || { m: 0, s: 0, c: 0 };
+    const sc = d.scenes || [], open = sc.map(s => doneLv(s.after));
+    const fin = sc.map(s => !!((pr.sceneDone && pr.sceneDone[s.id]) || (pr.scenes[s.id] || 0) > 0));
+    const completedScenes = fin.filter(Boolean).length;
+    const unlockedScenes = open.filter(Boolean).length;
+    let next = sc.findIndex((s, i) => open[i] && !fin[i]);
+    const allDone = next < 0 && unlockedScenes > 0;
+    if (next < 0) next = sc.findIndex((s, i) => open[i]);
+    const nextScene = next >= 0 && open[next] ? sc[next] : null;
     const pool = d.moments.filter(m => doneLv(m.after)).length;
+    const words = cards.length;
     const rows = [
-      { ico: '🎯', t: 'Daily Moments', sub: `${Math.min(5, dr.m)}/5 answered · ${pool} unlocked`, ok: dr.m >= 5, go: 'Drill.moments()' },
-      { ico: sc[next].emoji, t: (allDone ? 'Replay: ' : 'Scene: ') + sc[next].title, sub: `After Level ${sc[next].lvl} · ${sc[next].topic}`, ok: dr.s >= 1, go: `Drill.scene(${next})` }];
-    if (cards.length) rows.push({ ico: '🗂️', t: 'Flashcards', sub: st.due + st.fresh ? `${st.due} due · ${Math.min(6, st.fresh)} new` : 'All caught up', ok: !(st.due + st.fresh) || dr.c >= 5, go: 'Drill.flash()' });
+      { ico: '🎯', t: 'Daily Moments', sub: `${Math.min(5, dr.m)}/5 responses today · ${pool} situations unlocked`, ok: dr.m >= 5, go: 'Drill.moments()' }
+    ];
+    if (nextScene) rows.push({ ico: nextScene.emoji || '🎬', t: (allDone ? 'Replay: ' : 'Next scene: ') + nextScene.title, sub: allDone ? 'All available scenes completed' : `After Level ${nextScene.lvl} · ${nextScene.topic}`, ok: (dr.s || 0) >= 1, go: `Drill.scene(${next})` });
+    if (cards.length && st.due + st.fresh > 0) rows.push({ ico: '🗂️', t: 'Flashcards', sub: `${st.due} due · ${Math.min(6, st.fresh)} new available`, ok: (dr.c || 0) >= 5, go: 'Drill.flash()' });
     const got = rows.filter(r => r.ok).length;
-    const words = ((State.user && State.user.savedWords) || []).length;
+    const dailyPct = rows.length ? Math.round(got / rows.length * 100) : 0;
+    const streak = State.effectiveStreak(State.progress || {});
+    const scenePct = sc.length ? Math.round(completedScenes / sc.length * 100) : 0;
+    const savedLabel = words === 1 ? 'word saved' : 'words saved';
+    const pathIntro = nextScene
+      ? (allDone ? 'You have completed every currently unlocked scene. Revisit one to strengthen your replies.' : `Next up: ${nextScene.title}. Complete it to add another conversation to your journey.`)
+      : 'Complete a lesson to unlock your first conversation scene.';
     root.innerHTML = `
       <div class="stat-row">
-        <div class="stat-tile"><div class="stat-ico">🔥</div><div class="stat-val">${State.effectiveStreak(State.progress || {})}</div><div class="stat-lbl">Day streak</div></div>
-        <div class="stat-tile"><div class="stat-ico">🎬</div><div class="stat-val">${fin.filter(Boolean).length}/${sc.length}</div><div class="stat-lbl">Scenes done</div></div>
-        <div class="stat-tile"><div class="stat-ico">⭐</div><div class="stat-val">${words}</div><div class="stat-lbl">Saved words</div></div>
+        <div class="stat-tile"><div class="stat-ico">🔥</div><div class="stat-val">${streak}</div><div class="stat-lbl">Day streak</div><small class="stat-detail">Consecutive learning days</small></div>
+        <div class="stat-tile"><div class="stat-ico">🎬</div><div class="stat-val">${completedScenes}/${sc.length}</div><div class="stat-lbl">Scenes done</div><small class="stat-detail">Conversations completed</small></div>
+        <div class="stat-tile"><div class="stat-ico">⭐</div><div class="stat-val">${words}</div><div class="stat-lbl">Saved words</div><small class="stat-detail">${esc(savedLabel)} in ${esc(LN())}</small></div>
       </div>
-      <div class="card today"><div class="today-h"><b>Today</b><span>${got}/${rows.length} done</span></div>
+      <div class="card progress-overview">
+        <div class="progress-overview-head"><div><div class="progress-overview-title">Your conversation journey</div><div class="progress-overview-copy">${esc(pathIntro)}</div></div><div class="progress-overview-count">${completedScenes}/${sc.length}</div></div>
+        <div class="progress-track" role="progressbar" aria-label="Conversation scenes completed" aria-valuemin="0" aria-valuemax="${sc.length}" aria-valuenow="${completedScenes}"><i style="width:${scenePct}%"></i></div>
+        <div class="progress-foot"><span>${unlockedScenes} of ${sc.length} scenes unlocked</span><span>${scenePct}% completed</span></div>
+      </div>
+      <div class="card today"><div class="today-h"><b>Today's practice</b><span>${got}/${rows.length} complete</span></div>
+        <div class="today-summary">${got === rows.length ? 'You have completed today’s suggested activities.' : 'A little practice goes a long way. Pick up where you left off.'}</div>
         ${rows.map(r => `<button class="today-row${r.ok ? ' ok' : ''}" onclick="${r.go}"><span class="today-ico">${r.ok ? '✓' : r.ico}</span><span class="today-body"><b>${esc(r.t)}</b><small>${esc(r.sub)}</small></span><span class="method-chev">›</span></button>`).join('')}
+        <div class="progress-track" style="margin:10px 2px 4px"><i style="width:${dailyPct}%"></i></div>
       </div>
       <div class="section-h">Your path</div>
       <div class="path">${sc.map((s, i) => { const k = !open[i] ? 'locked' : fin[i] ? 'done' : 'open';
-        return `<button class="path-node ${k}${i === next && !fin[i] ? ' next' : ''}" onclick="Drill.scene(${i})"><div class="path-dot">${k === 'locked' ? '🔒' : k === 'done' ? '✓' : s.emoji}</div><div class="path-body"><div class="path-title">${esc(s.title)}</div><div class="path-sub">${k === 'locked' ? `Unlocks after Level ${s.lvl} · ` : `After Level ${s.lvl} · `}${esc(s.topic)}</div>${fin[i] ? `<div class="path-stars">${stars(pr.scenes[s.id], s)}</div>` : ''}</div></button>`; }).join('')}</div>
+        return `<button class="path-node ${k}${open[i] && i === next && !fin[i] ? ' next' : ''}" onclick="Drill.scene(${i})"><div class="path-dot">${k === 'locked' ? '🔒' : k === 'done' ? '✓' : s.emoji}</div><div class="path-body"><div class="path-title">${esc(s.title)}</div><div class="path-sub">${k === 'locked' ? `Unlocks after Level ${s.lvl} · ` : `After Level ${s.lvl} · `}${esc(s.topic)}</div>${fin[i] ? `<div class="path-stars">${stars(pr.scenes[s.id] || 0, s)}</div>` : ''}</div></button>`; }).join('')}</div>
       <div class="section-h">Speak &amp; review</div>
       <div class="set-group">
         <button class="method-card tint-terracotta" onclick="Practice.openSpeak()"><div class="method-icon">🎤</div><div class="method-body"><div class="method-title">Pronunciation practice</div><div class="method-desc">Listen, then repeat</div></div><div class="method-chev">›</div></button>
-        <button class="method-card" onclick="Practice.openReview()"><div class="method-icon">⭐</div><div class="method-body"><div class="method-title">Saved words</div><div class="method-desc">${words ? `${words} word${words === 1 ? '' : 's'} saved` : 'Save words in lessons to review them here'}</div></div><div class="method-chev">›</div></button>
+        <button class="method-card" onclick="Practice.openReview()"><div class="method-icon">⭐</div><div class="method-body"><div class="method-title">Saved words</div><div class="method-desc">${words ? `${words} word${words === 1 ? '' : 's'} saved in ${esc(LN())}` : 'Save words in lessons to review them here'}</div></div><div class="method-chev">›</div></button>
       </div>`;
   }
   return { render, flash, moments, scene, play, exit, a: (n, x) => H[n] && H[n](x) };
