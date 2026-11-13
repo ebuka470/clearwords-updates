@@ -1,0 +1,6523 @@
+{
+ "version": 2,
+ "yoruba": {
+  "cards": [
+   {
+    "id": "yo0",
+    "term": "Ẹ káàárọ̀",
+    "pron": "eh KAH-ah-roh",
+    "en": "Good morning",
+    "audio": ""
+   },
+   {
+    "id": "yo1",
+    "term": "Báwo ni?",
+    "pron": "BAH-wo nee",
+    "en": "How are you?",
+    "audio": ""
+   },
+   {
+    "id": "yo2",
+    "term": "Mo wà dáadáa",
+    "pron": "moh wah DAH-ah-dah-ah",
+    "en": "I'm fine",
+    "audio": ""
+   },
+   {
+    "id": "yo3",
+    "term": "Ẹ ṣé",
+    "pron": "eh SHAY",
+    "en": "Thank you",
+    "audio": ""
+   },
+   {
+    "id": "yo4",
+    "term": "Jọ̀wọ́",
+    "pron": "JOH-woh",
+    "en": "Please",
+    "audio": ""
+   },
+   {
+    "id": "yo5",
+    "term": "Má bínú",
+    "pron": "mah BEE-noo",
+    "en": "Sorry",
+    "audio": ""
+   },
+   {
+    "id": "yo6",
+    "term": "Ó dàbọ̀",
+    "pron": "oh dah-BOH",
+    "en": "Goodbye",
+    "audio": ""
+   },
+   {
+    "id": "yo7",
+    "term": "Èló ni?",
+    "pron": "eh-LOH nee",
+    "en": "How much is it?",
+    "audio": ""
+   },
+   {
+    "id": "yo8",
+    "term": "Ó wọ́n jù",
+    "pron": "oh WAWN joo",
+    "en": "It's too expensive",
+    "audio": ""
+   },
+   {
+    "id": "yo9",
+    "term": "Ẹ dín in kù díẹ̀",
+    "pron": "eh deen een koo DEE-eh",
+    "en": "Please reduce it a little",
+    "audio": ""
+   },
+   {
+    "id": "yo10",
+    "term": "Mo máa ra èyí",
+    "pron": "moh mah rah EH-yee",
+    "en": "I'll take it",
+    "audio": ""
+   },
+   {
+    "id": "yo11",
+    "term": "Ṣé ẹ ti jẹun?",
+    "pron": "shay eh tee jeh-OON",
+    "en": "Have you eaten?",
+    "audio": ""
+   },
+   {
+    "id": "yo12",
+    "term": "Mo ti yó",
+    "pron": "moh tee YOH",
+    "en": "I'm full",
+    "audio": ""
+   },
+   {
+    "id": "yo13",
+    "term": "Ó dùn",
+    "pron": "oh DOON",
+    "en": "It's delicious",
+    "audio": ""
+   },
+   {
+    "id": "yo14",
+    "term": "Ẹ káàsán",
+    "pron": "eh KAH-sahn",
+    "en": "Good afternoon",
+    "audio": ""
+   },
+   {
+    "id": "yo15",
+    "term": "Kí ni orúkọ yín?",
+    "pron": "",
+    "en": "What is your name?",
+    "audio": ""
+   },
+   {
+    "id": "yo16",
+    "term": "Orúkọ mi ni …",
+    "pron": "",
+    "en": "My name is …",
+    "audio": ""
+   },
+   {
+    "id": "yo17",
+    "term": "Inú mi dùn láti pàdé yín",
+    "pron": "",
+    "en": "Nice to meet you",
+    "audio": ""
+   },
+   {
+    "id": "yo18",
+    "term": "Kò burú",
+    "pron": "",
+    "en": "It's okay",
+    "audio": ""
+   },
+   {
+    "id": "yo19",
+    "term": "Mo fẹ́ omi",
+    "pron": "",
+    "en": "I want water",
+    "audio": ""
+   },
+   {
+    "id": "yo20",
+    "term": "Mo nílò ìrànlọ́wọ́",
+    "pron": "",
+    "en": "I need help",
+    "audio": ""
+   },
+   {
+    "id": "yo21",
+    "term": "Níbo ni ilé ìgbọ̀nsẹ̀ wà?",
+    "pron": "",
+    "en": "Where is the toilet?",
+    "audio": ""
+   },
+   {
+    "id": "yo22",
+    "term": "Níbo ni ọjà wà?",
+    "pron": "",
+    "en": "Where is the market?",
+    "audio": ""
+   },
+   {
+    "id": "yo23",
+    "term": "Lọ síwájú",
+    "pron": "",
+    "en": "Go straight",
+    "audio": ""
+   },
+   {
+    "id": "yo24",
+    "term": "Yí sí apá òsì",
+    "pron": "",
+    "en": "Turn left",
+    "audio": ""
+   },
+   {
+    "id": "yo25",
+    "term": "Yí sí apá ọ̀tún",
+    "pron": "",
+    "en": "Turn right",
+    "audio": ""
+   },
+   {
+    "id": "yo26",
+    "term": "Ó wà nítòsí",
+    "pron": "",
+    "en": "It's near",
+    "audio": ""
+   },
+   {
+    "id": "yo27",
+    "term": "Ó jìnnà",
+    "pron": "",
+    "en": "It's far",
+    "audio": ""
+   },
+   {
+    "id": "yo28",
+    "term": "Ẹ ṣé gan-an",
+    "pron": "",
+    "en": "Thank you very much",
+    "audio": ""
+   },
+   {
+    "id": "yo29",
+    "term": "Mo ń lọ báyìí",
+    "pron": "",
+    "en": "I'm leaving now",
+    "audio": ""
+   },
+   {
+    "id": "yo30",
+    "term": "Màá padà wá",
+    "pron": "",
+    "en": "I'll come back",
+    "audio": ""
+   },
+   {
+    "id": "yo31",
+    "term": "Ó di ọ̀la",
+    "pron": "",
+    "en": "See you tomorrow",
+    "audio": ""
+   },
+   {
+    "id": "yo32",
+    "term": "Ẹ rora",
+    "pron": "",
+    "en": "Take care",
+    "audio": ""
+   },
+   {
+    "id": "yo33",
+    "term": "Ṣé ẹbí wà dáadáa?",
+    "pron": "",
+    "en": "How is the family?",
+    "audio": ""
+   },
+   {
+    "id": "yo34",
+    "term": "Ẹ káàbọ̀",
+    "pron": "",
+    "en": "Welcome",
+    "audio": ""
+   },
+   {
+    "id": "yo35",
+    "term": "Ẹ jókòó",
+    "pron": "",
+    "en": "Please sit",
+    "audio": ""
+   },
+   {
+    "id": "yo36",
+    "term": "Iye tó kẹ́yìn?",
+    "pron": "",
+    "en": "What's the last price?",
+    "audio": ""
+   }
+  ],
+  "moments": [
+   {
+    "id": "m1",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "Your father walks in on a morning:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Greet elders first and add a title like Daddy, Sir or Ma.",
+    "options": [
+     {
+      "c": 0,
+      "v": "best",
+      "why": "Greeting an elder first, in the respectful form, is right."
+     },
+     {
+      "c": 1,
+      "v": "okay",
+      "why": "Skips the greeting. Say good morning first."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? He just arrived!"
+     }
+    ]
+   },
+   {
+    "id": "m2",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "An elder asks you:",
+    "prompt": 1,
+    "q": "How do you reply?",
+    "culture": "Greetings are caring questions, not small talk. Answer, then ask back.",
+    "options": [
+     {
+      "c": 2,
+      "v": "best",
+      "why": "Short and polite."
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Thanks is kind, but you didn't answer."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Leaving without answering is rude."
+     }
+    ]
+   },
+   {
+    "id": "m3",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "You meet a friend's mother in the afternoon:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Time-of-day greetings are expected, especially with elders.",
+    "options": [
+     {
+      "c": 14,
+      "v": "best",
+      "why": "Matching the greeting to the time of day is polite."
+     },
+     {
+      "c": 0,
+      "v": "off",
+      "why": "That is a morning greeting."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? You have just met!"
+     }
+    ]
+   },
+   {
+    "id": "m4",
+    "lvl": 3,
+    "topic": "Introduction",
+    "after": 3,
+    "setup": "A new person asks you:",
+    "prompt": 15,
+    "q": "How do you answer?",
+    "culture": "Share your name warmly, then use the greeting back.",
+    "options": [
+     {
+      "c": 16,
+      "v": "best",
+      "why": "A clear answer."
+     },
+     {
+      "c": 17,
+      "v": "okay",
+      "why": "Friendly, but they asked your name."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m5",
+    "lvl": 3,
+    "topic": "Introduction",
+    "after": 3,
+    "setup": "They tell you their name. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "After names, a friendly 'nice to meet you' is the usual reply.",
+    "options": [
+     {
+      "c": 17,
+      "v": "best",
+      "why": "A warm, standard reply."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't fit."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m6",
+    "lvl": 4,
+    "topic": "Empathy",
+    "after": 4,
+    "setup": "You bump an elder's foot on the bus:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Apologise at once to elders, with a slight bow or nod.",
+    "options": [
+     {
+      "c": 5,
+      "v": "best",
+      "why": "A quick, sincere apology is expected."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't apologise."
+     },
+     {
+      "c": 3,
+      "v": "off",
+      "why": "Thanks makes no sense here."
+     }
+    ]
+   },
+   {
+    "id": "m7",
+    "lvl": 4,
+    "topic": "Empathy",
+    "after": 4,
+    "setup": "A friend says sorry for being late. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Accepting an apology kindly keeps the friendship warm.",
+    "options": [
+     {
+      "c": 18,
+      "v": "best",
+      "why": "Gracious and natural."
+     },
+     {
+      "c": 5,
+      "v": "okay",
+      "why": "Fine, but you did nothing wrong."
+     },
+     {
+      "c": 3,
+      "v": "off",
+      "why": "Thanks isn't the right reply."
+     }
+    ]
+   },
+   {
+    "id": "m8",
+    "lvl": 5,
+    "topic": "Basic Needs",
+    "after": 5,
+    "setup": "You are thirsty at a host's home:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Guests may ask for water, but always thank the host.",
+    "options": [
+     {
+      "c": 19,
+      "v": "best",
+      "why": "Clear and simple."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "That asks a price, not for water."
+     },
+     {
+      "c": 20,
+      "v": "okay",
+      "why": "'I need help' is too strong."
+     }
+    ]
+   },
+   {
+    "id": "m9",
+    "lvl": 5,
+    "topic": "Basic Needs",
+    "after": 5,
+    "setup": "You need the toilet in someone's house:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "It's normal to ask your host politely.",
+    "options": [
+     {
+      "c": 21,
+      "v": "best",
+      "why": "The right question."
+     },
+     {
+      "c": 22,
+      "v": "off",
+      "why": "That asks about the market!"
+     },
+     {
+      "c": 19,
+      "v": "off",
+      "why": "That asks for water."
+     }
+    ]
+   },
+   {
+    "id": "m10",
+    "lvl": 6,
+    "topic": "Food",
+    "after": 6,
+    "setup": "At dinner, Uncle asks you:",
+    "prompt": 11,
+    "q": "What do you say?",
+    "culture": "Refusing food flatly can seem rude. Thank your host first.",
+    "options": [
+     {
+      "c": 3,
+      "v": "best",
+      "why": "Thanking first is warm, even when you are declining."
+     },
+     {
+      "c": 12,
+      "v": "okay",
+      "why": "True, but blunt. Add thanks."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Asking a price doesn't answer him."
+     }
+    ]
+   },
+   {
+    "id": "m11",
+    "lvl": 6,
+    "topic": "Food",
+    "after": 6,
+    "setup": "You finish a meal and want to compliment the cook:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Praise the food and thank the cook. Hosts love to hear it.",
+    "options": [
+     {
+      "c": 13,
+      "v": "best",
+      "why": "Praising the food honours the host."
+     },
+     {
+      "c": 12,
+      "v": "okay",
+      "why": "Says you're full but doesn't praise the food."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't fit."
+     }
+    ]
+   },
+   {
+    "id": "m12",
+    "lvl": 7,
+    "topic": "Directions",
+    "after": 7,
+    "setup": "You are lost and need the market:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Greet first, then ask. Strangers happily point the way.",
+    "options": [
+     {
+      "c": 22,
+      "v": "best",
+      "why": "Clear and direct."
+     },
+     {
+      "c": 21,
+      "v": "off",
+      "why": "That asks for the toilet."
+     },
+     {
+      "c": 23,
+      "v": "off",
+      "why": "That is a direction, not a question."
+     }
+    ]
+   },
+   {
+    "id": "m13",
+    "lvl": 7,
+    "topic": "Directions",
+    "after": 7,
+    "setup": "Someone has just given you directions. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "A warm thank-you matters more than speed.",
+    "options": [
+     {
+      "c": 28,
+      "v": "best",
+      "why": "Warm thanks."
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Fine, but plain."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye without thanks."
+     }
+    ]
+   },
+   {
+    "id": "m14",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "setup": "A seller says the tomatoes cost ₦1,500. You think it is too much:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Bargaining is expected in markets. Keep it friendly.",
+    "options": [
+     {
+      "c": 9,
+      "v": "best",
+      "why": "Politely asking for less is the normal way to bargain."
+     },
+     {
+      "c": 8,
+      "v": "okay",
+      "why": "Clear, but blunt. Soften it with please."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Walking off ends the chat."
+     }
+    ]
+   },
+   {
+    "id": "m15",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "setup": "You like the price. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Say it clearly when you agree on a price.",
+    "options": [
+     {
+      "c": 10,
+      "v": "best",
+      "why": "Clear and decisive."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "You already know the price."
+     },
+     {
+      "c": 8,
+      "v": "off",
+      "why": "You said it's too expensive!"
+     }
+    ]
+   },
+   {
+    "id": "m16",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "setup": "You want the seller's best offer:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Asking for the last price is a normal step.",
+    "options": [
+     {
+      "c": 36,
+      "v": "best",
+      "why": "Asking the last price is classic bargaining."
+     },
+     {
+      "c": 10,
+      "v": "okay",
+      "why": "You took the first price without bargaining."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Leaving too soon."
+     }
+    ]
+   },
+   {
+    "id": "m17",
+    "lvl": 9,
+    "topic": "Exiting",
+    "after": 9,
+    "setup": "You must leave a host's home:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Never leave abruptly. Say you're going and thank them.",
+    "options": [
+     {
+      "c": 29,
+      "v": "best",
+      "why": "Polite and clear."
+     },
+     {
+      "c": 6,
+      "v": "okay",
+      "why": "Goodbye alone is abrupt."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m18",
+    "lvl": 9,
+    "topic": "Exiting",
+    "after": 9,
+    "setup": "Parting words to an elder:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Wish elders well as they go.",
+    "options": [
+     {
+      "c": 32,
+      "v": "best",
+      "why": "A caring farewell."
+     },
+     {
+      "c": 6,
+      "v": "okay",
+      "why": "Fine, but plain."
+     },
+     {
+      "c": 5,
+      "v": "off",
+      "why": "Sorry? You did nothing wrong."
+     }
+    ]
+   },
+   {
+    "id": "m19",
+    "lvl": 12,
+    "topic": "Family",
+    "after": 12,
+    "setup": "A relative asks:",
+    "prompt": 33,
+    "q": "How do you reply?",
+    "culture": "Asking about family is care, not nosiness.",
+    "options": [
+     {
+      "c": 2,
+      "v": "best",
+      "why": "A warm, short answer."
+     },
+     {
+      "c": 1,
+      "v": "off",
+      "why": "She asked you!"
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Thanks is kind but doesn't answer."
+     }
+    ]
+   },
+   {
+    "id": "m20",
+    "lvl": 12,
+    "topic": "Family",
+    "after": 12,
+    "setup": "A relative welcomes you at her door:",
+    "prompt": 34,
+    "q": "How do you reply?",
+    "culture": "Greet and thank when welcomed into a home.",
+    "options": [
+     {
+      "c": 3,
+      "v": "best",
+      "why": "Thanking is the right start."
+     },
+     {
+      "c": 14,
+      "v": "okay",
+      "why": "A greeting works, but thanks first."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? You just arrived!"
+     }
+    ]
+   }
+  ],
+  "scenes": [
+   {
+    "id": "greet",
+    "title": "Good morning, Daddy",
+    "emoji": "🏠",
+    "goal": "Greet your father the right way",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "culture": "Greet elders first, warmly, and add a title like Daddy, Sir or Ma. It shows you were raised well.",
+    "words": [
+     0,
+     1,
+     2,
+     11,
+     12,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good morning! You're up early.",
+      "replies": [
+       {
+        "c": 0,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greeting first, with respect, is perfect."
+       },
+       {
+        "c": 1,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet him first, then ask how he is."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How are you this morning?",
+      "c": 1,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A short, polite answer."
+       },
+       {
+        "c": 3,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Say how you are first, then thank him."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Have you eaten?",
+      "c": 11,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thanking him is warm and polite."
+       },
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Fine. Add thanks next time."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Good. Go well today.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "A gracious close."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "God bless you, my child.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "intro",
+    "title": "Meeting someone new",
+    "emoji": "👋",
+    "goal": "Introduce yourself politely",
+    "lvl": 3,
+    "topic": "Introduction",
+    "after": 3,
+    "culture": "First meetings begin with a greeting, then names. A warm tone matters more than perfect grammar.",
+    "words": [
+     14,
+     15,
+     16,
+     17,
+     1,
+     2
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good afternoon!",
+      "c": 14,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Match the greeting to the time of day."
+       },
+       {
+        "c": 0,
+        "ok": 0,
+        "next": "n2",
+        "fb": "It's afternoon, not morning."
+       }
+      ]
+     },
+     "n2": {
+      "en": "What is your name?",
+      "c": 15,
+      "replies": [
+       {
+        "c": 16,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and polite."
+       },
+       {
+        "c": 3,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Say your name first."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Lovely! Nice to meet you.",
+      "replies": [
+       {
+        "c": 17,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Return the kindness."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thanks works too."
+       }
+      ]
+     },
+     "n4": {
+      "en": "How are you today?",
+      "c": 1,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "end",
+        "fb": "Good answer."
+       },
+       {
+        "c": 1,
+        "ok": 1,
+        "next": "end",
+        "fb": "Asking back is polite too."
+       }
+      ]
+     },
+     "end": {
+      "en": "Great chat. See you around!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "sorry",
+    "title": "I'm sorry!",
+    "emoji": "🙏",
+    "goal": "Apologise to an elder at once",
+    "lvl": 4,
+    "topic": "Empathy",
+    "after": 4,
+    "culture": "Apologise quickly to elders, with a slight bow or nod. Accepting an apology kindly is also good manners.",
+    "words": [
+     5,
+     18,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Ouch! You bump an elder carrying a bag.",
+      "replies": [
+       {
+        "c": 5,
+        "ok": 1,
+        "next": "n2",
+        "fb": "A quick, sincere apology."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "n2",
+        "fb": "'Please' isn't an apology."
+       }
+      ]
+     },
+     "n2": {
+      "en": "It's okay, my child.",
+      "c": 18,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Thank them for their kindness."
+       },
+       {
+        "c": 5,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Saying sorry again is fine."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Be careful next time. God bless you.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Gracious."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A polite goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "The elder smiles and walks on.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "needs",
+    "title": "What do you need?",
+    "emoji": "💧",
+    "goal": "Ask for what you need, politely",
+    "lvl": 5,
+    "topic": "Basic Needs",
+    "after": 5,
+    "culture": "Ask politely and thank your host. Hosts love to help, but the way you ask matters.",
+    "words": [
+     34,
+     35,
+     19,
+     20,
+     21,
+     3,
+     28
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Welcome! Come in.",
+      "c": 34,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thank them for the welcome."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "n2",
+        "fb": "'Please' doesn't answer a welcome."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Please sit. What can I get you?",
+      "c": 35,
+      "replies": [
+       {
+        "c": 19,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and simple."
+       },
+       {
+        "c": 13,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Delicious? You haven't eaten yet!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "Here is your water.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Always thank them."
+       },
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Extra warm thanks."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Anything else?",
+      "replies": [
+       {
+        "c": 21,
+        "ok": 1,
+        "next": "end",
+        "fb": "Good to know how to ask."
+       },
+       {
+        "c": 20,
+        "ok": 1,
+        "next": "end",
+        "fb": "Asking for help is fine."
+       }
+      ]
+     },
+     "end": {
+      "en": "You are welcome in this house.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "food",
+    "title": "Dinner at home",
+    "emoji": "🍲",
+    "goal": "Be a gracious guest",
+    "lvl": 6,
+    "topic": "Food",
+    "after": 6,
+    "culture": "Thank first, praise the food, and accept what is offered with your right hand.",
+    "words": [
+     11,
+     3,
+     12,
+     13,
+     4,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Come, sit and eat.",
+      "c": 11,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thanking first is the polite start."
+       },
+       {
+        "c": 12,
+        "ok": 0,
+        "next": "n2",
+        "fb": "True, but blunt. Thank them first."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Eat more, don't be shy!",
+      "replies": [
+       {
+        "c": 13,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Praising the food honours the host."
+       },
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Fine. Politely declining more is okay."
+       }
+      ]
+     },
+     "n3": {
+      "en": "I'm glad you liked it. Take some home.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Gracious."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "end",
+        "fb": "'Please' isn't needed. A thank-you fits."
+       }
+      ]
+     },
+     "end": {
+      "en": "Come again soon!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "dir",
+    "title": "Finding the market",
+    "emoji": "🧭",
+    "goal": "Ask for directions without a phone",
+    "lvl": 7,
+    "topic": "Directions",
+    "after": 7,
+    "culture": "Greet before you ask. People are happy to help, and a warm thank-you finishes the exchange well.",
+    "words": [
+     14,
+     22,
+     23,
+     24,
+     26,
+     3,
+     28
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good afternoon! You look lost.",
+      "c": 14,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greet back first."
+       },
+       {
+        "c": 22,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet first, then ask."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How can I help?",
+      "replies": [
+       {
+        "c": 22,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and direct."
+       },
+       {
+        "c": 21,
+        "ok": 0,
+        "next": "n3",
+        "fb": "That's the toilet, not the market!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "The market? Go straight, then turn left. It's near.",
+      "c": 23,
+      "replies": [
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "end",
+        "fb": "Warm thanks."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Polite thanks."
+       }
+      ]
+     },
+     "end": {
+      "en": "Go well, and God bless you.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "haggle",
+    "title": "At the market",
+    "emoji": "🛒",
+    "goal": "Buy tomatoes at a fair price",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "culture": "Bargaining is normal at markets. Start with a greeting and keep it friendly.",
+    "words": [
+     0,
+     7,
+     8,
+     36,
+     9,
+     10,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good morning! Fresh tomatoes today. What can I get you?",
+      "replies": [
+       {
+        "c": 0,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greeting first goes a long way."
+       },
+       {
+        "c": 7,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet first, then ask the price."
+       }
+      ]
+     },
+     "n2": {
+      "en": "These ones? ₦1,500 a basket.",
+      "replies": [
+       {
+        "c": 8,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Polite push-back."
+       },
+       {
+        "c": 10,
+        "ok": 0,
+        "next": "n4",
+        "fb": "You took it without bargaining."
+       }
+      ]
+     },
+     "n3": {
+      "en": "For you, ₦1,300.",
+      "replies": [
+       {
+        "c": 36,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Asking the last price is classic bargaining."
+       },
+       {
+        "c": 9,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Good try. The seller smiles."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Alright, ₦1,200. Last price!",
+      "replies": [
+       {
+        "c": 10,
+        "ok": 1,
+        "next": "n5",
+        "fb": "Deal. A fair price."
+       },
+       {
+        "c": 8,
+        "ok": 0,
+        "next": "n5",
+        "fb": "Too much? You already got a good price."
+       }
+      ]
+     },
+     "n5": {
+      "en": "Thank you! Anything else?",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "A polite thank-you closes the deal."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "God bless you. Come again!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "exit",
+    "title": "Time to go",
+    "emoji": "👋",
+    "goal": "Leave politely and promise to return",
+    "lvl": 9,
+    "topic": "Exiting",
+    "after": 9,
+    "culture": "Never leave abruptly. Say why you're going, promise to return, and thank your host.",
+    "words": [
+     29,
+     30,
+     31,
+     3,
+     28,
+     32,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Stay a little more!",
+      "replies": [
+       {
+        "c": 29,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Polite and clear."
+       },
+       {
+        "c": 7,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Wrong topic. Say you are leaving."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Will you come back soon?",
+      "replies": [
+       {
+        "c": 30,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A warm promise."
+       },
+       {
+        "c": 31,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Good, you suggest a time."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Take something for the road.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thank them."
+       },
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Extra warm thanks."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Safe journey!",
+      "replies": [
+       {
+        "c": 32,
+        "ok": 1,
+        "next": "end",
+        "fb": "A caring goodbye."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "Go well!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "family",
+    "title": "Visiting family",
+    "emoji": "👨‍👩‍👧",
+    "goal": "Be a good visitor at a relative's home",
+    "lvl": 12,
+    "topic": "Family",
+    "after": 12,
+    "culture": "Greet the household, answer questions about family warmly, and accept food. It shows love.",
+    "words": [
+     14,
+     2,
+     11,
+     12,
+     13,
+     3,
+     33,
+     34
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Welcome! Come in, come in!",
+      "c": 34,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greet her first."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thanks is warm too."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How is the family?",
+      "c": 33,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A warm, short answer."
+       },
+       {
+        "c": 1,
+        "ok": 0,
+        "next": "n3",
+        "fb": "She asked you!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "Sit! Have you eaten?",
+      "c": 11,
+      "replies": [
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Fine, but thank her too."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Gracious."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Please, eat something.",
+      "replies": [
+       {
+        "c": 13,
+        "ok": 1,
+        "next": "end",
+        "fb": "Praising the food honours the host."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Thanks is always welcome."
+       }
+      ]
+     },
+     "end": {
+      "en": "You are family now!",
+      "end": true
+     }
+    }
+   }
+  ]
+ },
+ "igbo": {
+  "cards": [
+   {
+    "id": "ig0",
+    "term": "Ụtụtụ ọma",
+    "pron": "oo-too-too OH-mah",
+    "en": "Good morning",
+    "audio": ""
+   },
+   {
+    "id": "ig1",
+    "term": "Kedu?",
+    "pron": "KEH-doo",
+    "en": "How are you?",
+    "audio": ""
+   },
+   {
+    "id": "ig2",
+    "term": "Adị m mma",
+    "pron": "AH-dee m mmah",
+    "en": "I'm fine",
+    "audio": ""
+   },
+   {
+    "id": "ig3",
+    "term": "Daalụ",
+    "pron": "DAH-loo",
+    "en": "Thank you",
+    "audio": ""
+   },
+   {
+    "id": "ig4",
+    "term": "Biko",
+    "pron": "BEE-koh",
+    "en": "Please",
+    "audio": ""
+   },
+   {
+    "id": "ig5",
+    "term": "Ndo",
+    "pron": "n-DOH",
+    "en": "Sorry",
+    "audio": ""
+   },
+   {
+    "id": "ig6",
+    "term": "Ka ọ dị",
+    "pron": "kah oh DEE",
+    "en": "Goodbye",
+    "audio": ""
+   },
+   {
+    "id": "ig7",
+    "term": "Ego ole ka ọ bụ?",
+    "pron": "EH-goh OH-leh kah oh boo",
+    "en": "How much is it?",
+    "audio": ""
+   },
+   {
+    "id": "ig8",
+    "term": "Ọ dị oke ọnụ",
+    "pron": "oh dee OH-keh OH-noo",
+    "en": "It's too expensive",
+    "audio": ""
+   },
+   {
+    "id": "ig9",
+    "term": "Belata ọnụ ahịa",
+    "pron": "BEH-lah-tah OH-noo ah-HEE-ah",
+    "en": "Please reduce it a little",
+    "audio": ""
+   },
+   {
+    "id": "ig10",
+    "term": "Aga m azụta ya",
+    "pron": "AH-gah m ah-ZOO-tah ya",
+    "en": "I'll take it",
+    "audio": ""
+   },
+   {
+    "id": "ig11",
+    "term": "Ị riala nri?",
+    "pron": "ee ree-AH-lah NREE",
+    "en": "Have you eaten?",
+    "audio": ""
+   },
+   {
+    "id": "ig12",
+    "term": "Afọ ejuola m",
+    "pron": "AH-foh eh-joo-OH-lah m",
+    "en": "I'm full",
+    "audio": ""
+   },
+   {
+    "id": "ig13",
+    "term": "Ọ tọrọ ụtọ",
+    "pron": "oh toh-roh OO-toh",
+    "en": "It's delicious",
+    "audio": ""
+   },
+   {
+    "id": "ig14",
+    "term": "Ehihie ọma",
+    "pron": "eh-HEE-hee-eh OH-mah",
+    "en": "Good afternoon",
+    "audio": ""
+   },
+   {
+    "id": "ig15",
+    "term": "Gịnị bụ aha gị?",
+    "pron": "",
+    "en": "What is your name?",
+    "audio": ""
+   },
+   {
+    "id": "ig16",
+    "term": "Aha m bụ …",
+    "pron": "",
+    "en": "My name is …",
+    "audio": ""
+   },
+   {
+    "id": "ig17",
+    "term": "Ọ dị mma ịhụ gị",
+    "pron": "",
+    "en": "Nice to meet you",
+    "audio": ""
+   },
+   {
+    "id": "ig18",
+    "term": "Ọ dị mma",
+    "pron": "",
+    "en": "It's okay",
+    "audio": ""
+   },
+   {
+    "id": "ig19",
+    "term": "Achọrọ m mmiri",
+    "pron": "",
+    "en": "I want water",
+    "audio": ""
+   },
+   {
+    "id": "ig20",
+    "term": "Achọrọ m enyemaka",
+    "pron": "",
+    "en": "I need help",
+    "audio": ""
+   },
+   {
+    "id": "ig21",
+    "term": "Ebee ka ụlọ mposi dị?",
+    "pron": "",
+    "en": "Where is the toilet?",
+    "audio": ""
+   },
+   {
+    "id": "ig22",
+    "term": "Ebee ka ahịa dị?",
+    "pron": "",
+    "en": "Where is the market?",
+    "audio": ""
+   },
+   {
+    "id": "ig23",
+    "term": "Gaa n'ihu",
+    "pron": "",
+    "en": "Go straight",
+    "audio": ""
+   },
+   {
+    "id": "ig24",
+    "term": "Gbagoo n'aka ekpe",
+    "pron": "",
+    "en": "Turn left",
+    "audio": ""
+   },
+   {
+    "id": "ig25",
+    "term": "Gbagoo n'aka nri",
+    "pron": "",
+    "en": "Turn right",
+    "audio": ""
+   },
+   {
+    "id": "ig26",
+    "term": "Ọ dị nso",
+    "pron": "",
+    "en": "It's near",
+    "audio": ""
+   },
+   {
+    "id": "ig27",
+    "term": "Ọ dị anya",
+    "pron": "",
+    "en": "It's far",
+    "audio": ""
+   },
+   {
+    "id": "ig28",
+    "term": "Daalụ nke ukwuu",
+    "pron": "",
+    "en": "Thank you very much",
+    "audio": ""
+   },
+   {
+    "id": "ig29",
+    "term": "M ga-ala",
+    "pron": "",
+    "en": "I'm leaving now",
+    "audio": ""
+   },
+   {
+    "id": "ig30",
+    "term": "M ga-alọghachi",
+    "pron": "",
+    "en": "I'll come back",
+    "audio": ""
+   },
+   {
+    "id": "ig31",
+    "term": "Ọ bụ echi",
+    "pron": "",
+    "en": "See you tomorrow",
+    "audio": ""
+   },
+   {
+    "id": "ig32",
+    "term": "Gaa nke ọma",
+    "pron": "",
+    "en": "Take care",
+    "audio": ""
+   },
+   {
+    "id": "ig33",
+    "term": "Ezinụlọ dị mma?",
+    "pron": "",
+    "en": "How is the family?",
+    "audio": ""
+   },
+   {
+    "id": "ig34",
+    "term": "Nnọọ",
+    "pron": "",
+    "en": "Welcome",
+    "audio": ""
+   },
+   {
+    "id": "ig35",
+    "term": "Nọdụ ala",
+    "pron": "",
+    "en": "Please sit",
+    "audio": ""
+   },
+   {
+    "id": "ig36",
+    "term": "Ọ bụ ngwụcha ego?",
+    "pron": "",
+    "en": "What's the last price?",
+    "audio": ""
+   }
+  ],
+  "moments": [
+   {
+    "id": "m1",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "Your father walks in on a morning:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Greet elders first and add a title like Daddy, Sir or Ma.",
+    "options": [
+     {
+      "c": 0,
+      "v": "best",
+      "why": "Greeting an elder first, in the respectful form, is right."
+     },
+     {
+      "c": 1,
+      "v": "okay",
+      "why": "Skips the greeting. Say good morning first."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? He just arrived!"
+     }
+    ]
+   },
+   {
+    "id": "m2",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "An elder asks you:",
+    "prompt": 1,
+    "q": "How do you reply?",
+    "culture": "Greetings are caring questions, not small talk. Answer, then ask back.",
+    "options": [
+     {
+      "c": 2,
+      "v": "best",
+      "why": "Short and polite."
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Thanks is kind, but you didn't answer."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Leaving without answering is rude."
+     }
+    ]
+   },
+   {
+    "id": "m3",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "You meet a friend's mother in the afternoon:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Time-of-day greetings are expected, especially with elders.",
+    "options": [
+     {
+      "c": 14,
+      "v": "best",
+      "why": "Matching the greeting to the time of day is polite."
+     },
+     {
+      "c": 0,
+      "v": "off",
+      "why": "That is a morning greeting."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? You have just met!"
+     }
+    ]
+   },
+   {
+    "id": "m4",
+    "lvl": 3,
+    "topic": "Introduction",
+    "after": 3,
+    "setup": "A new person asks you:",
+    "prompt": 15,
+    "q": "How do you answer?",
+    "culture": "Share your name warmly, then use the greeting back.",
+    "options": [
+     {
+      "c": 16,
+      "v": "best",
+      "why": "A clear answer."
+     },
+     {
+      "c": 17,
+      "v": "okay",
+      "why": "Friendly, but they asked your name."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m5",
+    "lvl": 3,
+    "topic": "Introduction",
+    "after": 3,
+    "setup": "They tell you their name. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "After names, a friendly 'nice to meet you' is the usual reply.",
+    "options": [
+     {
+      "c": 17,
+      "v": "best",
+      "why": "A warm, standard reply."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't fit."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m6",
+    "lvl": 4,
+    "topic": "Empathy",
+    "after": 4,
+    "setup": "You bump an elder's foot on the bus:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Apologise at once to elders, with a slight bow or nod.",
+    "options": [
+     {
+      "c": 5,
+      "v": "best",
+      "why": "A quick, sincere apology is expected."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't apologise."
+     },
+     {
+      "c": 3,
+      "v": "off",
+      "why": "Thanks makes no sense here."
+     }
+    ]
+   },
+   {
+    "id": "m7",
+    "lvl": 4,
+    "topic": "Empathy",
+    "after": 4,
+    "setup": "A friend says sorry for being late. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Accepting an apology kindly keeps the friendship warm.",
+    "options": [
+     {
+      "c": 18,
+      "v": "best",
+      "why": "Gracious and natural."
+     },
+     {
+      "c": 5,
+      "v": "okay",
+      "why": "Fine, but you did nothing wrong."
+     },
+     {
+      "c": 3,
+      "v": "off",
+      "why": "Thanks isn't the right reply."
+     }
+    ]
+   },
+   {
+    "id": "m8",
+    "lvl": 5,
+    "topic": "Basic Needs",
+    "after": 5,
+    "setup": "You are thirsty at a host's home:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Guests may ask for water, but always thank the host.",
+    "options": [
+     {
+      "c": 19,
+      "v": "best",
+      "why": "Clear and simple."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "That asks a price, not for water."
+     },
+     {
+      "c": 20,
+      "v": "okay",
+      "why": "'I need help' is too strong."
+     }
+    ]
+   },
+   {
+    "id": "m9",
+    "lvl": 5,
+    "topic": "Basic Needs",
+    "after": 5,
+    "setup": "You need the toilet in someone's house:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "It's normal to ask your host politely.",
+    "options": [
+     {
+      "c": 21,
+      "v": "best",
+      "why": "The right question."
+     },
+     {
+      "c": 22,
+      "v": "off",
+      "why": "That asks about the market!"
+     },
+     {
+      "c": 19,
+      "v": "off",
+      "why": "That asks for water."
+     }
+    ]
+   },
+   {
+    "id": "m10",
+    "lvl": 6,
+    "topic": "Food",
+    "after": 6,
+    "setup": "At dinner, Uncle asks you:",
+    "prompt": 11,
+    "q": "What do you say?",
+    "culture": "Refusing food flatly can seem rude. Thank your host first.",
+    "options": [
+     {
+      "c": 3,
+      "v": "best",
+      "why": "Thanking first is warm, even when you are declining."
+     },
+     {
+      "c": 12,
+      "v": "okay",
+      "why": "True, but blunt. Add thanks."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Asking a price doesn't answer him."
+     }
+    ]
+   },
+   {
+    "id": "m11",
+    "lvl": 6,
+    "topic": "Food",
+    "after": 6,
+    "setup": "You finish a meal and want to compliment the cook:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Praise the food and thank the cook. Hosts love to hear it.",
+    "options": [
+     {
+      "c": 13,
+      "v": "best",
+      "why": "Praising the food honours the host."
+     },
+     {
+      "c": 12,
+      "v": "okay",
+      "why": "Says you're full but doesn't praise the food."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't fit."
+     }
+    ]
+   },
+   {
+    "id": "m12",
+    "lvl": 7,
+    "topic": "Directions",
+    "after": 7,
+    "setup": "You are lost and need the market:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Greet first, then ask. Strangers happily point the way.",
+    "options": [
+     {
+      "c": 22,
+      "v": "best",
+      "why": "Clear and direct."
+     },
+     {
+      "c": 21,
+      "v": "off",
+      "why": "That asks for the toilet."
+     },
+     {
+      "c": 23,
+      "v": "off",
+      "why": "That is a direction, not a question."
+     }
+    ]
+   },
+   {
+    "id": "m13",
+    "lvl": 7,
+    "topic": "Directions",
+    "after": 7,
+    "setup": "Someone has just given you directions. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "A warm thank-you matters more than speed.",
+    "options": [
+     {
+      "c": 28,
+      "v": "best",
+      "why": "Warm thanks."
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Fine, but plain."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye without thanks."
+     }
+    ]
+   },
+   {
+    "id": "m14",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "setup": "A seller says the tomatoes cost ₦1,500. You think it is too much:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Bargaining is expected in markets. Keep it friendly.",
+    "options": [
+     {
+      "c": 9,
+      "v": "best",
+      "why": "Politely asking for less is the normal way to bargain."
+     },
+     {
+      "c": 8,
+      "v": "okay",
+      "why": "Clear, but blunt. Soften it with please."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Walking off ends the chat."
+     }
+    ]
+   },
+   {
+    "id": "m15",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "setup": "You like the price. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Say it clearly when you agree on a price.",
+    "options": [
+     {
+      "c": 10,
+      "v": "best",
+      "why": "Clear and decisive."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "You already know the price."
+     },
+     {
+      "c": 8,
+      "v": "off",
+      "why": "You said it's too expensive!"
+     }
+    ]
+   },
+   {
+    "id": "m16",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "setup": "You want the seller's best offer:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Asking for the last price is a normal step.",
+    "options": [
+     {
+      "c": 36,
+      "v": "best",
+      "why": "Asking the last price is classic bargaining."
+     },
+     {
+      "c": 10,
+      "v": "okay",
+      "why": "You took the first price without bargaining."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Leaving too soon."
+     }
+    ]
+   },
+   {
+    "id": "m17",
+    "lvl": 9,
+    "topic": "Exiting",
+    "after": 9,
+    "setup": "You must leave a host's home:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Never leave abruptly. Say you're going and thank them.",
+    "options": [
+     {
+      "c": 29,
+      "v": "best",
+      "why": "Polite and clear."
+     },
+     {
+      "c": 6,
+      "v": "okay",
+      "why": "Goodbye alone is abrupt."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m18",
+    "lvl": 9,
+    "topic": "Exiting",
+    "after": 9,
+    "setup": "Parting words to an elder:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Wish elders well as they go.",
+    "options": [
+     {
+      "c": 32,
+      "v": "best",
+      "why": "A caring farewell."
+     },
+     {
+      "c": 6,
+      "v": "okay",
+      "why": "Fine, but plain."
+     },
+     {
+      "c": 5,
+      "v": "off",
+      "why": "Sorry? You did nothing wrong."
+     }
+    ]
+   },
+   {
+    "id": "m19",
+    "lvl": 12,
+    "topic": "Family",
+    "after": 12,
+    "setup": "A relative asks:",
+    "prompt": 33,
+    "q": "How do you reply?",
+    "culture": "Asking about family is care, not nosiness.",
+    "options": [
+     {
+      "c": 2,
+      "v": "best",
+      "why": "A warm, short answer."
+     },
+     {
+      "c": 1,
+      "v": "off",
+      "why": "She asked you!"
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Thanks is kind but doesn't answer."
+     }
+    ]
+   },
+   {
+    "id": "m20",
+    "lvl": 12,
+    "topic": "Family",
+    "after": 12,
+    "setup": "A relative welcomes you at her door:",
+    "prompt": 34,
+    "q": "How do you reply?",
+    "culture": "Greet and thank when welcomed into a home.",
+    "options": [
+     {
+      "c": 3,
+      "v": "best",
+      "why": "Thanking is the right start."
+     },
+     {
+      "c": 14,
+      "v": "okay",
+      "why": "A greeting works, but thanks first."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? You just arrived!"
+     }
+    ]
+   }
+  ],
+  "scenes": [
+   {
+    "id": "greet",
+    "title": "Good morning, Daddy",
+    "emoji": "🏠",
+    "goal": "Greet your father the right way",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "culture": "Greet elders first, warmly, and add a title like Daddy, Sir or Ma. It shows you were raised well.",
+    "words": [
+     0,
+     1,
+     2,
+     11,
+     12,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good morning! You're up early.",
+      "replies": [
+       {
+        "c": 0,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greeting first, with respect, is perfect."
+       },
+       {
+        "c": 1,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet him first, then ask how he is."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How are you this morning?",
+      "c": 1,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A short, polite answer."
+       },
+       {
+        "c": 3,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Say how you are first, then thank him."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Have you eaten?",
+      "c": 11,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thanking him is warm and polite."
+       },
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Fine. Add thanks next time."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Good. Go well today.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "A gracious close."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "God bless you, my child.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "intro",
+    "title": "Meeting someone new",
+    "emoji": "👋",
+    "goal": "Introduce yourself politely",
+    "lvl": 3,
+    "topic": "Introduction",
+    "after": 3,
+    "culture": "First meetings begin with a greeting, then names. A warm tone matters more than perfect grammar.",
+    "words": [
+     14,
+     15,
+     16,
+     17,
+     1,
+     2
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good afternoon!",
+      "c": 14,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Match the greeting to the time of day."
+       },
+       {
+        "c": 0,
+        "ok": 0,
+        "next": "n2",
+        "fb": "It's afternoon, not morning."
+       }
+      ]
+     },
+     "n2": {
+      "en": "What is your name?",
+      "c": 15,
+      "replies": [
+       {
+        "c": 16,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and polite."
+       },
+       {
+        "c": 3,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Say your name first."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Lovely! Nice to meet you.",
+      "replies": [
+       {
+        "c": 17,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Return the kindness."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thanks works too."
+       }
+      ]
+     },
+     "n4": {
+      "en": "How are you today?",
+      "c": 1,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "end",
+        "fb": "Good answer."
+       },
+       {
+        "c": 1,
+        "ok": 1,
+        "next": "end",
+        "fb": "Asking back is polite too."
+       }
+      ]
+     },
+     "end": {
+      "en": "Great chat. See you around!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "sorry",
+    "title": "I'm sorry!",
+    "emoji": "🙏",
+    "goal": "Apologise to an elder at once",
+    "lvl": 4,
+    "topic": "Empathy",
+    "after": 4,
+    "culture": "Apologise quickly to elders, with a slight bow or nod. Accepting an apology kindly is also good manners.",
+    "words": [
+     5,
+     18,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Ouch! You bump an elder carrying a bag.",
+      "replies": [
+       {
+        "c": 5,
+        "ok": 1,
+        "next": "n2",
+        "fb": "A quick, sincere apology."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "n2",
+        "fb": "'Please' isn't an apology."
+       }
+      ]
+     },
+     "n2": {
+      "en": "It's okay, my child.",
+      "c": 18,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Thank them for their kindness."
+       },
+       {
+        "c": 5,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Saying sorry again is fine."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Be careful next time. God bless you.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Gracious."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A polite goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "The elder smiles and walks on.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "needs",
+    "title": "What do you need?",
+    "emoji": "💧",
+    "goal": "Ask for what you need, politely",
+    "lvl": 5,
+    "topic": "Basic Needs",
+    "after": 5,
+    "culture": "Ask politely and thank your host. Hosts love to help, but the way you ask matters.",
+    "words": [
+     34,
+     35,
+     19,
+     20,
+     21,
+     3,
+     28
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Welcome! Come in.",
+      "c": 34,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thank them for the welcome."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "n2",
+        "fb": "'Please' doesn't answer a welcome."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Please sit. What can I get you?",
+      "c": 35,
+      "replies": [
+       {
+        "c": 19,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and simple."
+       },
+       {
+        "c": 13,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Delicious? You haven't eaten yet!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "Here is your water.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Always thank them."
+       },
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Extra warm thanks."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Anything else?",
+      "replies": [
+       {
+        "c": 21,
+        "ok": 1,
+        "next": "end",
+        "fb": "Good to know how to ask."
+       },
+       {
+        "c": 20,
+        "ok": 1,
+        "next": "end",
+        "fb": "Asking for help is fine."
+       }
+      ]
+     },
+     "end": {
+      "en": "You are welcome in this house.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "food",
+    "title": "Dinner at home",
+    "emoji": "🍲",
+    "goal": "Be a gracious guest",
+    "lvl": 6,
+    "topic": "Food",
+    "after": 6,
+    "culture": "Thank first, praise the food, and accept what is offered with your right hand.",
+    "words": [
+     11,
+     3,
+     12,
+     13,
+     4,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Come, sit and eat.",
+      "c": 11,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thanking first is the polite start."
+       },
+       {
+        "c": 12,
+        "ok": 0,
+        "next": "n2",
+        "fb": "True, but blunt. Thank them first."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Eat more, don't be shy!",
+      "replies": [
+       {
+        "c": 13,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Praising the food honours the host."
+       },
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Fine. Politely declining more is okay."
+       }
+      ]
+     },
+     "n3": {
+      "en": "I'm glad you liked it. Take some home.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Gracious."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "end",
+        "fb": "'Please' isn't needed. A thank-you fits."
+       }
+      ]
+     },
+     "end": {
+      "en": "Come again soon!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "dir",
+    "title": "Finding the market",
+    "emoji": "🧭",
+    "goal": "Ask for directions without a phone",
+    "lvl": 7,
+    "topic": "Directions",
+    "after": 7,
+    "culture": "Greet before you ask. People are happy to help, and a warm thank-you finishes the exchange well.",
+    "words": [
+     14,
+     22,
+     23,
+     24,
+     26,
+     3,
+     28
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good afternoon! You look lost.",
+      "c": 14,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greet back first."
+       },
+       {
+        "c": 22,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet first, then ask."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How can I help?",
+      "replies": [
+       {
+        "c": 22,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and direct."
+       },
+       {
+        "c": 21,
+        "ok": 0,
+        "next": "n3",
+        "fb": "That's the toilet, not the market!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "The market? Go straight, then turn left. It's near.",
+      "c": 23,
+      "replies": [
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "end",
+        "fb": "Warm thanks."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Polite thanks."
+       }
+      ]
+     },
+     "end": {
+      "en": "Go well, and God bless you.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "haggle",
+    "title": "At the market",
+    "emoji": "🛒",
+    "goal": "Buy tomatoes at a fair price",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "culture": "Bargaining is normal at markets. Start with a greeting and keep it friendly.",
+    "words": [
+     0,
+     7,
+     8,
+     36,
+     9,
+     10,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good morning! Fresh tomatoes today. What can I get you?",
+      "replies": [
+       {
+        "c": 0,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greeting first goes a long way."
+       },
+       {
+        "c": 7,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet first, then ask the price."
+       }
+      ]
+     },
+     "n2": {
+      "en": "These ones? ₦1,500 a basket.",
+      "replies": [
+       {
+        "c": 8,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Polite push-back."
+       },
+       {
+        "c": 10,
+        "ok": 0,
+        "next": "n4",
+        "fb": "You took it without bargaining."
+       }
+      ]
+     },
+     "n3": {
+      "en": "For you, ₦1,300.",
+      "replies": [
+       {
+        "c": 36,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Asking the last price is classic bargaining."
+       },
+       {
+        "c": 9,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Good try. The seller smiles."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Alright, ₦1,200. Last price!",
+      "replies": [
+       {
+        "c": 10,
+        "ok": 1,
+        "next": "n5",
+        "fb": "Deal. A fair price."
+       },
+       {
+        "c": 8,
+        "ok": 0,
+        "next": "n5",
+        "fb": "Too much? You already got a good price."
+       }
+      ]
+     },
+     "n5": {
+      "en": "Thank you! Anything else?",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "A polite thank-you closes the deal."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "God bless you. Come again!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "exit",
+    "title": "Time to go",
+    "emoji": "👋",
+    "goal": "Leave politely and promise to return",
+    "lvl": 9,
+    "topic": "Exiting",
+    "after": 9,
+    "culture": "Never leave abruptly. Say why you're going, promise to return, and thank your host.",
+    "words": [
+     29,
+     30,
+     31,
+     3,
+     28,
+     32,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Stay a little more!",
+      "replies": [
+       {
+        "c": 29,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Polite and clear."
+       },
+       {
+        "c": 7,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Wrong topic. Say you are leaving."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Will you come back soon?",
+      "replies": [
+       {
+        "c": 30,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A warm promise."
+       },
+       {
+        "c": 31,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Good, you suggest a time."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Take something for the road.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thank them."
+       },
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Extra warm thanks."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Safe journey!",
+      "replies": [
+       {
+        "c": 32,
+        "ok": 1,
+        "next": "end",
+        "fb": "A caring goodbye."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "Go well!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "family",
+    "title": "Visiting family",
+    "emoji": "👨‍👩‍👧",
+    "goal": "Be a good visitor at a relative's home",
+    "lvl": 12,
+    "topic": "Family",
+    "after": 12,
+    "culture": "Greet the household, answer questions about family warmly, and accept food. It shows love.",
+    "words": [
+     14,
+     2,
+     11,
+     12,
+     13,
+     3,
+     33,
+     34
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Welcome! Come in, come in!",
+      "c": 34,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greet her first."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thanks is warm too."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How is the family?",
+      "c": 33,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A warm, short answer."
+       },
+       {
+        "c": 1,
+        "ok": 0,
+        "next": "n3",
+        "fb": "She asked you!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "Sit! Have you eaten?",
+      "c": 11,
+      "replies": [
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Fine, but thank her too."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Gracious."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Please, eat something.",
+      "replies": [
+       {
+        "c": 13,
+        "ok": 1,
+        "next": "end",
+        "fb": "Praising the food honours the host."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Thanks is always welcome."
+       }
+      ]
+     },
+     "end": {
+      "en": "You are family now!",
+      "end": true
+     }
+    }
+   }
+  ]
+ },
+ "hausa": {
+  "cards": [
+   {
+    "id": "ha0",
+    "term": "Ina kwana",
+    "pron": "EE-na KWA-na",
+    "en": "Good morning",
+    "audio": ""
+   },
+   {
+    "id": "ha1",
+    "term": "Yaya kake?",
+    "pron": "YA-ya KA-keh",
+    "en": "How are you?",
+    "audio": ""
+   },
+   {
+    "id": "ha2",
+    "term": "Lafiya lau",
+    "pron": "la-FEE-ya LAU",
+    "en": "I'm fine",
+    "audio": ""
+   },
+   {
+    "id": "ha3",
+    "term": "Na gode",
+    "pron": "na GO-deh",
+    "en": "Thank you",
+    "audio": ""
+   },
+   {
+    "id": "ha4",
+    "term": "Don Allah",
+    "pron": "don AL-lah",
+    "en": "Please",
+    "audio": ""
+   },
+   {
+    "id": "ha5",
+    "term": "Yi haƙuri",
+    "pron": "yee ha-KOO-ree",
+    "en": "Sorry",
+    "audio": ""
+   },
+   {
+    "id": "ha6",
+    "term": "Sai an jima",
+    "pron": "sai an JEE-ma",
+    "en": "Goodbye",
+    "audio": ""
+   },
+   {
+    "id": "ha7",
+    "term": "Nawa ne?",
+    "pron": "NA-wa neh",
+    "en": "How much is it?",
+    "audio": ""
+   },
+   {
+    "id": "ha8",
+    "term": "Ya yi tsada",
+    "pron": "ya yee TSA-da",
+    "en": "It's too expensive",
+    "audio": ""
+   },
+   {
+    "id": "ha9",
+    "term": "Rage mini kaɗan",
+    "pron": "RA-geh MEE-nee KA-dan",
+    "en": "Please reduce it a little",
+    "audio": ""
+   },
+   {
+    "id": "ha10",
+    "term": "Zan ɗauka",
+    "pron": "zan DAU-ka",
+    "en": "I'll take it",
+    "audio": ""
+   },
+   {
+    "id": "ha11",
+    "term": "Kun ci abinci?",
+    "pron": "koon chee a-BEEN-chee",
+    "en": "Have you eaten?",
+    "audio": ""
+   },
+   {
+    "id": "ha12",
+    "term": "Na koshi",
+    "pron": "na KO-shee",
+    "en": "I'm full",
+    "audio": ""
+   },
+   {
+    "id": "ha13",
+    "term": "Yana da daɗi",
+    "pron": "YA-na da DA-dee",
+    "en": "It's delicious",
+    "audio": ""
+   },
+   {
+    "id": "ha14",
+    "term": "Barka da rana",
+    "pron": "BAR-ka da RA-na",
+    "en": "Good afternoon",
+    "audio": ""
+   },
+   {
+    "id": "ha15",
+    "term": "Menene sunanka?",
+    "pron": "",
+    "en": "What is your name?",
+    "audio": ""
+   },
+   {
+    "id": "ha16",
+    "term": "Sunana …",
+    "pron": "",
+    "en": "My name is …",
+    "audio": ""
+   },
+   {
+    "id": "ha17",
+    "term": "Na ji daɗin haɗuwa da ku",
+    "pron": "",
+    "en": "Nice to meet you",
+    "audio": ""
+   },
+   {
+    "id": "ha18",
+    "term": "Ba laifi",
+    "pron": "",
+    "en": "It's okay",
+    "audio": ""
+   },
+   {
+    "id": "ha19",
+    "term": "Ina so ruwa",
+    "pron": "",
+    "en": "I want water",
+    "audio": ""
+   },
+   {
+    "id": "ha20",
+    "term": "Ina buƙatar taimako",
+    "pron": "",
+    "en": "I need help",
+    "audio": ""
+   },
+   {
+    "id": "ha21",
+    "term": "Ina gidan wanka yake?",
+    "pron": "",
+    "en": "Where is the toilet?",
+    "audio": ""
+   },
+   {
+    "id": "ha22",
+    "term": "Ina kasuwa yake?",
+    "pron": "",
+    "en": "Where is the market?",
+    "audio": ""
+   },
+   {
+    "id": "ha23",
+    "term": "Ka tafi gaba",
+    "pron": "",
+    "en": "Go straight",
+    "audio": ""
+   },
+   {
+    "id": "ha24",
+    "term": "Juya hagu",
+    "pron": "",
+    "en": "Turn left",
+    "audio": ""
+   },
+   {
+    "id": "ha25",
+    "term": "Juya dama",
+    "pron": "",
+    "en": "Turn right",
+    "audio": ""
+   },
+   {
+    "id": "ha26",
+    "term": "Yana kusa",
+    "pron": "",
+    "en": "It's near",
+    "audio": ""
+   },
+   {
+    "id": "ha27",
+    "term": "Yana nesa",
+    "pron": "",
+    "en": "It's far",
+    "audio": ""
+   },
+   {
+    "id": "ha28",
+    "term": "Na gode sosai",
+    "pron": "",
+    "en": "Thank you very much",
+    "audio": ""
+   },
+   {
+    "id": "ha29",
+    "term": "Ina tafiya",
+    "pron": "",
+    "en": "I'm leaving now",
+    "audio": ""
+   },
+   {
+    "id": "ha30",
+    "term": "Zan dawo",
+    "pron": "",
+    "en": "I'll come back",
+    "audio": ""
+   },
+   {
+    "id": "ha31",
+    "term": "Sai gobe",
+    "pron": "",
+    "en": "See you tomorrow",
+    "audio": ""
+   },
+   {
+    "id": "ha32",
+    "term": "Ka kula",
+    "pron": "",
+    "en": "Take care",
+    "audio": ""
+   },
+   {
+    "id": "ha33",
+    "term": "Ina iyali?",
+    "pron": "",
+    "en": "How is the family?",
+    "audio": ""
+   },
+   {
+    "id": "ha34",
+    "term": "Barka da zuwa",
+    "pron": "",
+    "en": "Welcome",
+    "audio": ""
+   },
+   {
+    "id": "ha35",
+    "term": "Zauna",
+    "pron": "",
+    "en": "Please sit",
+    "audio": ""
+   },
+   {
+    "id": "ha36",
+    "term": "Karshe nawa ne?",
+    "pron": "",
+    "en": "What's the last price?",
+    "audio": ""
+   }
+  ],
+  "moments": [
+   {
+    "id": "m1",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "Your father walks in on a morning:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Greet elders first and add a title like Daddy, Sir or Ma.",
+    "options": [
+     {
+      "c": 0,
+      "v": "best",
+      "why": "Greeting an elder first, in the respectful form, is right."
+     },
+     {
+      "c": 1,
+      "v": "okay",
+      "why": "Skips the greeting. Say good morning first."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? He just arrived!"
+     }
+    ]
+   },
+   {
+    "id": "m2",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "An elder asks you:",
+    "prompt": 1,
+    "q": "How do you reply?",
+    "culture": "Greetings are caring questions, not small talk. Answer, then ask back.",
+    "options": [
+     {
+      "c": 2,
+      "v": "best",
+      "why": "Short and polite."
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Thanks is kind, but you didn't answer."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Leaving without answering is rude."
+     }
+    ]
+   },
+   {
+    "id": "m3",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "You meet a friend's mother in the afternoon:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Time-of-day greetings are expected, especially with elders.",
+    "options": [
+     {
+      "c": 14,
+      "v": "best",
+      "why": "Matching the greeting to the time of day is polite."
+     },
+     {
+      "c": 0,
+      "v": "off",
+      "why": "That is a morning greeting."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? You have just met!"
+     }
+    ]
+   },
+   {
+    "id": "m4",
+    "lvl": 3,
+    "topic": "Introduction",
+    "after": 3,
+    "setup": "A new person asks you:",
+    "prompt": 15,
+    "q": "How do you answer?",
+    "culture": "Share your name warmly, then use the greeting back.",
+    "options": [
+     {
+      "c": 16,
+      "v": "best",
+      "why": "A clear answer."
+     },
+     {
+      "c": 17,
+      "v": "okay",
+      "why": "Friendly, but they asked your name."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m5",
+    "lvl": 3,
+    "topic": "Introduction",
+    "after": 3,
+    "setup": "They tell you their name. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "After names, a friendly 'nice to meet you' is the usual reply.",
+    "options": [
+     {
+      "c": 17,
+      "v": "best",
+      "why": "A warm, standard reply."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't fit."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m6",
+    "lvl": 4,
+    "topic": "Empathy",
+    "after": 4,
+    "setup": "You bump an elder's foot on the bus:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Apologise at once to elders, with a slight bow or nod.",
+    "options": [
+     {
+      "c": 5,
+      "v": "best",
+      "why": "A quick, sincere apology is expected."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't apologise."
+     },
+     {
+      "c": 3,
+      "v": "off",
+      "why": "Thanks makes no sense here."
+     }
+    ]
+   },
+   {
+    "id": "m7",
+    "lvl": 4,
+    "topic": "Empathy",
+    "after": 4,
+    "setup": "A friend says sorry for being late. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Accepting an apology kindly keeps the friendship warm.",
+    "options": [
+     {
+      "c": 18,
+      "v": "best",
+      "why": "Gracious and natural."
+     },
+     {
+      "c": 5,
+      "v": "okay",
+      "why": "Fine, but you did nothing wrong."
+     },
+     {
+      "c": 3,
+      "v": "off",
+      "why": "Thanks isn't the right reply."
+     }
+    ]
+   },
+   {
+    "id": "m8",
+    "lvl": 5,
+    "topic": "Basic Needs",
+    "after": 5,
+    "setup": "You are thirsty at a host's home:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Guests may ask for water, but always thank the host.",
+    "options": [
+     {
+      "c": 19,
+      "v": "best",
+      "why": "Clear and simple."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "That asks a price, not for water."
+     },
+     {
+      "c": 20,
+      "v": "okay",
+      "why": "'I need help' is too strong."
+     }
+    ]
+   },
+   {
+    "id": "m9",
+    "lvl": 5,
+    "topic": "Basic Needs",
+    "after": 5,
+    "setup": "You need the toilet in someone's house:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "It's normal to ask your host politely.",
+    "options": [
+     {
+      "c": 21,
+      "v": "best",
+      "why": "The right question."
+     },
+     {
+      "c": 22,
+      "v": "off",
+      "why": "That asks about the market!"
+     },
+     {
+      "c": 19,
+      "v": "off",
+      "why": "That asks for water."
+     }
+    ]
+   },
+   {
+    "id": "m10",
+    "lvl": 6,
+    "topic": "Food",
+    "after": 6,
+    "setup": "At dinner, Uncle asks you:",
+    "prompt": 11,
+    "q": "What do you say?",
+    "culture": "Refusing food flatly can seem rude. Thank your host first.",
+    "options": [
+     {
+      "c": 3,
+      "v": "best",
+      "why": "Thanking first is warm, even when you are declining."
+     },
+     {
+      "c": 12,
+      "v": "okay",
+      "why": "True, but blunt. Add thanks."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Asking a price doesn't answer him."
+     }
+    ]
+   },
+   {
+    "id": "m11",
+    "lvl": 6,
+    "topic": "Food",
+    "after": 6,
+    "setup": "You finish a meal and want to compliment the cook:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Praise the food and thank the cook. Hosts love to hear it.",
+    "options": [
+     {
+      "c": 13,
+      "v": "best",
+      "why": "Praising the food honours the host."
+     },
+     {
+      "c": 12,
+      "v": "okay",
+      "why": "Says you're full but doesn't praise the food."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't fit."
+     }
+    ]
+   },
+   {
+    "id": "m12",
+    "lvl": 7,
+    "topic": "Directions",
+    "after": 7,
+    "setup": "You are lost and need the market:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Greet first, then ask. Strangers happily point the way.",
+    "options": [
+     {
+      "c": 22,
+      "v": "best",
+      "why": "Clear and direct."
+     },
+     {
+      "c": 21,
+      "v": "off",
+      "why": "That asks for the toilet."
+     },
+     {
+      "c": 23,
+      "v": "off",
+      "why": "That is a direction, not a question."
+     }
+    ]
+   },
+   {
+    "id": "m13",
+    "lvl": 7,
+    "topic": "Directions",
+    "after": 7,
+    "setup": "Someone has just given you directions. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "A warm thank-you matters more than speed.",
+    "options": [
+     {
+      "c": 28,
+      "v": "best",
+      "why": "Warm thanks."
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Fine, but plain."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye without thanks."
+     }
+    ]
+   },
+   {
+    "id": "m14",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "setup": "A seller says the tomatoes cost ₦1,500. You think it is too much:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Bargaining is expected in markets. Keep it friendly.",
+    "options": [
+     {
+      "c": 9,
+      "v": "best",
+      "why": "Politely asking for less is the normal way to bargain."
+     },
+     {
+      "c": 8,
+      "v": "okay",
+      "why": "Clear, but blunt. Soften it with please."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Walking off ends the chat."
+     }
+    ]
+   },
+   {
+    "id": "m15",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "setup": "You like the price. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Say it clearly when you agree on a price.",
+    "options": [
+     {
+      "c": 10,
+      "v": "best",
+      "why": "Clear and decisive."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "You already know the price."
+     },
+     {
+      "c": 8,
+      "v": "off",
+      "why": "You said it's too expensive!"
+     }
+    ]
+   },
+   {
+    "id": "m16",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "setup": "You want the seller's best offer:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Asking for the last price is a normal step.",
+    "options": [
+     {
+      "c": 36,
+      "v": "best",
+      "why": "Asking the last price is classic bargaining."
+     },
+     {
+      "c": 10,
+      "v": "okay",
+      "why": "You took the first price without bargaining."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Leaving too soon."
+     }
+    ]
+   },
+   {
+    "id": "m17",
+    "lvl": 9,
+    "topic": "Exiting",
+    "after": 9,
+    "setup": "You must leave a host's home:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Never leave abruptly. Say you're going and thank them.",
+    "options": [
+     {
+      "c": 29,
+      "v": "best",
+      "why": "Polite and clear."
+     },
+     {
+      "c": 6,
+      "v": "okay",
+      "why": "Goodbye alone is abrupt."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m18",
+    "lvl": 9,
+    "topic": "Exiting",
+    "after": 9,
+    "setup": "Parting words to an elder:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Wish elders well as they go.",
+    "options": [
+     {
+      "c": 32,
+      "v": "best",
+      "why": "A caring farewell."
+     },
+     {
+      "c": 6,
+      "v": "okay",
+      "why": "Fine, but plain."
+     },
+     {
+      "c": 5,
+      "v": "off",
+      "why": "Sorry? You did nothing wrong."
+     }
+    ]
+   },
+   {
+    "id": "m19",
+    "lvl": 12,
+    "topic": "Family",
+    "after": 12,
+    "setup": "A relative asks:",
+    "prompt": 33,
+    "q": "How do you reply?",
+    "culture": "Asking about family is care, not nosiness.",
+    "options": [
+     {
+      "c": 2,
+      "v": "best",
+      "why": "A warm, short answer."
+     },
+     {
+      "c": 1,
+      "v": "off",
+      "why": "She asked you!"
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Thanks is kind but doesn't answer."
+     }
+    ]
+   },
+   {
+    "id": "m20",
+    "lvl": 12,
+    "topic": "Family",
+    "after": 12,
+    "setup": "A relative welcomes you at her door:",
+    "prompt": 34,
+    "q": "How do you reply?",
+    "culture": "Greet and thank when welcomed into a home.",
+    "options": [
+     {
+      "c": 3,
+      "v": "best",
+      "why": "Thanking is the right start."
+     },
+     {
+      "c": 14,
+      "v": "okay",
+      "why": "A greeting works, but thanks first."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? You just arrived!"
+     }
+    ]
+   }
+  ],
+  "scenes": [
+   {
+    "id": "greet",
+    "title": "Good morning, Daddy",
+    "emoji": "🏠",
+    "goal": "Greet your father the right way",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "culture": "Greet elders first, warmly, and add a title like Daddy, Sir or Ma. It shows you were raised well.",
+    "words": [
+     0,
+     1,
+     2,
+     11,
+     12,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good morning! You're up early.",
+      "replies": [
+       {
+        "c": 0,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greeting first, with respect, is perfect."
+       },
+       {
+        "c": 1,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet him first, then ask how he is."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How are you this morning?",
+      "c": 1,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A short, polite answer."
+       },
+       {
+        "c": 3,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Say how you are first, then thank him."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Have you eaten?",
+      "c": 11,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thanking him is warm and polite."
+       },
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Fine. Add thanks next time."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Good. Go well today.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "A gracious close."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "God bless you, my child.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "intro",
+    "title": "Meeting someone new",
+    "emoji": "👋",
+    "goal": "Introduce yourself politely",
+    "lvl": 3,
+    "topic": "Introduction",
+    "after": 3,
+    "culture": "First meetings begin with a greeting, then names. A warm tone matters more than perfect grammar.",
+    "words": [
+     14,
+     15,
+     16,
+     17,
+     1,
+     2
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good afternoon!",
+      "c": 14,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Match the greeting to the time of day."
+       },
+       {
+        "c": 0,
+        "ok": 0,
+        "next": "n2",
+        "fb": "It's afternoon, not morning."
+       }
+      ]
+     },
+     "n2": {
+      "en": "What is your name?",
+      "c": 15,
+      "replies": [
+       {
+        "c": 16,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and polite."
+       },
+       {
+        "c": 3,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Say your name first."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Lovely! Nice to meet you.",
+      "replies": [
+       {
+        "c": 17,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Return the kindness."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thanks works too."
+       }
+      ]
+     },
+     "n4": {
+      "en": "How are you today?",
+      "c": 1,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "end",
+        "fb": "Good answer."
+       },
+       {
+        "c": 1,
+        "ok": 1,
+        "next": "end",
+        "fb": "Asking back is polite too."
+       }
+      ]
+     },
+     "end": {
+      "en": "Great chat. See you around!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "sorry",
+    "title": "I'm sorry!",
+    "emoji": "🙏",
+    "goal": "Apologise to an elder at once",
+    "lvl": 4,
+    "topic": "Empathy",
+    "after": 4,
+    "culture": "Apologise quickly to elders, with a slight bow or nod. Accepting an apology kindly is also good manners.",
+    "words": [
+     5,
+     18,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Ouch! You bump an elder carrying a bag.",
+      "replies": [
+       {
+        "c": 5,
+        "ok": 1,
+        "next": "n2",
+        "fb": "A quick, sincere apology."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "n2",
+        "fb": "'Please' isn't an apology."
+       }
+      ]
+     },
+     "n2": {
+      "en": "It's okay, my child.",
+      "c": 18,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Thank them for their kindness."
+       },
+       {
+        "c": 5,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Saying sorry again is fine."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Be careful next time. God bless you.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Gracious."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A polite goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "The elder smiles and walks on.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "needs",
+    "title": "What do you need?",
+    "emoji": "💧",
+    "goal": "Ask for what you need, politely",
+    "lvl": 5,
+    "topic": "Basic Needs",
+    "after": 5,
+    "culture": "Ask politely and thank your host. Hosts love to help, but the way you ask matters.",
+    "words": [
+     34,
+     35,
+     19,
+     20,
+     21,
+     3,
+     28
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Welcome! Come in.",
+      "c": 34,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thank them for the welcome."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "n2",
+        "fb": "'Please' doesn't answer a welcome."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Please sit. What can I get you?",
+      "c": 35,
+      "replies": [
+       {
+        "c": 19,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and simple."
+       },
+       {
+        "c": 13,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Delicious? You haven't eaten yet!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "Here is your water.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Always thank them."
+       },
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Extra warm thanks."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Anything else?",
+      "replies": [
+       {
+        "c": 21,
+        "ok": 1,
+        "next": "end",
+        "fb": "Good to know how to ask."
+       },
+       {
+        "c": 20,
+        "ok": 1,
+        "next": "end",
+        "fb": "Asking for help is fine."
+       }
+      ]
+     },
+     "end": {
+      "en": "You are welcome in this house.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "food",
+    "title": "Dinner at home",
+    "emoji": "🍲",
+    "goal": "Be a gracious guest",
+    "lvl": 6,
+    "topic": "Food",
+    "after": 6,
+    "culture": "Thank first, praise the food, and accept what is offered with your right hand.",
+    "words": [
+     11,
+     3,
+     12,
+     13,
+     4,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Come, sit and eat.",
+      "c": 11,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thanking first is the polite start."
+       },
+       {
+        "c": 12,
+        "ok": 0,
+        "next": "n2",
+        "fb": "True, but blunt. Thank them first."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Eat more, don't be shy!",
+      "replies": [
+       {
+        "c": 13,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Praising the food honours the host."
+       },
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Fine. Politely declining more is okay."
+       }
+      ]
+     },
+     "n3": {
+      "en": "I'm glad you liked it. Take some home.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Gracious."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "end",
+        "fb": "'Please' isn't needed. A thank-you fits."
+       }
+      ]
+     },
+     "end": {
+      "en": "Come again soon!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "dir",
+    "title": "Finding the market",
+    "emoji": "🧭",
+    "goal": "Ask for directions without a phone",
+    "lvl": 7,
+    "topic": "Directions",
+    "after": 7,
+    "culture": "Greet before you ask. People are happy to help, and a warm thank-you finishes the exchange well.",
+    "words": [
+     14,
+     22,
+     23,
+     24,
+     26,
+     3,
+     28
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good afternoon! You look lost.",
+      "c": 14,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greet back first."
+       },
+       {
+        "c": 22,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet first, then ask."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How can I help?",
+      "replies": [
+       {
+        "c": 22,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and direct."
+       },
+       {
+        "c": 21,
+        "ok": 0,
+        "next": "n3",
+        "fb": "That's the toilet, not the market!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "The market? Go straight, then turn left. It's near.",
+      "c": 23,
+      "replies": [
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "end",
+        "fb": "Warm thanks."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Polite thanks."
+       }
+      ]
+     },
+     "end": {
+      "en": "Go well, and God bless you.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "haggle",
+    "title": "At the market",
+    "emoji": "🛒",
+    "goal": "Buy tomatoes at a fair price",
+    "lvl": 8,
+    "topic": "Haggling",
+    "after": 8,
+    "culture": "Bargaining is normal at markets. Start with a greeting and keep it friendly.",
+    "words": [
+     0,
+     7,
+     8,
+     36,
+     9,
+     10,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good morning! Fresh tomatoes today. What can I get you?",
+      "replies": [
+       {
+        "c": 0,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greeting first goes a long way."
+       },
+       {
+        "c": 7,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet first, then ask the price."
+       }
+      ]
+     },
+     "n2": {
+      "en": "These ones? ₦1,500 a basket.",
+      "replies": [
+       {
+        "c": 8,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Polite push-back."
+       },
+       {
+        "c": 10,
+        "ok": 0,
+        "next": "n4",
+        "fb": "You took it without bargaining."
+       }
+      ]
+     },
+     "n3": {
+      "en": "For you, ₦1,300.",
+      "replies": [
+       {
+        "c": 36,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Asking the last price is classic bargaining."
+       },
+       {
+        "c": 9,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Good try. The seller smiles."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Alright, ₦1,200. Last price!",
+      "replies": [
+       {
+        "c": 10,
+        "ok": 1,
+        "next": "n5",
+        "fb": "Deal. A fair price."
+       },
+       {
+        "c": 8,
+        "ok": 0,
+        "next": "n5",
+        "fb": "Too much? You already got a good price."
+       }
+      ]
+     },
+     "n5": {
+      "en": "Thank you! Anything else?",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "A polite thank-you closes the deal."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "God bless you. Come again!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "exit",
+    "title": "Time to go",
+    "emoji": "👋",
+    "goal": "Leave politely and promise to return",
+    "lvl": 9,
+    "topic": "Exiting",
+    "after": 9,
+    "culture": "Never leave abruptly. Say why you're going, promise to return, and thank your host.",
+    "words": [
+     29,
+     30,
+     31,
+     3,
+     28,
+     32,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Stay a little more!",
+      "replies": [
+       {
+        "c": 29,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Polite and clear."
+       },
+       {
+        "c": 7,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Wrong topic. Say you are leaving."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Will you come back soon?",
+      "replies": [
+       {
+        "c": 30,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A warm promise."
+       },
+       {
+        "c": 31,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Good, you suggest a time."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Take something for the road.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thank them."
+       },
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Extra warm thanks."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Safe journey!",
+      "replies": [
+       {
+        "c": 32,
+        "ok": 1,
+        "next": "end",
+        "fb": "A caring goodbye."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "Go well!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "family",
+    "title": "Visiting family",
+    "emoji": "👨‍👩‍👧",
+    "goal": "Be a good visitor at a relative's home",
+    "lvl": 12,
+    "topic": "Family",
+    "after": 12,
+    "culture": "Greet the household, answer questions about family warmly, and accept food. It shows love.",
+    "words": [
+     14,
+     2,
+     11,
+     12,
+     13,
+     3,
+     33,
+     34
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Welcome! Come in, come in!",
+      "c": 34,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greet her first."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thanks is warm too."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How is the family?",
+      "c": 33,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A warm, short answer."
+       },
+       {
+        "c": 1,
+        "ok": 0,
+        "next": "n3",
+        "fb": "She asked you!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "Sit! Have you eaten?",
+      "c": 11,
+      "replies": [
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Fine, but thank her too."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Gracious."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Please, eat something.",
+      "replies": [
+       {
+        "c": 13,
+        "ok": 1,
+        "next": "end",
+        "fb": "Praising the food honours the host."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Thanks is always welcome."
+       }
+      ]
+     },
+     "end": {
+      "en": "You are family now!",
+      "end": true
+     }
+    }
+   }
+  ]
+ },
+ "pidgin": {
+  "cards": [
+   {
+    "id": "pi0",
+    "term": "Good morning o",
+    "pron": "",
+    "en": "Good morning",
+    "audio": ""
+   },
+   {
+    "id": "pi1",
+    "term": "How you dey?",
+    "pron": "",
+    "en": "How are you?",
+    "audio": ""
+   },
+   {
+    "id": "pi2",
+    "term": "I dey fine",
+    "pron": "",
+    "en": "I'm fine",
+    "audio": ""
+   },
+   {
+    "id": "pi3",
+    "term": "Thank you o",
+    "pron": "",
+    "en": "Thank you",
+    "audio": ""
+   },
+   {
+    "id": "pi4",
+    "term": "Abeg",
+    "pron": "",
+    "en": "Please",
+    "audio": ""
+   },
+   {
+    "id": "pi5",
+    "term": "Sorry o",
+    "pron": "",
+    "en": "Sorry",
+    "audio": ""
+   },
+   {
+    "id": "pi6",
+    "term": "Bye bye, I go see you",
+    "pron": "",
+    "en": "Goodbye",
+    "audio": ""
+   },
+   {
+    "id": "pi7",
+    "term": "How much be this?",
+    "pron": "",
+    "en": "How much is it?",
+    "audio": ""
+   },
+   {
+    "id": "pi8",
+    "term": "E too cost",
+    "pron": "",
+    "en": "It's too expensive",
+    "audio": ""
+   },
+   {
+    "id": "pi9",
+    "term": "Abeg, reduce am small",
+    "pron": "",
+    "en": "Please reduce it a little",
+    "audio": ""
+   },
+   {
+    "id": "pi10",
+    "term": "I go take am",
+    "pron": "",
+    "en": "I'll take it",
+    "audio": ""
+   },
+   {
+    "id": "pi11",
+    "term": "You don chop?",
+    "pron": "",
+    "en": "Have you eaten?",
+    "audio": ""
+   },
+   {
+    "id": "pi12",
+    "term": "I don full",
+    "pron": "",
+    "en": "I'm full",
+    "audio": ""
+   },
+   {
+    "id": "pi13",
+    "term": "E sweet well well",
+    "pron": "",
+    "en": "It's delicious",
+    "audio": ""
+   },
+   {
+    "id": "pi14",
+    "term": "Good afternoon o",
+    "pron": "",
+    "en": "Good afternoon",
+    "audio": ""
+   },
+   {
+    "id": "pi15",
+    "term": "Wetin be your name?",
+    "pron": "",
+    "en": "What is your name?",
+    "audio": ""
+   },
+   {
+    "id": "pi16",
+    "term": "My name na …",
+    "pron": "",
+    "en": "My name is …",
+    "audio": ""
+   },
+   {
+    "id": "pi17",
+    "term": "Nice to meet you",
+    "pron": "",
+    "en": "Nice to meet you",
+    "audio": ""
+   },
+   {
+    "id": "pi18",
+    "term": "No wahala",
+    "pron": "",
+    "en": "It's okay",
+    "audio": ""
+   },
+   {
+    "id": "pi19",
+    "term": "I wan water",
+    "pron": "",
+    "en": "I want water",
+    "audio": ""
+   },
+   {
+    "id": "pi20",
+    "term": "I need help",
+    "pron": "",
+    "en": "I need help",
+    "audio": ""
+   },
+   {
+    "id": "pi21",
+    "term": "Where toilet dey?",
+    "pron": "",
+    "en": "Where is the toilet?",
+    "audio": ""
+   },
+   {
+    "id": "pi22",
+    "term": "Where market dey?",
+    "pron": "",
+    "en": "Where is the market?",
+    "audio": ""
+   },
+   {
+    "id": "pi23",
+    "term": "Go straight",
+    "pron": "",
+    "en": "Go straight",
+    "audio": ""
+   },
+   {
+    "id": "pi24",
+    "term": "Turn left",
+    "pron": "",
+    "en": "Turn left",
+    "audio": ""
+   },
+   {
+    "id": "pi25",
+    "term": "Turn right",
+    "pron": "",
+    "en": "Turn right",
+    "audio": ""
+   },
+   {
+    "id": "pi26",
+    "term": "E near",
+    "pron": "",
+    "en": "It's near",
+    "audio": ""
+   },
+   {
+    "id": "pi27",
+    "term": "E far",
+    "pron": "",
+    "en": "It's far",
+    "audio": ""
+   },
+   {
+    "id": "pi28",
+    "term": "Thank you well well",
+    "pron": "",
+    "en": "Thank you very much",
+    "audio": ""
+   },
+   {
+    "id": "pi29",
+    "term": "I dey go now",
+    "pron": "",
+    "en": "I'm leaving now",
+    "audio": ""
+   },
+   {
+    "id": "pi30",
+    "term": "I go come back",
+    "pron": "",
+    "en": "I'll come back",
+    "audio": ""
+   },
+   {
+    "id": "pi31",
+    "term": "See you tomorrow",
+    "pron": "",
+    "en": "See you tomorrow",
+    "audio": ""
+   },
+   {
+    "id": "pi32",
+    "term": "Take care",
+    "pron": "",
+    "en": "Take care",
+    "audio": ""
+   },
+   {
+    "id": "pi33",
+    "term": "How family dey?",
+    "pron": "",
+    "en": "How is the family?",
+    "audio": ""
+   },
+   {
+    "id": "pi34",
+    "term": "Welcome o",
+    "pron": "",
+    "en": "Welcome",
+    "audio": ""
+   },
+   {
+    "id": "pi35",
+    "term": "Siddon",
+    "pron": "",
+    "en": "Please sit",
+    "audio": ""
+   },
+   {
+    "id": "pi36",
+    "term": "Wetin be the last price?",
+    "pron": "",
+    "en": "What's the last price?",
+    "audio": ""
+   }
+  ],
+  "moments": [
+   {
+    "id": "m1",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "Your father walks in on a morning:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Greet elders first and add a title like Daddy, Sir or Ma.",
+    "options": [
+     {
+      "c": 0,
+      "v": "best",
+      "why": "Greeting an elder first, in the respectful form, is right."
+     },
+     {
+      "c": 1,
+      "v": "okay",
+      "why": "Skips the greeting. Say good morning first."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? He just arrived!"
+     }
+    ]
+   },
+   {
+    "id": "m2",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "An elder asks you:",
+    "prompt": 1,
+    "q": "How do you reply?",
+    "culture": "Greetings are caring questions, not small talk. Answer, then ask back.",
+    "options": [
+     {
+      "c": 2,
+      "v": "best",
+      "why": "Short and polite."
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Thanks is kind, but you didn't answer."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Leaving without answering is rude."
+     }
+    ]
+   },
+   {
+    "id": "m3",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "setup": "You meet a friend's mother in the afternoon:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Time-of-day greetings are expected, especially with elders.",
+    "options": [
+     {
+      "c": 14,
+      "v": "best",
+      "why": "Matching the greeting to the time of day is polite."
+     },
+     {
+      "c": 0,
+      "v": "off",
+      "why": "That is a morning greeting."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? You have just met!"
+     }
+    ]
+   },
+   {
+    "id": "m4",
+    "lvl": 2,
+    "topic": "Introductions",
+    "after": 2,
+    "setup": "A new person asks you:",
+    "prompt": 15,
+    "q": "How do you answer?",
+    "culture": "Share your name warmly, then use the greeting back.",
+    "options": [
+     {
+      "c": 16,
+      "v": "best",
+      "why": "A clear answer."
+     },
+     {
+      "c": 17,
+      "v": "okay",
+      "why": "Friendly, but they asked your name."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m5",
+    "lvl": 2,
+    "topic": "Introductions",
+    "after": 2,
+    "setup": "They tell you their name. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "After names, a friendly 'nice to meet you' is the usual reply.",
+    "options": [
+     {
+      "c": 17,
+      "v": "best",
+      "why": "A warm, standard reply."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't fit."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m6",
+    "lvl": 3,
+    "topic": "Common Expressions",
+    "after": 3,
+    "setup": "You bump an elder's foot on the bus:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Apologise at once to elders, with a slight bow or nod.",
+    "options": [
+     {
+      "c": 5,
+      "v": "best",
+      "why": "A quick, sincere apology is expected."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't apologise."
+     },
+     {
+      "c": 3,
+      "v": "off",
+      "why": "Thanks makes no sense here."
+     }
+    ]
+   },
+   {
+    "id": "m7",
+    "lvl": 3,
+    "topic": "Common Expressions",
+    "after": 3,
+    "setup": "A friend says sorry for being late. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Accepting an apology kindly keeps the friendship warm.",
+    "options": [
+     {
+      "c": 18,
+      "v": "best",
+      "why": "Gracious and natural."
+     },
+     {
+      "c": 5,
+      "v": "okay",
+      "why": "Fine, but you did nothing wrong."
+     },
+     {
+      "c": 3,
+      "v": "off",
+      "why": "Thanks isn't the right reply."
+     }
+    ]
+   },
+   {
+    "id": "m8",
+    "lvl": 3,
+    "topic": "Common Expressions",
+    "after": 3,
+    "setup": "You are thirsty at a host's home:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Guests may ask for water, but always thank the host.",
+    "options": [
+     {
+      "c": 19,
+      "v": "best",
+      "why": "Clear and simple."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "That asks a price, not for water."
+     },
+     {
+      "c": 20,
+      "v": "okay",
+      "why": "'I need help' is too strong."
+     }
+    ]
+   },
+   {
+    "id": "m9",
+    "lvl": 3,
+    "topic": "Common Expressions",
+    "after": 3,
+    "setup": "You need the toilet in someone's house:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "It's normal to ask your host politely.",
+    "options": [
+     {
+      "c": 21,
+      "v": "best",
+      "why": "The right question."
+     },
+     {
+      "c": 22,
+      "v": "off",
+      "why": "That asks about the market!"
+     },
+     {
+      "c": 19,
+      "v": "off",
+      "why": "That asks for water."
+     }
+    ]
+   },
+   {
+    "id": "m10",
+    "lvl": 6,
+    "topic": "Food and Eating",
+    "after": 6,
+    "setup": "At dinner, Uncle asks you:",
+    "prompt": 11,
+    "q": "What do you say?",
+    "culture": "Refusing food flatly can seem rude. Thank your host first.",
+    "options": [
+     {
+      "c": 3,
+      "v": "best",
+      "why": "Thanking first is warm, even when you are declining."
+     },
+     {
+      "c": 12,
+      "v": "okay",
+      "why": "True, but blunt. Add thanks."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Asking a price doesn't answer him."
+     }
+    ]
+   },
+   {
+    "id": "m11",
+    "lvl": 6,
+    "topic": "Food and Eating",
+    "after": 6,
+    "setup": "You finish a meal and want to compliment the cook:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Praise the food and thank the cook. Hosts love to hear it.",
+    "options": [
+     {
+      "c": 13,
+      "v": "best",
+      "why": "Praising the food honours the host."
+     },
+     {
+      "c": 12,
+      "v": "okay",
+      "why": "Says you're full but doesn't praise the food."
+     },
+     {
+      "c": 4,
+      "v": "off",
+      "why": "'Please' doesn't fit."
+     }
+    ]
+   },
+   {
+    "id": "m12",
+    "lvl": 8,
+    "topic": "Directions and Transportation",
+    "after": 8,
+    "setup": "You are lost and need the market:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Greet first, then ask. Strangers happily point the way.",
+    "options": [
+     {
+      "c": 22,
+      "v": "best",
+      "why": "Clear and direct."
+     },
+     {
+      "c": 21,
+      "v": "off",
+      "why": "That asks for the toilet."
+     },
+     {
+      "c": 23,
+      "v": "off",
+      "why": "That is a direction, not a question."
+     }
+    ]
+   },
+   {
+    "id": "m13",
+    "lvl": 8,
+    "topic": "Directions and Transportation",
+    "after": 8,
+    "setup": "Someone has just given you directions. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "A warm thank-you matters more than speed.",
+    "options": [
+     {
+      "c": 28,
+      "v": "best",
+      "why": "Warm thanks."
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Fine, but plain."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye without thanks."
+     }
+    ]
+   },
+   {
+    "id": "m14",
+    "lvl": 7,
+    "topic": "Shopping and Bargaining",
+    "after": 7,
+    "setup": "A seller says the tomatoes cost ₦1,500. You think it is too much:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Bargaining is expected in markets. Keep it friendly.",
+    "options": [
+     {
+      "c": 9,
+      "v": "best",
+      "why": "Politely asking for less is the normal way to bargain."
+     },
+     {
+      "c": 8,
+      "v": "okay",
+      "why": "Clear, but blunt. Soften it with please."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Walking off ends the chat."
+     }
+    ]
+   },
+   {
+    "id": "m15",
+    "lvl": 7,
+    "topic": "Shopping and Bargaining",
+    "after": 7,
+    "setup": "You like the price. You say:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Say it clearly when you agree on a price.",
+    "options": [
+     {
+      "c": 10,
+      "v": "best",
+      "why": "Clear and decisive."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "You already know the price."
+     },
+     {
+      "c": 8,
+      "v": "off",
+      "why": "You said it's too expensive!"
+     }
+    ]
+   },
+   {
+    "id": "m16",
+    "lvl": 7,
+    "topic": "Shopping and Bargaining",
+    "after": 7,
+    "setup": "You want the seller's best offer:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Asking for the last price is a normal step.",
+    "options": [
+     {
+      "c": 36,
+      "v": "best",
+      "why": "Asking the last price is classic bargaining."
+     },
+     {
+      "c": 10,
+      "v": "okay",
+      "why": "You took the first price without bargaining."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Leaving too soon."
+     }
+    ]
+   },
+   {
+    "id": "m17",
+    "lvl": 9,
+    "topic": "Time and Dates",
+    "after": 9,
+    "setup": "You must leave a host's home:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Never leave abruptly. Say you're going and thank them.",
+    "options": [
+     {
+      "c": 29,
+      "v": "best",
+      "why": "Polite and clear."
+     },
+     {
+      "c": 6,
+      "v": "okay",
+      "why": "Goodbye alone is abrupt."
+     },
+     {
+      "c": 7,
+      "v": "off",
+      "why": "Wrong topic."
+     }
+    ]
+   },
+   {
+    "id": "m18",
+    "lvl": 9,
+    "topic": "Time and Dates",
+    "after": 9,
+    "setup": "Parting words to an elder:",
+    "prompt": null,
+    "q": "What do you say?",
+    "culture": "Wish elders well as they go.",
+    "options": [
+     {
+      "c": 32,
+      "v": "best",
+      "why": "A caring farewell."
+     },
+     {
+      "c": 6,
+      "v": "okay",
+      "why": "Fine, but plain."
+     },
+     {
+      "c": 5,
+      "v": "off",
+      "why": "Sorry? You did nothing wrong."
+     }
+    ]
+   },
+   {
+    "id": "m19",
+    "lvl": 5,
+    "topic": "Family",
+    "after": 5,
+    "setup": "A relative asks:",
+    "prompt": 33,
+    "q": "How do you reply?",
+    "culture": "Asking about family is care, not nosiness.",
+    "options": [
+     {
+      "c": 2,
+      "v": "best",
+      "why": "A warm, short answer."
+     },
+     {
+      "c": 1,
+      "v": "off",
+      "why": "She asked you!"
+     },
+     {
+      "c": 3,
+      "v": "okay",
+      "why": "Thanks is kind but doesn't answer."
+     }
+    ]
+   },
+   {
+    "id": "m20",
+    "lvl": 5,
+    "topic": "Family",
+    "after": 5,
+    "setup": "A relative welcomes you at her door:",
+    "prompt": 34,
+    "q": "How do you reply?",
+    "culture": "Greet and thank when welcomed into a home.",
+    "options": [
+     {
+      "c": 3,
+      "v": "best",
+      "why": "Thanking is the right start."
+     },
+     {
+      "c": 14,
+      "v": "okay",
+      "why": "A greeting works, but thanks first."
+     },
+     {
+      "c": 6,
+      "v": "off",
+      "why": "Goodbye? You just arrived!"
+     }
+    ]
+   }
+  ],
+  "scenes": [
+   {
+    "id": "greet",
+    "title": "Good morning, Daddy",
+    "emoji": "🏠",
+    "goal": "Greet your father the right way",
+    "lvl": 1,
+    "topic": "Greetings",
+    "after": 0,
+    "culture": "Greet elders first, warmly, and add a title like Daddy, Sir or Ma. It shows you were raised well.",
+    "words": [
+     0,
+     1,
+     2,
+     11,
+     12,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good morning! You're up early.",
+      "replies": [
+       {
+        "c": 0,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greeting first, with respect, is perfect."
+       },
+       {
+        "c": 1,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet him first, then ask how he is."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How are you this morning?",
+      "c": 1,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A short, polite answer."
+       },
+       {
+        "c": 3,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Say how you are first, then thank him."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Have you eaten?",
+      "c": 11,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thanking him is warm and polite."
+       },
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Fine. Add thanks next time."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Good. Go well today.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "A gracious close."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "God bless you, my child.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "intro",
+    "title": "Meeting someone new",
+    "emoji": "👋",
+    "goal": "Introduce yourself politely",
+    "lvl": 2,
+    "topic": "Introductions",
+    "after": 2,
+    "culture": "First meetings begin with a greeting, then names. A warm tone matters more than perfect grammar.",
+    "words": [
+     14,
+     15,
+     16,
+     17,
+     1,
+     2
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good afternoon!",
+      "c": 14,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Match the greeting to the time of day."
+       },
+       {
+        "c": 0,
+        "ok": 0,
+        "next": "n2",
+        "fb": "It's afternoon, not morning."
+       }
+      ]
+     },
+     "n2": {
+      "en": "What is your name?",
+      "c": 15,
+      "replies": [
+       {
+        "c": 16,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and polite."
+       },
+       {
+        "c": 3,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Say your name first."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Lovely! Nice to meet you.",
+      "replies": [
+       {
+        "c": 17,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Return the kindness."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thanks works too."
+       }
+      ]
+     },
+     "n4": {
+      "en": "How are you today?",
+      "c": 1,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "end",
+        "fb": "Good answer."
+       },
+       {
+        "c": 1,
+        "ok": 1,
+        "next": "end",
+        "fb": "Asking back is polite too."
+       }
+      ]
+     },
+     "end": {
+      "en": "Great chat. See you around!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "sorry",
+    "title": "I'm sorry!",
+    "emoji": "🙏",
+    "goal": "Apologise to an elder at once",
+    "lvl": 3,
+    "topic": "Common Expressions",
+    "after": 3,
+    "culture": "Apologise quickly to elders, with a slight bow or nod. Accepting an apology kindly is also good manners.",
+    "words": [
+     5,
+     18,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Ouch! You bump an elder carrying a bag.",
+      "replies": [
+       {
+        "c": 5,
+        "ok": 1,
+        "next": "n2",
+        "fb": "A quick, sincere apology."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "n2",
+        "fb": "'Please' isn't an apology."
+       }
+      ]
+     },
+     "n2": {
+      "en": "It's okay, my child.",
+      "c": 18,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Thank them for their kindness."
+       },
+       {
+        "c": 5,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Saying sorry again is fine."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Be careful next time. God bless you.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Gracious."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A polite goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "The elder smiles and walks on.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "needs",
+    "title": "What do you need?",
+    "emoji": "💧",
+    "goal": "Ask for what you need, politely",
+    "lvl": 3,
+    "topic": "Common Expressions",
+    "after": 3,
+    "culture": "Ask politely and thank your host. Hosts love to help, but the way you ask matters.",
+    "words": [
+     34,
+     35,
+     19,
+     20,
+     21,
+     3,
+     28
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Welcome! Come in.",
+      "c": 34,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thank them for the welcome."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "n2",
+        "fb": "'Please' doesn't answer a welcome."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Please sit. What can I get you?",
+      "c": 35,
+      "replies": [
+       {
+        "c": 19,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and simple."
+       },
+       {
+        "c": 13,
+        "ok": 0,
+        "next": "n3",
+        "fb": "Delicious? You haven't eaten yet!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "Here is your water.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Always thank them."
+       },
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Extra warm thanks."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Anything else?",
+      "replies": [
+       {
+        "c": 21,
+        "ok": 1,
+        "next": "end",
+        "fb": "Good to know how to ask."
+       },
+       {
+        "c": 20,
+        "ok": 1,
+        "next": "end",
+        "fb": "Asking for help is fine."
+       }
+      ]
+     },
+     "end": {
+      "en": "You are welcome in this house.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "food",
+    "title": "Dinner at home",
+    "emoji": "🍲",
+    "goal": "Be a gracious guest",
+    "lvl": 6,
+    "topic": "Food and Eating",
+    "after": 6,
+    "culture": "Thank first, praise the food, and accept what is offered with your right hand.",
+    "words": [
+     11,
+     3,
+     12,
+     13,
+     4,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Come, sit and eat.",
+      "c": 11,
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thanking first is the polite start."
+       },
+       {
+        "c": 12,
+        "ok": 0,
+        "next": "n2",
+        "fb": "True, but blunt. Thank them first."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Eat more, don't be shy!",
+      "replies": [
+       {
+        "c": 13,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Praising the food honours the host."
+       },
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Fine. Politely declining more is okay."
+       }
+      ]
+     },
+     "n3": {
+      "en": "I'm glad you liked it. Take some home.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Gracious."
+       },
+       {
+        "c": 4,
+        "ok": 0,
+        "next": "end",
+        "fb": "'Please' isn't needed. A thank-you fits."
+       }
+      ]
+     },
+     "end": {
+      "en": "Come again soon!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "dir",
+    "title": "Finding the market",
+    "emoji": "🧭",
+    "goal": "Ask for directions without a phone",
+    "lvl": 8,
+    "topic": "Directions and Transportation",
+    "after": 8,
+    "culture": "Greet before you ask. People are happy to help, and a warm thank-you finishes the exchange well.",
+    "words": [
+     14,
+     22,
+     23,
+     24,
+     26,
+     3,
+     28
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good afternoon! You look lost.",
+      "c": 14,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greet back first."
+       },
+       {
+        "c": 22,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet first, then ask."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How can I help?",
+      "replies": [
+       {
+        "c": 22,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Clear and direct."
+       },
+       {
+        "c": 21,
+        "ok": 0,
+        "next": "n3",
+        "fb": "That's the toilet, not the market!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "The market? Go straight, then turn left. It's near.",
+      "c": 23,
+      "replies": [
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "end",
+        "fb": "Warm thanks."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Polite thanks."
+       }
+      ]
+     },
+     "end": {
+      "en": "Go well, and God bless you.",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "haggle",
+    "title": "At the market",
+    "emoji": "🛒",
+    "goal": "Buy tomatoes at a fair price",
+    "lvl": 7,
+    "topic": "Shopping and Bargaining",
+    "after": 7,
+    "culture": "Bargaining is normal at markets. Start with a greeting and keep it friendly.",
+    "words": [
+     0,
+     7,
+     8,
+     36,
+     9,
+     10,
+     3,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Good morning! Fresh tomatoes today. What can I get you?",
+      "replies": [
+       {
+        "c": 0,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greeting first goes a long way."
+       },
+       {
+        "c": 7,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Greet first, then ask the price."
+       }
+      ]
+     },
+     "n2": {
+      "en": "These ones? ₦1,500 a basket.",
+      "replies": [
+       {
+        "c": 8,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Polite push-back."
+       },
+       {
+        "c": 10,
+        "ok": 0,
+        "next": "n4",
+        "fb": "You took it without bargaining."
+       }
+      ]
+     },
+     "n3": {
+      "en": "For you, ₦1,300.",
+      "replies": [
+       {
+        "c": 36,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Asking the last price is classic bargaining."
+       },
+       {
+        "c": 9,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Good try. The seller smiles."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Alright, ₦1,200. Last price!",
+      "replies": [
+       {
+        "c": 10,
+        "ok": 1,
+        "next": "n5",
+        "fb": "Deal. A fair price."
+       },
+       {
+        "c": 8,
+        "ok": 0,
+        "next": "n5",
+        "fb": "Too much? You already got a good price."
+       }
+      ]
+     },
+     "n5": {
+      "en": "Thank you! Anything else?",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "A polite thank-you closes the deal."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "God bless you. Come again!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "exit",
+    "title": "Time to go",
+    "emoji": "👋",
+    "goal": "Leave politely and promise to return",
+    "lvl": 9,
+    "topic": "Time and Dates",
+    "after": 9,
+    "culture": "Never leave abruptly. Say why you're going, promise to return, and thank your host.",
+    "words": [
+     29,
+     30,
+     31,
+     3,
+     28,
+     32,
+     6
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Stay a little more!",
+      "replies": [
+       {
+        "c": 29,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Polite and clear."
+       },
+       {
+        "c": 7,
+        "ok": 0,
+        "next": "n2",
+        "fb": "Wrong topic. Say you are leaving."
+       }
+      ]
+     },
+     "n2": {
+      "en": "Will you come back soon?",
+      "replies": [
+       {
+        "c": 30,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A warm promise."
+       },
+       {
+        "c": 31,
+        "ok": 1,
+        "next": "n3",
+        "fb": "Good, you suggest a time."
+       }
+      ]
+     },
+     "n3": {
+      "en": "Take something for the road.",
+      "replies": [
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Thank them."
+       },
+       {
+        "c": 28,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Extra warm thanks."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Safe journey!",
+      "replies": [
+       {
+        "c": 32,
+        "ok": 1,
+        "next": "end",
+        "fb": "A caring goodbye."
+       },
+       {
+        "c": 6,
+        "ok": 1,
+        "next": "end",
+        "fb": "A friendly goodbye."
+       }
+      ]
+     },
+     "end": {
+      "en": "Go well!",
+      "end": true
+     }
+    }
+   },
+   {
+    "id": "family",
+    "title": "Visiting family",
+    "emoji": "👨‍👩‍👧",
+    "goal": "Be a good visitor at a relative's home",
+    "lvl": 5,
+    "topic": "Family",
+    "after": 5,
+    "culture": "Greet the household, answer questions about family warmly, and accept food. It shows love.",
+    "words": [
+     14,
+     2,
+     11,
+     12,
+     13,
+     3,
+     33,
+     34
+    ],
+    "start": "n1",
+    "nodes": {
+     "n1": {
+      "en": "Welcome! Come in, come in!",
+      "c": 34,
+      "replies": [
+       {
+        "c": 14,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Greet her first."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n2",
+        "fb": "Thanks is warm too."
+       }
+      ]
+     },
+     "n2": {
+      "en": "How is the family?",
+      "c": 33,
+      "replies": [
+       {
+        "c": 2,
+        "ok": 1,
+        "next": "n3",
+        "fb": "A warm, short answer."
+       },
+       {
+        "c": 1,
+        "ok": 0,
+        "next": "n3",
+        "fb": "She asked you!"
+       }
+      ]
+     },
+     "n3": {
+      "en": "Sit! Have you eaten?",
+      "c": 11,
+      "replies": [
+       {
+        "c": 12,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Fine, but thank her too."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "n4",
+        "fb": "Gracious."
+       }
+      ]
+     },
+     "n4": {
+      "en": "Please, eat something.",
+      "replies": [
+       {
+        "c": 13,
+        "ok": 1,
+        "next": "end",
+        "fb": "Praising the food honours the host."
+       },
+       {
+        "c": 3,
+        "ok": 1,
+        "next": "end",
+        "fb": "Thanks is always welcome."
+       }
+      ]
+     },
+     "end": {
+      "en": "You are family now!",
+      "end": true
+     }
+    }
+   }
+  ]
+ }
+}
