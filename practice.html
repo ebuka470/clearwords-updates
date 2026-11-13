@@ -210,6 +210,38 @@ body{-webkit-font-smoothing:antialiased;overscroll-behavior-y:contain}
 .msg-share:active{opacity:.6}
 .chat-foot{gap:8px}
 .chat-input{border-radius:22px}
+/* ===== Practice path, today, drill overlay ===== */
+#drill-view{position:fixed;inset:0;height:100dvh;z-index:9998;background:var(--bg);display:none;flex-direction:column;overflow:hidden}
+.dr-wrap{flex:1;min-height:0;width:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;background:var(--chat-bg);border-left:1px solid var(--border);border-right:1px solid var(--border)}
+.dr-body{flex:1;min-height:0;overflow-y:auto;padding:16px 16px calc(24px + var(--safe-bot))}
+.dr-prog{height:6px;border-radius:3px;background:var(--border);overflow:hidden;margin-bottom:16px}
+.dr-prog i{display:block;height:100%;background:var(--brand);transition:width .3s}
+.dr-rate{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.dr-opt .m{display:block;font-size:12px;font-weight:500;color:var(--text-2);margin-top:3px}
+.ex-opt.best{border-color:var(--brand);background:rgba(var(--brand-rgb),.1)}
+.ex-opt.okay{border-color:var(--gold);background:rgba(var(--gold-rgb),.1)}
+.ex-opt.off{border-color:var(--danger);background:rgba(var(--danger-rgb),.08)}
+.ex-opt.pick{box-shadow:0 0 0 2px var(--text)}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat-tile{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 8px;text-align:center}
+.stat-ico{font-size:18px}.stat-val{font-weight:800;font-size:18px;margin-top:2px}.stat-lbl{font-size:11px;color:var(--text-2)}
+.today{padding:6px 14px 8px}
+.today-h{display:flex;justify-content:space-between;align-items:center;padding:10px 2px 6px;font-size:15px}.today-h span{font-size:12.5px;color:var(--text-2);font-weight:700}
+.today-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:11px 2px;border-top:1px solid var(--border)}
+.today-ico{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;background:rgba(var(--brand-rgb),.12);flex-shrink:0}
+.today-row.ok .today-ico{background:var(--brand);color:#fff;font-weight:800}
+.today-body{flex:1;min-width:0}.today-body b{display:block;font-size:14.5px}.today-body small{font-size:12px;color:var(--text-2)}
+.path{position:relative;padding:4px 0 8px}
+.path::before{content:'';position:absolute;left:32px;top:20px;bottom:20px;width:3px;background:var(--border);border-radius:2px}
+.path-node{position:relative;display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:10px 8px;margin-bottom:6px;border-radius:var(--radius)}
+.path-node:active{background:rgba(var(--brand-rgb),.06)}
+.path-dot{position:relative;z-index:1;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;background:var(--card);border:3px solid var(--brand)}
+.path-node.locked .path-dot{border-color:var(--border-strong);filter:grayscale(1);opacity:.75}
+.path-node.done .path-dot{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:800}
+.path-node.next .path-dot{animation:mp 1.6s infinite;box-shadow:0 0 0 0 rgba(var(--brand-rgb),.4)}
+.path-title{font-weight:800;font-size:15px}.path-node.locked .path-title{color:var(--text-3)}
+.path-sub{font-size:12px;color:var(--text-2)}.path-stars{color:var(--gold);font-size:14px;letter-spacing:2px;margin-top:2px}
+
 </style>
 </head>
 <body>
@@ -217,33 +249,8 @@ body{-webkit-font-smoothing:antialiased;overscroll-behavior-y:contain}
 <header id="cw-header"></header>
 
 <main class="page">
-  <div class="page-hero"><h1>Practice</h1><p>Talk, listen, and get comfortable with the sounds of the language.</p></div>
-  <div class="stat-row">
-    <div class="stat-tile"><div class="stat-ico">🔥</div><div class="stat-val" id="t-streak">0</div><div class="stat-lbl">Day streak</div></div>
-    <div class="stat-tile"><div class="stat-ico">⭐</div><div class="stat-val" id="t-words">0</div><div class="stat-lbl">Saved words</div></div>
-    <div class="stat-tile"><div class="stat-ico">💬</div><div class="stat-val" id="t-left">—</div><div class="stat-lbl">Timmy left</div></div>
-  </div>
-  <div class="nudge brand"><div class="nudge-ico">🤓</div><div class="nudge-body"><b>Timmy is ready when you are.</b>Share your best chats. Tap “Share” under any reply.</div></div>
-  <div id="usage-bar" class="usage-bar" style="display:none"><span class="label">Timmy usage today</span><span class="count" id="usage-count">—</span></div>
-
-  <div class="section-h">Talk with Timmy</div>
-  <div class="set-group">
-  <button class="method-card" data-section="practice" onclick="Practice.openSection('practice')"><div class="method-icon">🤓</div><div class="method-body"><div class="method-title">Practice with Timmy</div><div class="method-desc" data-lang-slot="practice">Chat about your latest lesson</div></div><div class="method-chev">›</div></button>
-  <button class="method-card tint-indigo" data-section="cultural" onclick="Practice.openSection('cultural')"><div class="method-icon">🎭</div><div class="method-body"><div class="method-title">Cultural advice</div><div class="method-desc">How and when to use words in real Nigerian contexts</div></div><div class="method-chev">›</div></button>
-  <button class="method-card tint-gold" data-section="quick" onclick="Practice.openSection('quick')"><div class="method-icon">⚡</div><div class="method-body"><div class="method-title">Quick translations</div><div class="method-desc">Fast translations with pronunciation help</div></div><div class="method-chev">›</div></button>
-
-  </div>
-
-  <div class="section-h">Speak &amp; review</div>
-  <div class="set-group">
-  <button class="method-card tint-terracotta" onclick="Practice.openSpeak()"><div class="method-icon">🎤</div><div class="method-body"><div class="method-title">Pronunciation practice</div><div class="method-desc">Listen, then repeat. Timmy explains where you can improve</div></div><div class="method-chev">›</div></button>
-
-  <button class="method-card" onclick="Practice.openReview()"><div class="method-icon">⭐</div><div class="method-body"><div class="method-title">Saved words</div><div class="method-desc" id="saved-count-text">Review words you've saved during lessons</div></div><div class="method-chev">›</div></button>
-  </div>
-
-  <div class="section-h">Situations</div>
-  <div class="set-group" id="situations-list"></div>
-  <div style="text-align:center;font-size:12px;color:var(--text-3);padding:24px 0 12px">Timmy resets at midnight local time</div>
+  <div class="page-hero"><h1>Practice</h1><p>Use what you learn in real situations.</p></div>
+  <div id="home-root"><div class="modal-loading">Loading…</div></div>
 </main>
 
 <nav id="cw-bottom-nav">
@@ -253,513 +260,246 @@ body{-webkit-font-smoothing:antialiased;overscroll-behavior-y:contain}
   <button class="tab" onclick="Nav.go('profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></button>
 </nav>
 
-<!-- ===== TIMMY OVERLAY: list view (level 2) + chat view (level 3) ===== -->
-<div id="timmy-view">
-
-  <div id="timmy-list-view" style="display:none">
-    <div class="chat-topbar">
-      <button class="chat-back" onclick="history.back()" aria-label="Back">←</button>
-      <div class="chat-avatar" id="list-avatar">🤓</div>
-      <div class="chat-name"><span id="list-title">Practice with Timmy</span><small id="list-sub">All chats</small></div>
-      <div class="chat-menu-wrap">
-        <button class="chat-menu-btn" onclick="Practice.toggleMenu(event,'list-menu')" aria-label="Menu">⋮</button>
-        <div class="chat-menu" id="list-menu">
-          <button onclick="Practice.markAllRead()">✅ Mark all as read</button>
-          <button class="danger" onclick="Practice.deleteAllChats()">🗑️ Delete all chats</button>
-        </div>
-      </div>
-    </div>
-    <div class="chat-list-scroll" id="timmy-chat-list"></div>
-    <button class="chat-fab" onclick="Practice.startNewChat()" aria-label="New chat">+</button>
-  </div>
-
-  <div id="timmy-chat-view" style="display:none">
-    <div class="chat-topbar">
-      <button class="chat-back" onclick="history.back()" aria-label="Back">←</button>
-      <div class="chat-avatar" id="timmy-avatar">🤓</div>
-      <div class="chat-name"><span id="timmy-title">Timmy</span><small id="timmy-sub">Timmy AI</small></div>
-      <div class="chat-menu-wrap">
-        <button class="chat-menu-btn" onclick="Practice.toggleMenu(event,'timmy-menu')" aria-label="Menu">⋮</button>
-        <div class="chat-menu" id="timmy-menu">
-          <button onclick="Practice.shareLast()">🖼️ Share a snippet</button>
-          <button onclick="Practice.exportCurrentChat()">📤 Export chat</button>
-          <button class="danger" onclick="Practice.deleteCurrentChat()">🗑️ Delete this chat</button>
-        </div>
-      </div>
-    </div>
-    <div class="chat-scroll" id="timmy-scroll"></div>
-    <div class="scaffold-row" id="scaffold-row" style="display:none"></div>
-    <div class="chat-foot">
-      <textarea class="chat-input" id="timmy-input" rows="1" placeholder="Message Timmy…" autocomplete="off"></textarea>
-      <button class="chat-send" id="timmy-send" onclick="Practice.sendMessage()" aria-label="Send">➤</button>
-    </div>
-  </div>
-
-</div>
+<div id="drill-view"><div class="dr-wrap"><div class="chat-topbar"><button class="chat-back" onclick="Drill.exit()" aria-label="Back">‹</button><div class="chat-name"><span id="dr-title">Practice</span></div></div><div class="dr-body" id="dr-body"></div></div></div>
 
 <script src="shared.js"></script>
 <script src="sharecards.js"></script>
 <script>
-/* ---------- Section metadata (id, emoji, title, greeting, system prompt) ---------- */
-const SECTIONS = {
-  practice: { emoji:'🤓', title:'Practice with Timmy', sub:l=>`Practice conversation in ${l}`,
-    greeting:(l,n)=>`Hi ${n}! Ready to practice ${l}? Start simple, or type whatever you like.`,
-    prompt:'You are Timmy, a friendly tutor. Hold a simple conversation in the target language, correct mistakes gently, and give short English hints.' },
-  cultural: { emoji:'🎭', title:'Cultural advice', sub:()=>'Ask about Nigerian customs and context',
-    greeting:(l,n)=>`Hi ${n}. Ask me anything about Nigerian culture: ${l} traditions, food, family customs, respect, proverbs, everyday life.`,
-    prompt:'You are Timmy, a guide to Nigerian culture. Explain customs, etiquette, proverbs and when to use words. Be concise and practical.' },
-  quick: { emoji:'⚡', title:'Quick translations', sub:()=>'Fast translations and explanations',
-    greeting:(l,n)=>`Hi ${n}. Give me any word or phrase and I'll translate it into ${l} with pronunciation.`,
-    prompt:'You are Timmy doing quick translations. Give the translation, a pronunciation guide, and a one-line usage note. Keep replies short.' },
-  greeting_parent: { emoji:'🏠', title:'Greeting a parent', sub:()=>'Respectful morning and evening greetings',
-    greeting:(l,n)=>`Hi ${n}. Let's practice greeting an older family member in ${l}. You're the younger person, I'm the elder.`,
-    prompt:'Role-play an elder parent. The learner greets you in the target language. Reply in character, then briefly coach their respect and tone.' },
-  meeting_friend: { emoji:'👋', title:'Meeting a friend', sub:()=>'Casual, warm, and natural',
-    greeting:(l,n)=>`Alright ${n}! Let's do a casual, friendly greeting with a peer in ${l}.`,
-    prompt:'Role-play a friend meeting the learner. Keep it casual and natural, then give brief feedback.' },
-  market: { emoji:'🛒', title:'At the market', sub:()=>'Asking prices and haggling politely',
-    greeting:(l,n)=>`Market scene in ${l}, ${n}. You're the buyer, I'm the seller. Ask the price of tomatoes.`,
-    prompt:'Role-play a market seller. The learner is the buyer. Haggle politely, then give brief language feedback.' },
-  meal_sharing: { emoji:'🍲', title:'Sharing a meal', sub:()=>'Offering and accepting food',
-    greeting:(l,n)=>`Let's practice a meal-sharing conversation in ${l}. I'll offer food, you accept or politely decline.`,
-    prompt:'Role-play someone offering food. The learner accepts or declines politely. Coach phrasing afterwards.' },
-  directions: { emoji:'🚗', title:'Asking for directions', sub:()=>'Finding your way without a phone',
-    greeting:(l,n)=>`${n}, you're lost in a Nigerian city and need directions in ${l}. I'm a stranger on the street. Ask away.`,
-    prompt:'Role-play a stranger giving directions in a Nigerian city. Use simple target-language phrases with English help.' },
-  showing_respect: { emoji:'🙏', title:'Showing respect', sub:()=>'The right words for elders',
-    greeting:(l,n)=>`Let's practice showing respect to an elder in ${l}, ${n}. These phrases matter a lot.`,
-    prompt:'Teach and drill respectful phrases for elders, with correct honorifics and body-language notes.' }
-};
-const SITUATIONS = ['greeting_parent','meeting_friend','market','meal_sharing','directions','showing_respect'];
-const ROLEPLAY = ['practice', ...SITUATIONS];
 const $ = id => document.getElementById(id);
 
-const Practice = {
-  user:null, messages:[], sending:false, currentSection:null, currentChatId:null, _cache:{},
+/* ============ Practice: path of scenes, daily Moments, flashcards ============ */
+const Drill = (() => {
+  const day = 864e5, L = () => State.currentLanguage, LN = () => CW_CONFIG.LANGUAGES[L()].name,
+    K = n => `cw_${n}_${L()}_${State.currentProfileId || 'me'}`, today = () => new Date().toLocaleDateString('en-CA');
+  const rd = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch { return d; } };
+  const wr = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  const sh = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  let on = false, cur = null, dk = [];
+  const H = { speak: async i => { try { await AudioMgr.play(dk[i].term, L()); } catch (e) { if (!(window.Paywall && Paywall.fromError(e))) showToast('Audio unavailable right now.', 'error'); } } };
 
+  let all = null;
+  async function data() {
+    if (!all) { try { const r = await fetch('/practice.json'); if (!r.ok) throw 0; all = await r.json(); } catch { all = {}; } }
+    return all[L()] || null;
+  }
+  async function need() { const d = await data(); if (!d) showToast('This language is coming soon.', 'info'); else cur = d; return d; }
+
+  /* ----- progress: local cache + backend sync ----- */
+  const API = {
+    async get(l) { if (window.Backend && Backend.getDrillProgress) { const r = await Backend.getDrillProgress(l); return r && r.progress; } return null; },
+    async put(l, p) { if (window.Backend && Backend.saveDrillProgress) return Backend.saveDrillProgress(l, p); throw new Error('Backend.saveDrillProgress missing'); }
+  };
+  const blank = () => ({ srs: {}, moments: {}, scenes: {}, days: {} });
+  const mx = (X, Y) => { const o = {}; for (const k of new Set([...Object.keys(X || {}), ...Object.keys(Y || {})])) o[k] = Math.max((X || {})[k] || 0, (Y || {})[k] || 0); return o; };
+  const merge = (a, b) => {
+    const o = blank(), A = a.srs || {}, B = b.srs || {};
+    for (const id of new Set([...Object.keys(A), ...Object.keys(B)])) { const x = A[id], y = B[id]; o.srs[id] = !y || (x && (x.u || 0) >= (y.u || 0)) ? x : y; }
+    o.moments = mx(a.moments, b.moments); o.scenes = mx(a.scenes, b.scenes);
+    for (const k of new Set([...Object.keys(a.days || {}), ...Object.keys(b.days || {})])) o.days[k] = { m: 0, s: 0, c: 0, ...{ m: mx(a.days && a.days[k], b.days && b.days[k]).m, s: mx(a.days && a.days[k], b.days && b.days[k]).s, c: mx(a.days && a.days[k], b.days && b.days[k]).c } };
+    return o;
+  };
+  let P = null, tm = null, dirty = false;
+  async function progress() {
+    const l = L(), pk = l + (State.currentProfileId || ''); if (P && P.pk === pk) return P.d;
+    let d = Object.assign(blank(), rd(K('prog'), {})); P = { l, pk, d };
+    try { const r = await API.get(l); if (r) { d = merge(d, r); P = { l, pk, d }; save(); } } catch (e) { console.warn('drill load', e.message || e); }
+    return P.d;
+  }
+  function save() {
+    const cut = new Date(Date.now() - 30 * day).toLocaleDateString('en-CA'); for (const k of Object.keys(P.d.days)) if (k < cut) delete P.d.days[k];
+    wr(K('prog'), P.d); dirty = true; clearTimeout(tm); tm = setTimeout(push, 1500);
+  }
+  async function push() { if (!dirty || !P) return; try { await API.put(P.l, P.d); dirty = false; } catch (e) { console.warn('drill sync', e.message || e); } }
+  window.addEventListener('pagehide', push);
+  const dayRec = () => P.d.days[today()] || (P.d.days[today()] = { m: 0, s: 0, c: 0 });
+  const bump = k => { dayRec()[k]++; save(); };
+
+  /* ----- lessons ----- */
+  const doneLv = n => !n || Curriculum.completedLessonIds(State.progress).some(x => { const s = String(x); return s === 'level-' + n || s === String(n) || s.startsWith(n + '-'); });
+  const deck = () => { const l = L(); return ((State.user && State.user.savedWords) || []).filter(w => w && w.word && (!w.language || w.language === l)).map(w => ({ id: `${l}:${w.word}`, term: w.word, pron: w.pronunciation ? `/${w.pronunciation}/` : '', en: w.translation || '' })); };
+  const stats = (cards, s) => { const n = Date.now(); let due = 0, fresh = 0; cards.forEach(c => { const r = s[c.id]; if (!r) fresh++; else if (r.due <= n) due++; }); return { due, fresh, s }; };
+  function rateCard(id, k) {
+    const s = P.d.srs, r = s[id] || { iv: 0, ease: 2.3, reps: 0 }; r.reps = (r.reps || 0) + 1;
+    if (k === 0) { r.iv = 0; r.ease = Math.max(1.3, r.ease - .2); r.due = Date.now() + 6e5; }
+    else { r.iv = r.iv < 1 ? (k === 3 ? 3 : 1) : Math.max(1, r.iv * (k === 1 ? 1.2 : r.ease * (k === 3 ? 1.3 : 1))); if (k === 3) r.ease += .1; r.due = Date.now() + r.iv * day; }
+    r.u = Date.now(); s[id] = r; save();
+  }
+  async function saveWords(cards) {
+    const l = L(), u = State.user || {}, have = new Set((u.savedWords || []).filter(w => (w.language || l) === l).map(w => w.word));
+    const add = cards.filter(c => !have.has(c.term)).map(c => ({ word: c.term, translation: c.en, pronunciation: c.pron || '', example: '', language: l, savedAt: new Date().toISOString() }));
+    if (!add.length) { showToast('Already in your flashcards', 'info'); return; }
+    const upd = [...(u.savedWords || []), ...add]; State.user.savedWords = upd; Auth.setUser(State.user);
+    try { await Backend.updateProfile({ savedWords: upd }); } catch {}
+    showToast(`Saved ${add.length} to your flashcards ⭐`, 'success');
+  }
+
+  /* ----- overlay ----- */
+  function show(title) { $('dr-title').textContent = title; $('drill-view').style.display = 'flex'; document.documentElement.style.overflow = 'hidden'; if (!on) { history.pushState({ t: 'drill' }, ''); on = true; } }
+  function hide() { push(); on = false; $('drill-view').style.display = 'none'; document.documentElement.style.overflow = ''; render(); }
+  const exit = () => on ? history.back() : hide();
+  window.addEventListener('popstate', () => { if (on) hide(); });
+  const body = h => { $('dr-body').innerHTML = h; $('dr-body').scrollTop = 0; };
+  const prog = p => `<div class="dr-prog"><i style="width:${Math.round(p * 100)}%"></i></div>`;
+  const tim = t => `<div class="speak-result info"><b>🤓 Timmy:</b> ${t}</div>`;
+  const done = (emoji, title, sub, extra) => `<div class="chat-empty"><div class="chat-empty-emoji">${emoji}</div><div class="chat-empty-title">${title}</div><div class="chat-empty-sub">${sub}</div>${extra || ''}<button class="btn" onclick="Drill.exit()">Done</button></div>`;
+  const stars = (pts, s) => { const r = pts / (Object.keys(s.nodes).length - 1), n = r >= 1 ? 3 : r >= .67 ? 2 : 1; return '★'.repeat(n) + '☆'.repeat(3 - n); };
+
+  /* ----- flashcards (from saved words) ----- */
+  const spk = i => window.AudioMgr ? `<button class="word-row-play" style="margin:14px auto 0;width:44px;height:44px" onclick="Drill.a('speak',${i})">🔊</button>` : '';
+  async function flash() {
+    const cards = dk = deck(), pr = await progress(); show('Flashcards');
+    if (!cards.length) { body(done('⭐', 'No saved words yet', 'Tap ☆ Save next to a word in a lesson, or save phrases after a scene. They become flashcards here.', `<button class="btn btn-ghost" style="margin-bottom:10px" onclick="Nav.go('learn')">Go to lessons</button>`)); return; }
+    const st = stats(cards, pr.srs), now = Date.now(), idx = cards.map((c, i) => i);
+    const q = sh(idx.filter(i => { const r = st.s[cards[i].id]; return r && r.due <= now; })).concat(idx.filter(i => !st.s[cards[i].id]).slice(0, 6));
+    if (!q.length) { const nx = Math.min(...Object.values(st.s).map(r => r.due)), h = Math.max(1, Math.round((nx - now) / 36e5)); body(done('🎉', 'All caught up', `Your next cards are due in ${h < 48 ? h + ' hours' : Math.round(h / 24) + ' days'}.`)); return; }
+    let n = 0, flip = false, rev = false, seen = 0;
+    const pick = () => { flip = false; const r = st.s[cards[q[n]].id]; rev = !!r && (r.reps || 0) >= 2 && Math.random() < .5; };
+    const draw = () => {
+      if (n >= q.length) { body(done('✅', 'Session done', `You reviewed ${seen} card${seen === 1 ? '' : 's'}. Come back tomorrow to keep your streak.`)); return; }
+      const i = q[n], c = cards[i], term = `<div class="speak-word"${rev ? ' style="margin-top:18px"' : ''}>${esc(c.term)}</div><div class="speak-pron">${esc(c.pron)}</div>${spk(i)}`;
+      const front = rev ? `<div class="speak-trans" style="margin:0;font-size:22px;color:var(--text)">${esc(c.en)}</div><div class="speak-pron">Say it in ${esc(LN())}</div>` : term;
+      body(prog(n / q.length) + `<div class="speak-card">${front}${flip ? (rev ? term : `<div class="speak-trans">${esc(c.en)}</div>`) : ''}</div>` + (flip
+        ? `<div class="dr-rate">${['Again', 'Hard', 'Good', 'Easy'].map((t, k) => `<button class="chip-btn" onclick="Drill.a('rate',${k})">${t}</button>`).join('')}</div>`
+        : `<button class="btn btn-block" onclick="Drill.a('flip')">${rev ? 'Show answer' : 'Show meaning'}</button>`));
+    };
+    H.flip = () => { flip = true; draw(); };
+    H.rate = k => { const i = q[n]; rateCard(cards[i].id, k); bump('c'); seen++; if (k === 0 && !q.slice(n + 1).includes(i)) q.push(i); n++; if (n < q.length) pick(); draw(); };
+    pick(); draw();
+  }
+
+  /* ----- daily Moments ----- */
+  async function moments() {
+    const d = await need(); if (!d) return; const pr = await progress();
+    const pool = d.moments.filter(m => doneLv(m.after)), w = m => pr.moments[m.id] == null ? 0 : pr.moments[m.id] < 2 ? 1 : 2;
+    const qs = pool.map(m => ({ m, k: w(m) + Math.random() * .9 })).sort((a, b) => a.k - b.k).slice(0, 5).map(x => x.m);
+    const lbl = { best: 'Best', okay: 'Okay', off: 'Off' }, pts = { best: 2, okay: 1, off: 0 }, missed = [];
+    let n = 0, score = 0, picked = false, hint = false, pk = -1, opts = [], mo = null;
+    const start = () => { opts = sh(qs[n].options); picked = false; hint = false; pk = -1; };
+    show('Daily Moments'); start();
+    const draw = () => {
+      if (n >= qs.length) {
+        const max = qs.length * 2, bests = missed.map(m => d.cards[m.options.find(o => o.v === 'best').c]);
+        body(done(score >= max * .8 ? '🏆' : '🎯', `${score} / ${max}`, score >= max * .8 ? 'Excellent. You sound respectful and natural.' : 'Good effort. These come back until you master them.',
+          `<div style="text-align:left;font-size:13px;color:var(--text-2);margin:8px 0">${qs.map(m => `<p style="margin-bottom:6px">🌍 ${esc(m.culture)}</p>`).join('')}</div>`
+          + (bests.length ? `<button class="btn btn-ghost" style="margin-bottom:10px" onclick="Drill.a('savemiss')">Save ${bests.length} missed phrase${bests.length === 1 ? '' : 's'}</button>` : '')
+          + `<button class="btn btn-ghost" style="margin-bottom:10px" onclick="Drill.moments()">Play 5 more</button>`));
+        H.savemiss = () => saveWords(bests); return;
+      }
+      const m = qs[n], p = m.prompt != null ? d.cards[m.prompt] : null;
+      body(prog(n / qs.length) + `<div class="path-sub" style="margin-bottom:4px">After Level ${m.lvl} · ${esc(m.topic)}</div><div style="font-weight:800;font-size:16px;margin-bottom:10px">${esc(m.setup)}</div>`
+        + (p ? `<div class="speak-card" style="padding:22px"><div class="speak-word" style="font-size:26px">«${esc(p.term)}»</div><div class="speak-pron">${esc(p.pron || '')}</div>${picked || hint ? `<div class="speak-trans" style="font-size:15px">${esc(p.en)}</div>` : ''}</div>` : '')
+        + `<div style="font-weight:800;margin:6px 2px 10px">${esc(m.q)}</div>`
+        + opts.map((o, k) => { const c = d.cards[o.c]; return `<button class="ex-opt dr-opt ${picked ? o.v + (k === pk ? ' pick' : '') : ''}" ${picked ? 'disabled' : ''} onclick="Drill.a('pick',${k})" style="margin-bottom:8px">${esc(c.term)}<span class="m">${esc(c.pron || '')}${picked || hint ? ' · ' + esc(c.en) : ''}${picked ? ' · ' + lbl[o.v] : ''}</span></button>`; }).join('')
+        + (picked ? tim(`<b>${lbl[opts[pk].v]}.</b> ${esc(opts[pk].why)}<br><br>🌍 ${esc(m.culture)}<div id="dr-more" style="margin-top:8px"><button class="chip-btn" onclick="Drill.a('more')">More detail</button></div>`) + `<button class="btn btn-block" onclick="Drill.a('next')">${n + 1 < qs.length ? 'Next' : 'See results'}</button>`
+          : `<button class="chip-btn" style="margin-top:6px" onclick="Drill.a('hint')">Show meanings</button>`));
+    };
+    H.pick = k => {
+      if (picked) return; picked = true; pk = k; mo = qs[n]; const v = opts[k].v; score += pts[v];
+      pr.moments[mo.id] = Math.max(pr.moments[mo.id] || 0, pts[v]); bump('m'); if (v !== 'best') missed.push(mo); draw();
+    };
+    H.hint = () => { hint = true; draw(); };
+    H.next = () => { n++; if (n < qs.length) start(); draw(); };
+    H.more = async () => {   // optional AI explanation: cached, capped, and silent on any failure
+      const box = $('dr-more'); if (!box) return; const o = opts[pk], c = d.cards[o.c], key = `cw_why_${L()}_${mo.id}_${o.c}`; let t = localStorage.getItem(key);
+      if (!t) {
+        const u = rd(K('ai'), { d: today(), n: 0 }); if (u.d !== today()) { u.d = today(); u.n = 0; } if (u.n >= 10) { box.remove(); return; }
+        box.textContent = '…';
+        try {
+          const res = await Backend.aiChat(`A learner of ${LN()} met this situation: "${mo.setup}" They chose "${c.term}" (${c.en}), rated ${o.v}. In two short plain sentences, explain why, and how it sounds to a Nigerian elder. No markdown.`, 'You are a warm, accurate Nigerian language and culture tutor.');
+          t = String(res.data || res.reply || res.message || '').replace(/[*_#`]/g, '').trim(); u.n++; wr(K('ai'), u); if (t) localStorage.setItem(key, t);
+        } catch { box.remove(); return; }
+      }
+      if (!t) box.remove(); else box.textContent = t;
+    };
+    draw();
+  }
+
+  /* ----- scenes ----- */
+  function scene(i) {
+    const s = cur && cur.scenes[i]; if (!s) return;
+    if (!doneLv(s.after)) { showToast(`Finish Level ${s.lvl} (${s.topic}) to unlock this scene`, 'info'); return; }
+    play(i);
+  }
+  async function play(i) {
+    const d = await need(); if (!d) return; const pr = await progress(), s = d.scenes[i], max = Object.keys(s.nodes).length - 1; show(s.title);
+    const bot = (t, c) => `<div class="msg-row bot"><div class="bubble">${c ? `<strong>${esc(c.term)}</strong> <em style="color:var(--text-3)">${esc(c.pron || '')}</em><br>` : ''}${esc(t)}</div></div>`;
+    const me = c => `<div class="msg-row user"><div class="bubble">${esc(c.term)}<div style="font-size:11.5px;opacity:.85;margin-top:2px">${esc(c.en)}</div></div></div>`;
+    const note = t => `<div class="msg-meta" style="padding:0 8px 4px;font-style:italic">${esc(t)}</div>`;
+    const first = s.nodes[s.start]; let node = s.start, pts = 0, hint = false, busy = false, opts = sh(first.replies), log = [bot(first.en, first.c != null ? d.cards[first.c] : null)];
+    const draw = () => {
+      const nd = s.nodes[node]; let tail = '';
+      if (nd.end) {
+        tail = tim(`<b>${stars(pts, s)}</b> ${pts === max ? 'Perfect!' : pts >= max - 1 ? 'Great job!' : 'Good start. Replay for more stars.'}<br><br>🌍 ${esc(s.culture)}`)
+          + `<div class="section-h">Words in this scene</div>` + s.words.map(w => { const c = d.cards[w]; return `<div class="word-row"><div class="word-row-body"><div class="word-row-term">${esc(c.term)}</div><div class="word-row-pron">${esc(c.pron || '')}</div><div class="word-row-trans">${esc(c.en)}</div></div></div>`; }).join('')
+          + `<button class="btn btn-block" onclick="Drill.a('savew')">Save words to flashcards</button><button class="btn btn-ghost btn-block" onclick="Drill.play(${i})">Replay</button><button class="btn btn-ghost btn-block" onclick="Drill.exit()">Back to path</button>`;
+      } else if (!busy) {
+        tail = `<div class="scaffold-row" style="flex-wrap:wrap;border:0;padding:14px 0 0">${opts.map((r, k) => { const c = d.cards[r.c]; return `<button class="scaffold-chip" style="text-align:left" onclick="Drill.a('say',${k})">${esc(c.term)}${hint ? `<br><span style="font-weight:500;font-size:11.5px;color:var(--text-2)">${esc(c.en)}</span>` : ''}</button>`; }).join('')}</div><button class="chip-btn" style="margin-top:6px" onclick="Drill.a('hint')">Show meanings</button>`;
+      }
+      body(`<div class="path-sub" style="margin-bottom:8px">After Level ${s.lvl} · ${esc(s.topic)}</div>${tim(`${esc(s.goal)}. Pick the best reply each time. <b>${pts}/${max}</b>`)}<div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">${log.join('')}</div>${tail}`);
+      $('dr-body').scrollTop = $('dr-body').scrollHeight;
+    };
+    H.hint = () => { hint = true; draw(); };
+    H.savew = () => saveWords(s.words.map(w => d.cards[w]));
+    H.say = k => {
+      if (busy) return; busy = true; const r = opts[k]; pts += r.ok; log.push(me(d.cards[r.c]), note(r.fb)); draw();
+      setTimeout(() => {
+        node = r.next; const nd = s.nodes[node]; log.push(bot(nd.en, nd.c != null ? d.cards[nd.c] : null)); opts = sh(nd.replies || []); hint = false; busy = false;
+        if (nd.end) { pr.scenes[s.id] = Math.max(pr.scenes[s.id] || 0, pts); bump('s'); }
+        draw();
+      }, 550);
+    };
+    draw();
+  }
+
+  /* ----- Practice home ----- */
+  async function render() {
+    const root = $('home-root'); if (!root || !window.State || !State.currentLanguage) return;
+    const d = await data(); if (!d) { root.innerHTML = `<div class="empty-note"><strong>Coming soon</strong>Practice for ${esc(LN())} is on the way.</div>`; return; }
+    cur = d; const pr = await progress(), cards = deck(), st = stats(cards, pr.srs), dr = pr.days[today()] || { m: 0, s: 0, c: 0 };
+    const sc = d.scenes, open = sc.map(s => doneLv(s.after)), fin = sc.map(s => (pr.scenes[s.id] || 0) > 0);
+    let next = sc.findIndex((s, i) => open[i] && !fin[i]); const allDone = next < 0; if (allDone) next = 0;
+    const pool = d.moments.filter(m => doneLv(m.after)).length;
+    const rows = [
+      { ico: '🎯', t: 'Daily Moments', sub: `${Math.min(5, dr.m)}/5 answered · ${pool} unlocked`, ok: dr.m >= 5, go: 'Drill.moments()' },
+      { ico: sc[next].emoji, t: (allDone ? 'Replay: ' : 'Scene: ') + sc[next].title, sub: `After Level ${sc[next].lvl} · ${sc[next].topic}`, ok: dr.s >= 1, go: `Drill.scene(${next})` }];
+    if (cards.length) rows.push({ ico: '🗂️', t: 'Flashcards', sub: st.due + st.fresh ? `${st.due} due · ${Math.min(6, st.fresh)} new` : 'All caught up', ok: !(st.due + st.fresh) || dr.c >= 5, go: 'Drill.flash()' });
+    const got = rows.filter(r => r.ok).length;
+    const words = ((State.user && State.user.savedWords) || []).length;
+    root.innerHTML = `
+      <div class="stat-row">
+        <div class="stat-tile"><div class="stat-ico">🔥</div><div class="stat-val">${State.effectiveStreak(State.progress || {})}</div><div class="stat-lbl">Day streak</div></div>
+        <div class="stat-tile"><div class="stat-ico">🎬</div><div class="stat-val">${fin.filter(Boolean).length}/${sc.length}</div><div class="stat-lbl">Scenes done</div></div>
+        <div class="stat-tile"><div class="stat-ico">⭐</div><div class="stat-val">${words}</div><div class="stat-lbl">Saved words</div></div>
+      </div>
+      <div class="card today"><div class="today-h"><b>Today</b><span>${got}/${rows.length} done</span></div>
+        ${rows.map(r => `<button class="today-row${r.ok ? ' ok' : ''}" onclick="${r.go}"><span class="today-ico">${r.ok ? '✓' : r.ico}</span><span class="today-body"><b>${esc(r.t)}</b><small>${esc(r.sub)}</small></span><span class="method-chev">›</span></button>`).join('')}
+      </div>
+      <div class="section-h">Your path</div>
+      <div class="path">${sc.map((s, i) => { const k = !open[i] ? 'locked' : fin[i] ? 'done' : 'open';
+        return `<button class="path-node ${k}${i === next && !fin[i] ? ' next' : ''}" onclick="Drill.scene(${i})"><div class="path-dot">${k === 'locked' ? '🔒' : k === 'done' ? '✓' : s.emoji}</div><div class="path-body"><div class="path-title">${esc(s.title)}</div><div class="path-sub">${k === 'locked' ? `Unlocks after Level ${s.lvl} · ` : `After Level ${s.lvl} · `}${esc(s.topic)}</div>${fin[i] ? `<div class="path-stars">${stars(pr.scenes[s.id], s)}</div>` : ''}</div></button>`; }).join('')}</div>
+      <div class="section-h">Speak &amp; review</div>
+      <div class="set-group">
+        <button class="method-card tint-terracotta" onclick="Practice.openSpeak()"><div class="method-icon">🎤</div><div class="method-body"><div class="method-title">Pronunciation practice</div><div class="method-desc">Listen, then repeat</div></div><div class="method-chev">›</div></button>
+        <button class="method-card" onclick="Practice.openReview()"><div class="method-icon">⭐</div><div class="method-body"><div class="method-title">Saved words</div><div class="method-desc">${words ? `${words} word${words === 1 ? '' : 's'} saved` : 'Save words in lessons to review them here'}</div></div><div class="method-chev">›</div></button>
+      </div>`;
+  }
+  return { render, flash, moments, scene, play, exit, a: (n, x) => H[n] && H[n](x) };
+})();
+window.Drill = Drill;
+
+const Practice = {
+  user: null,
   async init() {
     if (!(await cwBoot())) return;
     Header.render('practice');
     this.user = State.user;
-    this.setupLangSlots(); this.renderSituations(); this.renderSavedCount(); this.loadUsage(); this.renderTiles();
-    State.loadProgress(State.currentLanguage).then(() => this.renderTiles()).catch(() => {});
-    this.flushOfflineQueue().catch(()=>{});
-    this.maybeImportLocalChats().catch(()=>{});
-    this.refreshSectionBadges();
-    State.on('hydrated', () => { this.user = State.user; this.renderSavedCount(); this.renderTiles(); });
-    State.on('language:changed', () => { this.setupLangSlots(); this._cache = {}; this.refreshSectionBadges(); });
-    State.on('unread:changed', () => this.renderSectionBadges());
-    window.addEventListener('popstate', () => {
-      if (this.currentChatId) this.backToList();
-      else if (this.currentSection) this.closeTimmy();
-    });
+    Drill.render();
+    State.loadProgress(State.currentLanguage).then(() => Drill.render()).catch(() => {});
+    State.on('hydrated', () => { this.user = State.user; Drill.render(); });
+    State.on('language:changed', () => Drill.render());
+    State.on('progress:changed', () => Drill.render());
   },
 
-  setupLangSlots() {
-    const el = document.querySelector('[data-lang-slot="practice"]');
-    if (el) el.textContent = `Chat in ${CW_CONFIG.LANGUAGES[State.currentLanguage].name} about your latest lesson`;
-  },
-
-  async loadUsage() {
-    const bar = $('usage-bar'), count = $('usage-count'), tile = $('t-left');
-    try {
-      const c = (await Backend.getAIUsage())?.chat || {};
-      const label = bar.querySelector('.label');
-      bar.style.display = 'none'; bar.classList.remove('warning','limit');   // the tile below shows this now
-      if (c.unlimited) { count.textContent = '∞'; label.textContent = 'Unlimited Timmy messages'; if (tile) tile.textContent = '∞'; return; }
-      const limit = c.limit ?? 200, rem = c.remaining ?? Math.max(0, limit - (c.used ?? 0));
-      count.textContent = rem + ' / ' + limit;
-      if (tile) tile.textContent = rem;
-      if (rem === 0) bar.classList.add('limit'); else if (rem <= limit * .15) bar.classList.add('warning');
-      label.textContent = rem === 0 ? 'Daily limit reached — resets at midnight' : 'Timmy messages remaining today';
-      if (rem === 0) bar.style.display = 'flex';
-    } catch { bar.style.display = 'none'; if (tile) tile.textContent = '—'; }
-  },
-
-  renderTiles() {
-    const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
-    set('t-streak', State.effectiveStreak(State.progress || {}));
-    set('t-words', ((this.user && this.user.savedWords) || []).length);
-  },
-
-  renderSavedCount() {
-    const n = ((this.user && this.user.savedWords) || []).length;
-    $('saved-count-text').textContent = n ? `${n} word${n===1?'':'s'} saved from your lessons` : "Review words you've saved during lessons";
-    this.renderTiles && this.renderTiles();
-  },
-
-  renderSituations() {
-    $('situations-list').innerHTML = SITUATIONS.map(id => { const s = SECTIONS[id]; return `
-      <button class="situation-card" data-section="${id}" onclick="Practice.openSection('${id}')">
-        <div class="situation-icon">${s.emoji}</div>
-        <div class="situation-body"><div class="situation-title">${esc(s.title)}</div><div class="situation-desc">${esc(s.sub())}</div></div>
-        <div class="method-chev">›</div></button>`; }).join('');
-    this.renderSectionBadges();
-  },
-
-  /* ---------- unread badges: sum of unread across every chat in a section ---------- */
-  async refreshSectionBadges() {
-    await Promise.all(Object.keys(SECTIONS).map(id => this.loadSectionChats(id, { force:true }).catch(()=>{})));
-    this.renderSectionBadges();
-  },
-  renderSectionBadges() {
-    for (const id of Object.keys(SECTIONS)) {
-      const n = Object.values(this._cache[id] || {}).reduce((s,c) => s + (c.unreadCount || 0), 0);
-      const card = document.querySelector(`[data-section="${id}"]`); if (!card) continue;
-      let b = card.querySelector('.method-badge');
-      if (n > 0) { if (!b) { b = document.createElement('div'); b.className = 'method-badge'; card.appendChild(b); } b.textContent = n > 99 ? '99+' : n; }
-      else if (b) b.remove();
-    }
-  },
-
-  /* ---------- storage: _cache[sectionId][chatId] ---------- */
-  _chatKey(sid, cid) { return `cw_timmy_chat_full_${State.currentLanguage}_${sid}_${cid}`; },
-  _queueKey() { return 'cw_timmy_offline_queue_v2'; },
-
-  async loadSectionChats(sid, { force = false } = {}) {
-    if (!force && this._cache[sid]) return this._cache[sid];
-    try {
-      const res = await Backend.listTimmyChats(sid, State.currentLanguage), chats = {};
-      for (const c of (res.chats || [])) chats[c.chatId] = {
-        id:c.chatId, title:c.title, unreadCount:c.unreadCount || 0,
-        lastMessageAt:c.lastMessageAt ? new Date(c.lastMessageAt).getTime() : 0,
-        messageCount:c.messageCount || 0, lastMessage:c.lastMessage || null, messages:null };
-      for (const [id, c] of Object.entries(this._cache[sid] || {}))   // keep chats the server hasn't accepted yet
-        if (c.unsynced && !chats[id]) { chats[id] = c; this.retryCreate(sid, c); }
-      return (this._cache[sid] = chats);
-    } catch (e) { console.warn('loadSectionChats', e.message); return (this._cache[sid] = this._cache[sid] || {}); }
-  },
-
-  async retryCreate(sid, c) {
-    try {
-      await Backend.createTimmyChat({ sectionId:sid, language:State.currentLanguage, chatId:c.id, title:c.title, greeting:c.messages?.[0]?.content || '' });
-      delete c.unsynced;
-    } catch (e) { console.warn('retryCreate', e.message); }
-  },
-
-  async loadChat(sid, cid) {
-    const key = this._chatKey(sid, cid); let cached = null;
-    try { cached = JSON.parse(localStorage.getItem(key) || 'null'); } catch {}
-    const refresh = async () => {
-      try {
-        const chat = (await Backend.getTimmyChat(sid, cid)).chat;
-        const messages = (chat.messages || []).map(m => ({ id:m._id, role:m.role, content:m.content, ts:new Date(m.ts).getTime(), isError:!!m.isError }));
-        try { localStorage.setItem(key, JSON.stringify({ chat, messages })); } catch {}
-        const last = messages[messages.length - 1];
-        this._cache[sid] = this._cache[sid] || {};
-        this._cache[sid][cid] = { ...(this._cache[sid][cid] || {}), id:cid, title:chat.title, unreadCount:0,
-          lastMessageAt:chat.lastMessageAt ? new Date(chat.lastMessageAt).getTime() : 0,
-          messageCount:chat.messageCount || messages.length,
-          lastMessage:last ? { role:last.role, content:last.content, ts:last.ts } : null, messages };
-        if (this.currentChatId === cid && messages.length >= this.messages.length) { this.messages = messages; this.renderChat(); this.scrollToBottom(); }
-        return { chat, messages };
-      } catch (e) { console.warn('loadChat', e.message); return null; }
-    };
-    if (cached && cached.messages) { refresh().then(() => this.renderScaffold()); return cached; }
-    return await refresh();
-  },
-
-  queueOffline(item) {
-    try { const q = JSON.parse(localStorage.getItem(this._queueKey()) || '[]'); q.push({ ...item, ts:Date.now() }); localStorage.setItem(this._queueKey(), JSON.stringify(q.slice(-200))); } catch {}
-  },
-  async flushOfflineQueue() {
-    let q = []; try { q = JSON.parse(localStorage.getItem(this._queueKey()) || '[]'); } catch {}
-    const left = [];
-    for (const i of q) { try { await Backend.appendTimmyChatMessage(i.sectionId, i.chatId, i.role, i.content, i.isError); } catch { left.push(i); } }
-    try { left.length ? localStorage.setItem(this._queueKey(), JSON.stringify(left)) : localStorage.removeItem(this._queueKey()); } catch {}
-  },
-  async markChatReadServer(sid, cid) {
-    try { await Backend.markTimmyChatRead(sid, cid); if (this._cache[sid]?.[cid]) this._cache[sid][cid].unreadCount = 0; State.emit('timmy:chat-read', { sectionId:sid, chatId:cid }); }
-    catch (e) { console.warn('markChatRead', e.message); }
-  },
-
-  /* ---------- navigation: Practice tab → chat list → chat ---------- */
-  async openSection(sid) {
-    const s = SECTIONS[sid]; if (!s) return;
-    this.currentSection = sid; this.currentChatId = null;
-    this.showOverlay();
-    $('timmy-list-view').style.display = 'flex'; $('timmy-chat-view').style.display = 'none';
-    $('list-avatar').textContent = s.emoji; $('list-title').textContent = s.title;
-    $('list-sub').textContent = s.sub(CW_CONFIG.LANGUAGES[State.currentLanguage].name);
-    $('timmy-chat-list').innerHTML = '<div class="modal-loading">Loading chats…</div>';
-    await this.loadSectionChats(sid, { force:true });
-    if (this.currentSection === sid && !this.currentChatId) this.renderChatList(sid);
-  },
-
-  renderChatList(sid) {
-    const host = $('timmy-chat-list'); if (!host) return;
-    const chats = Object.values(this._cache[sid] || {}).sort((a,b) => (b.lastMessageAt||0) - (a.lastMessageAt||0));
-    if (!chats.length) {
-      host.innerHTML = `<div class="chat-list-empty"><div class="chat-list-empty-emoji">💬</div>
-        <div class="chat-list-empty-title">No chats yet</div>
-        <div class="chat-list-empty-sub">Start one to begin practicing.</div>
-        <button class="btn" onclick="Practice.startNewChat()">+ New chat</button></div>`;
-      return;
-    }
-    host.innerHTML = chats.map(c => {
-      const lm = c.lastMessage || (c.messages && c.messages[c.messages.length - 1]);
-      let preview = lm ? String(lm.content || '').replace(/<[^>]+>/g, '').trim() : 'No messages yet';
-      if (lm && lm.role === 'assistant') preview = 'T: ' + preview;
-      if (preview.length > 60) preview = preview.slice(0, 60) + '…';
-      const u = c.unreadCount || 0, n = c.messageCount || (c.messages?.length || 0);
-      return `<button class="chat-list-item" onclick="Practice.openChat('${c.id}')">
-        <div class="chat-list-avatar">${SECTIONS[sid].emoji}</div>
-        <div class="chat-list-body"><div class="chat-list-title">${esc(c.title || 'New chat')}</div><div class="chat-list-preview">${esc(preview)}</div></div>
-        <div class="chat-list-meta"><div class="chat-list-time">${esc(this.shortTime(c.lastMessageAt))}</div>
-        ${u > 0 ? `<div class="chat-list-unread">${u > 99 ? '99+' : u}</div>` : `<div class="chat-list-count">${n} msg${n===1?'':'s'}</div>`}</div></button>`;
-    }).join('');
-  },
-
-  shortTime(ts) {
-    if (!ts) return '';
-    const d = new Date(ts), now = new Date(), min = Math.floor((now - d) / 60000);
-    if (min < 1) return 'now'; if (min < 60) return min + 'm';
-    if (d.toDateString() === now.toDateString()) return d.toLocaleTimeString(undefined, { hour:'numeric', minute:'2-digit' });
-    const y = new Date(); y.setDate(now.getDate() - 1);
-    if (d.toDateString() === y.toDateString()) return 'Yesterday';
-    const days = Math.floor((now - d) / 86400000);
-    return days < 7 ? days + 'd' : d.toLocaleDateString(undefined, { month:'short', day:'numeric' });
-  },
-
-  async startNewChat() {
-    const sid = this.currentSection; if (!sid) return;
-    const s = SECTIONS[sid], lang = CW_CONFIG.LANGUAGES[State.currentLanguage].name;
-    const first = (this.user?.fullName || 'friend').split(' ')[0];
-    const cid = 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
-    const greeting = s.greeting(lang, first), now = Date.now();
-    const messages = [{ id:'a_' + now, role:'assistant', content:greeting, ts:now }];
-    this._cache[sid] = this._cache[sid] || {};
-    this._cache[sid][cid] = { id:cid, title:s.title, unreadCount:0, lastMessageAt:now, messageCount:1, lastMessage:{ role:'assistant', content:greeting, ts:now }, messages };
-    try { localStorage.setItem(this._chatKey(sid, cid), JSON.stringify({ chat:{ title:s.title }, messages })); } catch {}
-    try { await Backend.createTimmyChat({ sectionId:sid, language:State.currentLanguage, chatId:cid, title:s.title, greeting }); }
-    catch (e) {
-      console.error('createTimmyChat failed', e);
-      this._cache[sid][cid].unsynced = true;   // kept locally and retried on next list load
-      showToast('Chat not saved to server: ' + (e && (e.message || e.code) || 'unknown error'), 'error');
-    }
-    this.openChat(cid);
-  },
-
-  async openChat(cid) {
-    const sid = this.currentSection; if (!sid) return;
-    const s = SECTIONS[sid], meta = this._cache[sid]?.[cid] || { title:s.title };
-    this.currentChatId = cid;
-    history.pushState({ t:'chat' }, '');
-    $('timmy-avatar').textContent = s.emoji; $('timmy-title').textContent = meta.title || s.title;
-    const lang = CW_CONFIG.LANGUAGES[State.currentLanguage].name;
-    $('timmy-sub').textContent = s.sub(lang); $('timmy-input').placeholder = `Message Timmy in ${lang}…`;
-    $('timmy-list-view').style.display = 'none'; $('timmy-chat-view').style.display = 'flex';
-    $('timmy-scroll').innerHTML = '<div class="modal-loading">Loading messages…</div>';
-    const r = await this.loadChat(sid, cid);
-    this.messages = r?.messages || this._cache[sid]?.[cid]?.messages || [];
-    this.renderChat(); this.scrollToBottom(); this.renderScaffold();
-    await this.markChatReadServer(sid, cid);
-    this.renderSectionBadges(); window.Badges && Badges.refresh();
-    setTimeout(() => $('timmy-input')?.focus(), 250);
-  },
-
-  backToList() {   // chat → list (called from popstate)
-    if (!this.currentSection) return this.closeTimmy();
-    this.currentChatId = null; this.messages = [];
-    $('timmy-chat-view').style.display = 'none'; $('timmy-list-view').style.display = 'flex';
-    this.renderChatList(this.currentSection); this.renderSectionBadges(); window.Badges && Badges.refresh();
-  },
-
-  closeTimmy() {   // list → Practice tab (called from popstate)
-    this.currentSection = null; this.currentChatId = null;
-    const v = $('timmy-view'); v.classList.remove('active'); v.style.display = 'none';
-    document.documentElement.style.overflow = ''; document.body.style.cssText = '';
-    this.loadUsage(); this.renderSectionBadges(); window.Badges && Badges.refresh();
-  },
-
-  showOverlay() {
-    const v = $('timmy-view'); v.classList.add('active'); v.style.display = 'flex';
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.cssText = 'overflow:hidden;position:fixed;top:0;left:0;right:0;width:100%;height:100%';
-    history.pushState({ t:'list' }, '');
-  },
-
-  /* ---------- menus ---------- */
-  toggleMenu(e, id) { e.stopPropagation(); const m = $(id), open = m.classList.contains('show'); document.querySelectorAll('.chat-menu.show').forEach(x => x.classList.remove('show')); if (!open) m.classList.add('show'); },
-
-  async markAllRead() {
-    const sid = this.currentSection; if (!sid) return;
-    try {
-      await Backend.markTimmySectionRead(sid);
-      Object.values(this._cache[sid] || {}).forEach(c => c.unreadCount = 0);
-      $('list-menu').classList.remove('show'); this.renderChatList(sid); this.renderSectionBadges();
-      State.emit('timmy:section-cleared', { sectionId:sid }); window.Badges && Badges.refresh(); showToast('Marked all as read', 'success');
-    } catch (e) { showToast(e.message || 'Could not mark as read', 'error'); }
-  },
-  async deleteAllChats() {
-    const sid = this.currentSection; if (!sid) return;
-    if (!confirm(`Delete ALL chats in "${SECTIONS[sid].title}"? This cannot be undone.`)) return;
-    const backup = this._cache[sid]; this._cache[sid] = {};
-    try { await Backend.deleteTimmySection(sid); }
-    catch (e) {
-      console.error('deleteTimmySection failed', e);
-      this._cache[sid] = backup;   // server refused: put the chats back instead of pretending
-      $('list-menu').classList.remove('show'); this.renderChatList(sid); this.renderSectionBadges();
-      showToast('Could not delete: ' + (e.message || 'server error'), 'error'); return;
-    }
-    $('list-menu').classList.remove('show'); this.renderChatList(sid); this.renderSectionBadges();
-    State.emit('timmy:section-cleared', { sectionId:sid }); window.Badges && Badges.refresh(); showToast('All chats deleted', 'info');
-  },
-  exportCurrentChat() {
-    if (!this.currentChatId) return;
-    const text = `ClearWords chat export\nSection: ${SECTIONS[this.currentSection].title}\nLanguage: ${State.currentLanguage}\nDate: ${new Date().toISOString()}\n\n` + this.messages.map(m => `[${m.role.toUpperCase()}] ${m.content}`).join('\n\n');
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type:'text/plain' }));
-    a.download = 'timmy-chat-' + new Date().toISOString().slice(0, 10) + '.txt'; a.click(); URL.revokeObjectURL(a.href);
-    $('timmy-menu').classList.remove('show'); showToast('Chat exported', 'success');
-  },
-  async deleteCurrentChat() {
-    if (!this.currentChatId || !confirm('Delete this chat permanently?')) return;
-    const sid = this.currentSection, cid = this.currentChatId;
-    try { await Backend.deleteTimmyChat(sid, cid); }
-    catch (e) {
-      console.error('deleteTimmyChat failed', e);
-      $('timmy-menu').classList.remove('show');
-      showToast('Could not delete: ' + (e.message || 'server error'), 'error'); return;
-    }
-    if (this._cache[sid]) delete this._cache[sid][cid];
-    try { localStorage.removeItem(this._chatKey(sid, cid)); } catch {}
-    $('timmy-menu').classList.remove('show'); showToast('Chat deleted', 'info');
-    history.back();   // popstate → backToList()
-  },
-
-  /* ---------- chat rendering ---------- */
-  renderChat() {
-    const el = $('timmy-scroll'); if (!el) return;
-    if (!this.messages.length) { el.innerHTML = `<div class="chat-empty"><div class="chat-empty-emoji">${SECTIONS[this.currentSection]?.emoji || '💬'}</div><div class="chat-empty-title">Say something to start</div><div class="chat-empty-sub">Type a message below and Timmy will reply.</div></div>`; return; }
-    let lastDay = '', lastUser = -1;
-    this.messages.forEach((m, i) => { if (m.role === 'user') lastUser = i; });
-    el.innerHTML = this.messages.map((m, i) => {
-      const day = new Date(m.ts || Date.now()).toDateString(), sep = day !== lastDay ? `<div class="chat-daysep">${this.dayLabel(m.ts)}</div>` : ''; lastDay = day;
-      const user = m.role === 'user';
-      const body = user ? `<div class="bubble">${esc(m.content)}</div>` : `<div class="bubble ${m.isError ? 'is-error' : ''}">${this.formatBotHTML(m.content)}</div>`;
-      const share = (!user && !m.isError && i > 0) ? `<button class="msg-share" onclick="Practice.shareExchange(${i})">↗ Share</button>` : '';
-      return `${sep}<div class="msg-row ${user ? 'user' : 'bot'}">${body}<div class="msg-meta"><span>${this.fmtTime(m.ts)}${user && i === lastUser ? ' · Read' : ''}</span>${share}</div></div>`;
-    }).join('');
-  },
-  dayLabel(ts) {
-    const d = new Date(ts || Date.now()), t = new Date(), y = new Date(); y.setDate(t.getDate() - 1);
-    return d.toDateString() === t.toDateString() ? 'Today' : d.toDateString() === y.toDateString() ? 'Yesterday' : d.toLocaleDateString(undefined, { month:'short', day:'numeric' });
-  },
-  fmtTime(ts) { if (!ts) return ''; const d = new Date(ts); let h = d.getHours(); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return `${h}:${String(d.getMinutes()).padStart(2, '0')} ${ap}`; },
-  formatBotHTML(text) {
-    const str = String(text ?? '').trim(); if (!str) return '';
-    if (/<(p|br|strong|b|em|i|ul|ol|li|h[1-6]|code|pre|blockquote)\b/i.test(str)) {
-      let c = str.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '')
-        .replace(/<(iframe|object|embed)[\s\S]*?(<\/\1>|>)/gi, '')
-        .replace(/\son\w+="[^"]*"/gi, '').replace(/\son\w+='[^']*'/gi, '')
-        .replace(/href\s*=\s*(["'])\s*javascript:[^"']*\1/gi, 'href="#"');
-      if (!/<p\b/i.test(c)) c = c.split(/\n{2,}/).map(b => `<p>${b.replace(/\n/g, '<br>')}</p>`).join('');
-      return c;
-    }
-    return str.split(/\n{2,}/).map(p => `<p>${esc(p).replace(/\n/g, '<br>')}</p>`).join('');
-  },
-  renderScaffold() {
-    const row = $('scaffold-row'); if (!row) return;
-    if (!ROLEPLAY.includes(this.currentSection) || this.messages.some(m => m.role === 'user')) { row.style.display = 'none'; return; }
-    const samples = { yoruba:['Ẹ káàrọ̀','Báwo ni?','Mo wà dáadáa'], igbo:['Ndeewo','Kedu?','Ọ dị mma'], hausa:['Sannu','Yaya kake?','Lafiya lau'], pidgin:['How you dey?','I dey fine','Wetin dey happen?'] }[State.currentLanguage] || ['Hello','How are you?',"I'm fine"];
-    row.innerHTML = samples.map(s => `<button class="scaffold-chip" onclick="Practice.useScaffold(${JSON.stringify(s).replace(/"/g, '&quot;')})">${esc(s)}</button>`).join('');
-    row.style.display = 'flex';
-  },
-  useScaffold(t) { $('timmy-input').value = t; this.sendMessage(); },
-  scrollToBottom() { const s = $('timmy-scroll'); if (s) requestAnimationFrame(() => s.scrollTop = s.scrollHeight); },
-
-  /* ---------- sending ---------- */
-  async sendMessage() {
-    if (this.sending) return;
-    const inp = $('timmy-input'), text = inp?.value.trim();
-    if (!text || !this.currentSection || !this.currentChatId) return;
-    const sid = this.currentSection, cid = this.currentChatId;
-    this.sending = true; inp.value = ''; inp.style.height = 'auto'; $('scaffold-row').style.display = 'none';
-    this.messages.push({ id:'u_' + Date.now(), role:'user', content:text, ts:Date.now() });
-    this.renderChat(); this.scrollToBottom();
-
-    Backend.appendTimmyChatMessage(sid, cid, 'user', text, false).then(res => {
-      const c = this._cache[sid]?.[cid];
-      if (c) { c.lastMessageAt = Date.now(); c.messageCount = res.messageCount || c.messageCount; if (res.title) c.title = res.title; c.lastMessage = { role:'user', content:text, ts:Date.now() }; if (this.currentChatId === cid) $('timmy-title').textContent = c.title; }
-    }).catch(() => this.queueOffline({ sectionId:sid, chatId:cid, role:'user', content:text, isError:false }));
-
-    const typing = document.createElement('div');
-    typing.className = 'msg-row bot typing'; typing.id = 'typing'; typing.innerHTML = '<div class="bubble"><span></span><span></span><span></span></div>';
-    $('timmy-scroll').appendChild(typing); this.scrollToBottom();
-    const sendBtn = $('timmy-send'); sendBtn.disabled = true;
-
-    try {
-      const lang = CW_CONFIG.LANGUAGES[State.currentLanguage], user = State.user || {}, s = SECTIONS[sid];
-      const history_ = this.messages.slice(-13, -1).filter(m => !m.isError)
-        .map(m => `${m.role === 'user' ? 'Learner' : 'Timmy'}: ${String(m.content).replace(/<[^>]+>/g, '')}`).join('\n');
-      const context = [`Language: ${lang.name} (${State.currentLanguage})`, `Learner: ${user.fullName || 'learner'}`,
-        `Level: ${(State.progress && State.progress.currentLevel) || user.currentLevel || 1}`, `Section: ${s.title}`].join(' | ')
-        + `\nInstructions: ${s.prompt}` + (history_ ? `\nConversation so far:\n${history_}` : '');
-      const res = await Backend.aiChat(text, context);
-      const reply = res.data || res.reply || res.message || "Sorry — I didn't catch that.";
-      $('typing')?.remove();
-      if (this.currentChatId === cid) { this.messages.push({ id:'a_' + Date.now(), role:'assistant', content:reply, ts:Date.now() }); this.renderChat(); this.scrollToBottom(); }
-      this.loadUsage();
-      Backend.appendTimmyChatMessage(sid, cid, 'assistant', reply, false).then(() => {
-        const c = this._cache[sid]?.[cid]; if (c) { c.lastMessageAt = Date.now(); c.lastMessage = { role:'assistant', content:reply, ts:Date.now() }; }
-        State.emit('timmy:chat-updated', { sectionId:sid, chatId:cid });
-      }).catch(() => this.queueOffline({ sectionId:sid, chatId:cid, role:'assistant', content:reply, isError:false }));
-    } catch (e) {
-      $('typing')?.remove();
-      if (Paywall.fromError(e)) return;
-      const msg = e.code === 'timeout' ? 'Timmy is waking up — this can take 20–30 seconds. Try again.' : (e.message || "Couldn't reach Timmy.");
-      this.messages.push({ id:'a_' + Date.now(), role:'assistant', content:msg, ts:Date.now(), isError:true });
-      this.renderChat(); this.scrollToBottom();
-    } finally { this.sending = false; sendBtn.disabled = false; }
-  },
-
-  /* ---------- share a moment with Timmy as an image (HTML canvas) ---------- */
-  shareExchange(i) {
-    if (!window.ShareCards) { showToast('Sharing is not available right now.', 'error'); return; }
-    const list = []; let idx = -1;
-    this.messages.forEach((m, j) => {
-      if (m.isError) return;
-      list.push({ role: m.role === 'user' ? 'user' : 'assistant', text: m.content });
-      if (j === i) idx = list.length - 1;
-    });
-    if (idx < 0) return;
-    ShareCards.openChat({ messages: list, index: idx });
-  },
-  shareLast() {
-    $('timmy-menu').classList.remove('show');
-    for (let i = this.messages.length - 1; i > 0; i--) {
-      const m = this.messages[i];
-      if (m.role === 'assistant' && !m.isError) { this.shareExchange(i); return; }
-    }
-    showToast('Chat with Timmy first, then share a moment.', 'info');
-  },
-
-  /* ---------- one-time import of legacy local chats ---------- */
-  async maybeImportLocalChats() {
-    const lang = State.currentLanguage, flag = 'cw_timmy_migrated_v2_' + lang;
-    if (localStorage.getItem(flag)) return;
-    try {
-      const threads = [], legacy = JSON.parse(localStorage.getItem('cw_timmy_sections_' + lang) || '{}');
-      for (const [sid, s] of Object.entries(legacy)) {
-        if (!SECTIONS[sid]) continue;
-        for (const [cid, c] of Object.entries(s.chats || {}))
-          if (Array.isArray(c.messages) && c.messages.length) threads.push({ sectionId:sid, chatId:cid, title:c.title || SECTIONS[sid].title, messages:c.messages });
-      }
-      for (const k of ['cw_timmy_chat_' + lang, 'cw_timmy_cache_' + lang, 'cw_chat_practice_' + lang, 'cw_chat_cultural_' + lang, 'cw_chat_quick_' + lang]) {
-        try {
-          const arr = JSON.parse(localStorage.getItem(k) || 'null');
-          if (!Array.isArray(arr) || !arr.length) continue;
-          const sid = k.includes('cultural') ? 'cultural' : k.includes('quick') ? 'quick' : 'practice';
-          threads.push({ sectionId:sid, chatId:'migrated_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6), title:SECTIONS[sid].title, messages:arr });
-          localStorage.removeItem(k);
-        } catch {}
-      }
-      if (threads.length) await Backend.importTimmyChats(lang, threads);
-      localStorage.setItem(flag, '1');
-    } catch (e) { console.warn('maybeImportLocalChats', e.message); }
-  },
-
-  /* ---------- self-contained bottom-sheet modal (no dependency on shared.js) ---------- */
   modal(title, html) {
     let o = $('cw-practice-modal');
     if (!o) {
@@ -916,9 +656,6 @@ const Practice = {
   },
 };
 
-document.addEventListener('input', e => { if (e.target.id === 'timmy-input') { e.target.style.height = 'auto'; e.target.style.height = Math.min(120, e.target.scrollHeight) + 'px'; } });
-document.addEventListener('keydown', e => { if (e.target.id === 'timmy-input' && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); Practice.sendMessage(); } });
-document.addEventListener('click', e => { if (!e.target.closest('.chat-menu-wrap')) document.querySelectorAll('.chat-menu.show').forEach(m => m.classList.remove('show')); });
 document.addEventListener('DOMContentLoaded', () => Practice.init());
 window.Practice = Practice;
 
